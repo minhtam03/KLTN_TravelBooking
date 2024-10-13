@@ -10,6 +10,7 @@ import About from '../pages/About'
 import Flights from '../pages/Flights'
 import Stays from '../pages/Stays'
 import Blog from '../pages/Blog'
+import ThankYou from '../pages/ThankYou'
 
 const Routers = () => {
   return (
@@ -25,6 +26,7 @@ const Routers = () => {
         <Route path='/flights' element={<Flights/>} />
         <Route path='/stays' element={<Stays/>} />
         <Route path='/Blog' element={<Blog/>} />
+        <Route path='/thank-you' element={<ThankYou/>} />
     </Routes>
   )
 }

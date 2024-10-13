@@ -8,7 +8,7 @@ import "./tour-card.css"
 
 const TourCard = ({tour}) => {
 
-    const {id, title, city, photo, price, featured, reviews } = tour 
+    const {_id, title, city, photo, price, featured, reviews } = tour 
 
     const {totalRating, avgRating} = calculateAvgRating(reviews)
     
@@ -34,7 +34,7 @@ const TourCard = ({tour}) => {
                 </div>
 
                 <h5 className='tour__title'>
-                    <Link to={`/tours/${id}`}>{title}</Link>
+                    <Link to={`/tours/${_id}`}>{title}</Link>
                 </h5>
 
                 <div className='card__bottom d-flex align-items-center
@@ -44,7 +44,7 @@ const TourCard = ({tour}) => {
                     </h5>
 
                     <button className='btn booking__btn'>
-                        <Link to={`/tours/${id}`}>Book now</Link>
+                        <Link to={`/tours/${_id}`}>Book now</Link>
 
                     </button>
 

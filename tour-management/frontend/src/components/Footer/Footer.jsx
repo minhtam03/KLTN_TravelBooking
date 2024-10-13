@@ -44,7 +44,7 @@ const Footer = () => {
         <Row>
           <Col lg='3'>
             <div className="logo">
-              {/* <img src={logo} alt="" /> */}
+              <img src={logo} alt="" />
               <p>Lorem ipsum dolor sit 
                 amet consectetur adipisicing elit. Magnam, numquam?
               </p>
