@@ -1,0 +1,64 @@
+.booking-history {
+  padding: 20px;
+}
+
+.tour-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.tour-card:hover {
+  transform: scale(1.05);
+}
+
+.tour-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.tour-info {
+  padding: 15px;
+}
+
+.tour-info h5 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.tour-info p {
+  font-size: 14px;
+  color: #777;
+}
+
+.price-review {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.pagination {
+  margin-top: 20px;
+}
+
+.pagination button {
+  background: #ffd700;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 0 10px;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+}
+
+.pagination button i {
+  font-size: 20px;
+}

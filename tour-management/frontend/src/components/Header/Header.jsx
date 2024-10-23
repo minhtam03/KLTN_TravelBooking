@@ -30,6 +30,10 @@ const nav__links = [
   {
     path:'/blog',
     display:'Blog'
+  },
+  {
+    path:'/history',
+    display:'History'
   }
 ]
 
@@ -72,9 +76,9 @@ const Header = () => {
         justify-content-between'>
 
           {/* logo */}
-          <div className='logo'>
+          {/* <div className='logo'>
             <img src={logo} alt="" />
-          </div>
+          </div> */}
 
           {/* menu */}
           <div className='navigation' ref={menuRef} onClick={toggleMenu}>

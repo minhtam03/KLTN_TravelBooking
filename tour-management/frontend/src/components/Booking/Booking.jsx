@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react'
-import './booking.css'
+import './booking.scss'
 import { Form, FormGroup, ListGroup, ListGroupItem, Button } from 'reactstrap'
 
 
