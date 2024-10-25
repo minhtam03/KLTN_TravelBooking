@@ -6,7 +6,7 @@ const verifyToken = (req, res, next) => {
     if (!token) {
         return res.status(401).json({
             success: false,
-            message: "You are not authorize", 
+            message: "Authorization token is missing", 
         })
     }
 
@@ -15,7 +15,7 @@ const verifyToken = (req, res, next) => {
         if (err) {
             return res.status(401).json({
                 success: false,
-                message: "Token is invalid", 
+                message: "Invalid token", 
             })
         }
 
@@ -26,13 +26,14 @@ const verifyToken = (req, res, next) => {
 
 export const verifyUser = (req, res, next) => {
     verifyToken(req, res, next, () => {
+
         if (req.user.id === req.params.id || req.user.role === 'admin') {
             next()
         }
         else {
             return res.status(401).json({
                 success: false,
-                message: "You are not authenticated", 
+                message: "Access denied", 
             })
         }
     })

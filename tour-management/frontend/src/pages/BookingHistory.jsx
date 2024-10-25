@@ -1,70 +1,56 @@
-import React, { useState, useEffect, useContext } from 'react';
-import CommonSection from '../shared/CommonSection';
-import '../styles/booking-history.css';
-import { Container, Row, Col } from 'reactstrap';
-import { BASE_URL } from '../utils/config';
+import React, { useEffect, useContext } from 'react';
+import { Container } from 'reactstrap';
 import useFetch from '../hooks/useFetch';
-import { AuthContext } from '../context/AuthContext'
+import { BASE_URL } from '../utils/config';
+import { AuthContext } from '../context/AuthContext'; // Import AuthContext
 
 const BookingHistory = () => {
-  const { user } = useContext(AuthContext);
-  const [pageCount, setPageCount] = useState(0);
-  const [page, setPage] = useState(0);
+  const { user } = useContext(AuthContext); // Lấy thông tin user từ AuthContext
 
-  // Fetch user's booking data
-  const { data: bookings, loading, error } = useFetch(
-    `${BASE_URL}/bookings?userId=${user?._id}&page=${page}`
-  );
-  const { data: bookingCount } = useFetch(`${BASE_URL}/bookings/count?userId=${user?._id}`);
+  // Use the useFetch hook to get the user's booking history
+  const { data: bookings, loading, error } = useFetch(user ? `${BASE_URL}/booking/user/${user._id}` : null);
 
   useEffect(() => {
-    const pages = Math.ceil(bookingCount / 4); // Assuming 4 bookings per page
-    setPageCount(pages);
     window.scrollTo(0, 0);
-  }, [page, bookingCount, bookings]);
+  }, []);
 
   return (
-    <>
-      <CommonSection title={'Booking History'} />
-      <section>
-        <Container>
-          <Row>
-            {loading && <h4 className='text-center pt-5'>Loading...</h4>}
-            {error && <h4 className='text-center pt-5'>{error}</h4>}
-            {!loading && !error && (
-              <Row>
-                {bookings?.map((booking) => (
-                  <Col lg='3' className='mb-4' key={booking._id}>
-                    <div className='booking-card'>
-                      <img src='path/to/image' alt={booking.tourName} className='booking-card-img' />
-                      <div className='booking-info'>
-                        <h5>{booking.tourName}</h5>
-                        <p>{new Date(booking.bookAt).toLocaleDateString()}</p>
-                        <p>Guest: {booking.guestSize} people</p>
-                        <p>Total payment: ${(booking.guestSize * 35).toFixed(2)}</p>
-                      </div>
-                    </div>
-                  </Col>
-                ))}
-                <Col lg='12'>
-                  <div className='pagination d-flex align-items-center justify-content-center mt-4 gap-3'>
-                    {[...Array(pageCount).keys()].map((number) => (
-                      <span
-                        key={number}
-                        onClick={() => setPage(number)}
-                        className={page === number ? 'active__page' : ''}
-                      >
-                        {number + 1}
-                      </span>
-                    ))}
-                  </div>
-                </Col>
-              </Row>
-            )}
-          </Row>
-        </Container>
-      </section>
-    </>
+    <Container>
+      <h2>Your Booking History</h2>
+
+      {loading && <p>Loading...</p>}
+      {error && <p>Error: {error}</p>}
+      
+      {!user && <p>Please sign in to view your booking history.</p>}
+
+      {bookings?.length === 0 && !loading && <p>No bookings found.</p>}
+      
+      {/* Display bookings in a simple table or list */}
+      {bookings?.length > 0 && (
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Tour Name</th>
+              <th>Full Name</th>
+              <th>Guest Size</th>
+              <th>Phone</th>
+              <th>Booking Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bookings.map((booking) => (
+              <tr key={booking._id}>
+                <td>{booking.tourName}</td>
+                <td>{booking.fullName}</td>
+                <td>{booking.guestSize}</td>
+                <td>{booking.phone}</td>
+                <td>{new Date(booking.bookAt).toLocaleDateString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </Container>
   );
 };
 

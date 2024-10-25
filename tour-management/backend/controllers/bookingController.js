@@ -53,3 +53,31 @@ export const getAllBooking = async(req, res) => {
         })
     }
 }
+
+
+// get booking history of a user
+export const getBookingHistory = async (req, res) => {
+    const userId = req.user.id; // Lấy userId từ token đã xác thực
+
+    try {
+        const bookings = await Booking.find({ userId });  // Find all bookings with the user's ID
+
+        if (!bookings || bookings.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No bookings found for this user",
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Successful",
+            data: bookings,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+}
