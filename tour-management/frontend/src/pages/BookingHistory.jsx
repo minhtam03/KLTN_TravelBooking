@@ -20,7 +20,7 @@ const BookingHistory = () => {
         }
 
         const res = await fetch(`${BASE_URL}/booking/booking-history`, {
-          method: 'GET',
+          method: 'POST',
           credentials: 'include',
         });
 

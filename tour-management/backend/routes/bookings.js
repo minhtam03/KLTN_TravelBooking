@@ -6,5 +6,5 @@ const router = express.Router()
 router.post('/', verifyUser, createBooking)
 router.get('/:id', verifyUser, getBooking)
 router.get('/', verifyAdmin, getAllBooking)
-router.get('/booking-history', verifyUser, getBookingHistory);  // New route for booking history
+router.post('/booking-history', verifyUser, getBookingHistory);  // New route for booking history
 export default router
