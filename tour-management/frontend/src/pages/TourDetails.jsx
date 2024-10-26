@@ -113,6 +113,50 @@ const TourDetails = () => {
     }
   };
   
+//   const submitHandler = async (e) => {
+//     e.preventDefault();
+//     const reviewText = reviewMsgRef.current.value;
+
+//     try {
+//         if (!user) {
+//             alert('Please sign in');
+//             return;
+//         }
+
+//         const reviewObj = {
+//             username: user?.username,
+//             reviewText,
+//             rating: tourRating,
+//         };
+
+//         const res = await fetch(`${BASE_URL}/review/${id}`, {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             credentials: 'include',
+//             body: JSON.stringify(reviewObj),
+//         });
+
+//         const result = await res.json();
+//         if (!res.ok) {
+//             alert(result.message); // Hiển thị "Bạn chưa đặt tour này" nếu người dùng chưa đặt tour
+//             return;
+//         }
+
+//         const newReview = {
+//             username: user.username,
+//             reviewText,
+//             rating: tourRating,
+//             createdAt: new Date().toISOString(),
+//         };
+
+//         tour.reviews = [...reviews, newReview];
+//         reviewMsgRef.current.value = '';
+//         setTourRating(null);
+
+//     } catch (err) {
+//         alert(err.message);
+//     }
+// };
 
 
   useEffect(() => {
