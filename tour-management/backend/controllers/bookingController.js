@@ -55,12 +55,18 @@ export const getAllBooking = async(req, res) => {
 }
 
 
-// get booking history of a user
 export const getBookingHistory = async (req, res) => {
-    const userId = req.user.id; // Lấy userId từ token đã xác thực
+    const userId = req.user?.id; // Đảm bảo userId có tồn tại
+
+    if (!userId) {
+        return res.status(401).json({
+            success: false,
+            message: "Unauthorized: No user ID found in token",
+        });
+    }
 
     try {
-        const bookings = await Booking.find({ userId });  // Find all bookings with the user's ID
+        const bookings = await Booking.find({ userId });
 
         if (!bookings || bookings.length === 0) {
             return res.status(404).json({
@@ -77,7 +83,7 @@ export const getBookingHistory = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: "Internal server error",
+            message: error.name === "MongoNetworkError" ? "Database connection error" : "Internal server error",
         });
     }
-}
+};
