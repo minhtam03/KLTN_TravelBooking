@@ -120,3 +120,13 @@
 .review__item span {
     font-weight: 500;
 }
+
+
+.rating__group i {
+    color: #ccc; /* Màu mặc định cho sao chưa được chọn */
+  }
+  
+  .rating__group i.filled {
+    color: var(--secondary-color); /* Màu khi sao được chọn */
+  }
+  

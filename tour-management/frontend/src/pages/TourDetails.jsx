@@ -29,42 +29,91 @@ const TourDetails = () => {
   const options = {day: "numeric", month: "long", year: "numeric"}
 
   // submit request to the server
-  const submitHandler = async e => {
-    e.preventDefault()
-    const reviewText = reviewMsgRef.current.value
+  // const submitHandler = async e => {
+  //   e.preventDefault()
+  //   const reviewText = reviewMsgRef.current.value
     
     
-    try {
-      if (!user || user === undefined || user == null) {
-        alert('Please sign in')
-      }
+  //   try {
+  //     if (!user || user === undefined || user == null) {
+  //       alert('Please sign in')
+  //     }
 
+  //     const reviewObj = {
+  //       username: user?.username,
+  //       reviewText,
+  //       rating:tourRating
+  //     }
+  //     const res = await fetch(`${BASE_URL}/review/${id}`, {
+  //       method: 'post',
+  //       headers: {
+  //         'content-type': 'application/json'
+  //       },
+  //       credentials:'include',
+  //       body: JSON.stringify(reviewObj)
+  //     })
+
+  //     const result = await res.json()
+  //     if (!res.ok) {
+  //       return alert(result.message)
+  //     }
+
+  //     alert(result.message)
+
+  //   } catch (err) {
+  //     alert(err.message)
+  //   }
+    
+  // }
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    const reviewText = reviewMsgRef.current.value;
+  
+    try {
+      if (!user) {
+        alert('Please sign in');
+        return;
+      }
+  
       const reviewObj = {
         username: user?.username,
         reviewText,
-        rating:tourRating
-      }
+        rating: tourRating
+      };
+  
       const res = await fetch(`${BASE_URL}/review/${id}`, {
-        method: 'post',
-        headers: {
-          'content-type': 'application/json'
-        },
-        credentials:'include',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(reviewObj)
-      })
-
-      const result = await res.json()
+      });
+  
+      const result = await res.json();
       if (!res.ok) {
-        return alert(result.message)
+        alert(result.message);
+        return;
       }
-
-      alert(result.message)
-
+  
+      // Cập nhật state của reviews để hiển thị review mới ngay lập tức
+      const newReview = {
+        username: user.username,
+        reviewText,
+        rating: tourRating,
+        createdAt: new Date().toISOString()
+      };
+  
+      // Thêm review mới vào danh sách reviews hiện tại
+      tour.reviews = [...reviews, newReview];
+      reviewMsgRef.current.value = '';
+      setTourRating(null);
+  
     } catch (err) {
-      alert(err.message)
+      alert(err.message);
     }
-    
-  }
+  };
+  
+
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -120,14 +169,26 @@ const TourDetails = () => {
                   Reviews ({reviews?.length} reviews)
                 </h4>
                 <Form onSubmit={submitHandler}>
-                  <div className='d-flex align-items-center gap-3 mb-4
+
+                  {/* <div className='d-flex align-items-center gap-3 mb-4
                   rating__group'>
                     <span onClick={() => setTourRating(1)}>1 <i class="ri-star-fill"></i></span>
                     <span onClick={() => setTourRating(2)}>2 <i class="ri-star-fill"></i></span>
                     <span onClick={() => setTourRating(3)}>3 <i class="ri-star-fill"></i></span>
                     <span onClick={() => setTourRating(4)}>4 <i class="ri-star-fill"></i></span>
                     <span onClick={() => setTourRating(5)}>5 <i class="ri-star-fill"></i></span>
+                  </div> */}
+
+                  <div className='d-flex align-items-center gap-3 mb-4 rating__group'>
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <span key={star} onClick={() => setTourRating(star)}>
+                        {star} <i className={`ri-star-fill ${tourRating >= star ? 'filled' : ''}`}></i>
+                      </span>
+                    ))}
                   </div>
+
+
+
                   <div className="review__input">
                     <input type="text" ref={reviewMsgRef} 
                     placeholder='share your thoughts'required/>

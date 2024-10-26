@@ -33,38 +33,45 @@ const Booking = ({tour, avgRating}) => {
 
 
     // send data to the server
-    const handleClick = async e => {
-        e.preventDefault()
-
-        console.log(booking)
-
+    const handleClick = async (e) => {
+        e.preventDefault();
+    
+        // Kiểm tra nếu ngày đặt là trước ngày hiện tại
+        const currentDate = new Date().setHours(0, 0, 0, 0); // Lấy ngày hiện tại, đặt thời gian về 0 để chỉ so sánh ngày
+        const bookingDate = new Date(booking.bookAt).setHours(0, 0, 0, 0); // Lấy ngày đặt và cũng đặt thời gian về 0
+    
+        if (bookingDate < currentDate) {
+            return alert("Booking date must be today or later.");
+        }
+    
+        console.log(booking);
+    
         try {
             if (!user || user === undefined || user === null) {
-                return alert('Please sign in')
+                return alert("Please sign in");
             }
-
+    
             const res = await fetch(`${BASE_URL}/booking`, {
-                method: 'post',
+                method: "post",
                 headers: {
-                'content-type': 'application/json'
+                    "content-type": "application/json",
                 },
-                credentials:'include',
-                body: JSON.stringify(booking)
-            })
-
-            const result = await res.json()
-
+                credentials: "include",
+                body: JSON.stringify(booking),
+            });
+    
+            const result = await res.json();
+    
             if (!res.ok) {
-                return alert(result.message)
+                return alert(result.message);
             }
-
-            navigate('/thank-you')
-
+    
+            navigate("/thank-you");
         } catch (err) {
-            alert(err.message)
+            alert(err.message);
         }
-
-    }
+    };
+    
 
   return (
     <div className='booking'>
