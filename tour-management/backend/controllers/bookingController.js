@@ -56,7 +56,7 @@ export const getAllBooking = async(req, res) => {
 
 
 export const getBookingHistory = async (req, res) => {
-    const userId = req.user?.id; // Đảm bảo userId có tồn tại
+    const userId = req.user?.id; 
 
     if (!userId) {
         return res.status(401).json({
