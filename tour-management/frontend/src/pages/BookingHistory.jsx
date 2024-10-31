@@ -1,8 +1,9 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Container, ListGroup, ListGroupItem } from 'reactstrap';
+import { Container, ListGroup, ListGroupItem, Row, Col } from 'reactstrap';
 import { AuthContext } from '../context/AuthContext';
 import { BASE_URL } from '../utils/config';
 import CommonSection from '../shared/CommonSection'
+import BookingCard from '../shared/BookingCard'; 
 
 const BookingHistory = () => {
   const { user } = useContext(AuthContext); // Lấy thông tin người dùng từ AuthContext
@@ -19,7 +20,7 @@ const BookingHistory = () => {
           return;
         }
 
-        const res = await fetch(`${BASE_URL}/booking/booking-history`, {
+        const res = await fetch(`${BASE_URL}/booking/booking-history/all`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -50,7 +51,7 @@ const BookingHistory = () => {
       {error && <p className="error-text">{error}</p>}
       {!loading && bookings.length === 0 && !error && <p>No bookings found.</p>}
 
-      {bookings.length > 0 && (
+      {/* {bookings.length > 0 && (
         <ListGroup>
           {bookings.map((booking) => (
             <ListGroupItem key={booking._id} className="booking-item">
@@ -62,7 +63,16 @@ const BookingHistory = () => {
             </ListGroupItem>
           ))}
         </ListGroup>
-      )}
+      )} */}
+      
+      <Row>
+        {bookings.map((booking) => (
+          <Col lg="3" md="6" sm="12" key={booking._id} className="mb-4">
+            <BookingCard booking={booking} />
+          </Col>
+        ))}
+      </Row>
+
     </Container>
   );
 };
