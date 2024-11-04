@@ -6,13 +6,13 @@ import './booking-card.css';
 import gallaryImg from "../assets/images/tour-img04.jpg"
 
 const BookingCard = ({ booking }) => {
-  const { tourName, fullName, phone, guestSize, bookAt, totalPayment, photo } = booking;
+  const { tourName, fullName, phone, guestSize, bookAt, totalPayment, tourPhoto, tourPrice } = booking;
 
   return (
     <div className="booking__card">
       <Card>
         <div className="booking__img">
-          {/* <img src={photo} alt="booking-img" /> */}
+          {/* <img src={tourPhoto} alt="booking-img" /> */}
         
           <img src={gallaryImg} alt="booking-img" />        
         </div>
@@ -23,13 +23,13 @@ const BookingCard = ({ booking }) => {
           <div className="booking__details">
             <p><i className="ri-calendar-line"></i> {new Date(bookAt).toLocaleDateString()}</p>
             <p>Guest: {guestSize} people</p>
-            <p>Total payment: ${totalPayment}</p>
+            <p>Total payment: ${tourPrice}</p>
           </div>
           <div className="card__bottom d-flex align-items-center justify-content-between mt-3">
-            <span className="booking__price">${35.00} <span> /per person</span></span>
-            <span className="booking__rating">
+            {/* <span className="booking__price">${35.00} <span> /per person</span></span> */}
+            {/* <span className="booking__rating">
               <i className="ri-star-fill"></i> 4.5 (584 reviews)
-            </span>
+            </span> */}
           </div>
         </CardBody>
       </Card>

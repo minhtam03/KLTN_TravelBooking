@@ -28,44 +28,7 @@ const TourDetails = () => {
   // format date
   const options = {day: "numeric", month: "long", year: "numeric"}
 
-  // submit request to the server
-  // const submitHandler = async e => {
-  //   e.preventDefault()
-  //   const reviewText = reviewMsgRef.current.value
-    
-    
-  //   try {
-  //     if (!user || user === undefined || user == null) {
-  //       alert('Please sign in')
-  //     }
-
-  //     const reviewObj = {
-  //       username: user?.username,
-  //       reviewText,
-  //       rating:tourRating
-  //     }
-  //     const res = await fetch(`${BASE_URL}/review/${id}`, {
-  //       method: 'post',
-  //       headers: {
-  //         'content-type': 'application/json'
-  //       },
-  //       credentials:'include',
-  //       body: JSON.stringify(reviewObj)
-  //     })
-
-  //     const result = await res.json()
-  //     if (!res.ok) {
-  //       return alert(result.message)
-  //     }
-
-  //     alert(result.message)
-
-  //   } catch (err) {
-  //     alert(err.message)
-  //   }
-    
-  // }
-
+  
   const submitHandler = async (e) => {
     e.preventDefault();
     const reviewText = reviewMsgRef.current.value;
@@ -75,6 +38,39 @@ const TourDetails = () => {
         alert('Please sign in');
         return;
       }
+
+      // Lấy danh sách bookings của người dùng
+      const resBookings = await fetch(`${BASE_URL}/booking/booking-history/all`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+      const resultBooking = await resBookings.json();
+
+      // Kiểm tra phản hồi từ API
+      if (!resultBooking.success) {
+          alert(resultBooking.message); // Hiển thị thông báo lỗi từ API
+          return;
+      }
+
+      const bookings = resultBooking.data; // Dữ liệu bookings từ API
+
+      // Kiểm tra kiểu dữ liệu của bookings
+      if (!Array.isArray(bookings)) {
+          console.error("Bookings is not an array:", bookings);
+          alert("Đã có lỗi xảy ra trong việc lấy danh sách đặt tour.");
+          return;
+      }
+
+      // Kiểm tra xem user đã đặt tour này chưa
+      const tourBooked = bookings.some(booking => booking.tourName === title);
+
+      if (!tourBooked) {
+          alert("You have never booked this tour before.");
+          return;
+      }
+
+
+       
   
       const reviewObj = {
         username: user?.username,
@@ -112,51 +108,6 @@ const TourDetails = () => {
       alert(err.message);
     }
   };
-  
-//   const submitHandler = async (e) => {
-//     e.preventDefault();
-//     const reviewText = reviewMsgRef.current.value;
-
-//     try {
-//         if (!user) {
-//             alert('Please sign in');
-//             return;
-//         }
-
-//         const reviewObj = {
-//             username: user?.username,
-//             reviewText,
-//             rating: tourRating,
-//         };
-
-//         const res = await fetch(`${BASE_URL}/review/${id}`, {
-//             method: 'POST',
-//             headers: { 'Content-Type': 'application/json' },
-//             credentials: 'include',
-//             body: JSON.stringify(reviewObj),
-//         });
-
-//         const result = await res.json();
-//         if (!res.ok) {
-//             alert(result.message); // Hiển thị "Bạn chưa đặt tour này" nếu người dùng chưa đặt tour
-//             return;
-//         }
-
-//         const newReview = {
-//             username: user.username,
-//             reviewText,
-//             rating: tourRating,
-//             createdAt: new Date().toISOString(),
-//         };
-
-//         tour.reviews = [...reviews, newReview];
-//         reviewMsgRef.current.value = '';
-//         setTourRating(null);
-
-//     } catch (err) {
-//         alert(err.message);
-//     }
-// };
 
 
   useEffect(() => {
