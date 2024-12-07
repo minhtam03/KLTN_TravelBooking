@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@langchain/core": "^0.3.22",
+    "@langchain/groq": "^0.1.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -15,6 +17,7 @@
     "react-slick": "^0.29.0",
     "reactstrap": "^9.1.5",
     "remixicon": "^2.5.0",
+    "sass": "^1.82.0",
     "slick-carousel": "^1.8.1",
     "web-vitals": "^2.1.4"
   },
