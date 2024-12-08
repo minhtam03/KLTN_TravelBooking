@@ -51,4 +51,15 @@ const tourSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+tourSchema.statics.getAvailableTours = async function (destination) {
+  try {
+      return await this.find({ city: destination });
+  } catch (error) {
+      console.error("Error fetching available tours: ", error);
+      throw new Error('Error fetching available tours');
+  }
+};
+
+const Tour = mongoose.model('Tour', tourSchema);
+
 export default mongoose.model("Tour", tourSchema);
