@@ -41,7 +41,7 @@ flightSchema.statics.getAvailableFlights = async function (departure, destinatio
       return await this.find({
           departureCity: departure,
           arrivalCity: destination,
-          departureDate: { $gte: new Date(startDate) },
+          // departureDate: { $gte: new Date(startDate) },
       });
   } catch (error) {
       console.error("Error fetching available flights: ", error);

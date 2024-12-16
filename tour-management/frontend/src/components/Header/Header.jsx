@@ -34,6 +34,10 @@ const nav__links = [
   {
     path:'/history',
     display:'History'
+  },
+  {
+    path:'/suggestion',
+    display:'Suggestion'
   }
 ]
 
@@ -101,7 +105,7 @@ const Header = () => {
               
               {
                 user? ( <>
-                  <h5 className='mb-0'>{user.username}</h5>
+                  <p className='mb-0 username'>{user.username}</p>
                   <Button className='btn btn-dark' onClick={logout}>
                     Logout
                   </Button>

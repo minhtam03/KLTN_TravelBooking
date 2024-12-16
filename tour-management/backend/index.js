@@ -12,6 +12,7 @@ import bookingRoute from './routes/bookings.js'
 import flightRoute from './routes/flights.js'
 import hotelRoute from './routes/hotels.js'
 import suggestionRoute from './routes/suggestions.js'
+import postRoute from './routes/posts.js'
 
 dotenv.config()
 const app = express()
@@ -48,6 +49,7 @@ app.use('/api/v1/booking', bookingRoute)
 app.use('/api/v1/flights', flightRoute)
 app.use('/api/v1/hotels', hotelRoute)
 app.use('/api/v1/suggestions', suggestionRoute)
+app.use('/api/v1/posts', postRoute)
 
 app.listen(port, () => {
     connect()

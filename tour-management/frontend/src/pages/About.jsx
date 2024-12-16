@@ -1,8 +1,12 @@
 import React from 'react'
+import { Container } from 'reactstrap'
+import CommonSection from '../shared/CommonSection'
 
 const About = () => {
   return (
-    <div>About</div>
+    <Container>
+      <CommonSection  title={"About"}/>
+    </Container>
   )
 }
 
