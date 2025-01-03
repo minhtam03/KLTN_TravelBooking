@@ -28,9 +28,18 @@ export const getSuggestions = async (req, res) => {
                     // Check if the total cost is within the budget
                     if (estimatedCost.total <= budget) {
                         options.push({
-                            tour: tour.title,
-                            flight: flight.airline,
-                            hotel: hotel.hotelName,
+                            tour: { title: tour.title, desc: tour.desc },
+                            flight: {
+                                flightNumber: flight.flightNumber,
+                                airline: flight.airline,
+                                airplaneType: flight.airplaneType,
+                                departureDate: flight.departureDate,
+                                class: flight.class
+                            },
+                            hotel: {
+                                hotelName: hotel.hotelName, 
+                                amenities: hotel.amenities
+                            },
                             totalCost: estimatedCost.total,
                             estimatedDetails: estimatedCost
                         });

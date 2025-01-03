@@ -6,6 +6,10 @@ const flightSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
+    flightNumber: {
+      type: String,
+      required: true,
+    },
     arrivalCity: {
       type: String,
       required: true,
@@ -23,15 +27,19 @@ const flightSchema = new mongoose.Schema({
       required: true,
     },
     flightTime: {
-      type: String,  // "2 hours", "3 hours 30 minutes", etc.
+      type: String,  
       required: true,
     },
     duration: {
-      type: String,  // "Direct", "1 Stop", etc.
+      type: String,  
       required: true,
     },
     airplaneType: {
       type: String,
+      required: true,
+    },
+    class: {
+      type: String, 
       required: true,
     },
 });
