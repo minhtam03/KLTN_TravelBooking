@@ -16,6 +16,7 @@ export const getSuggestions = async (req, res) => {
         console.log('Tours:', tours);
         console.log('Flights:', flights);
         console.log('Hotels:', hotels);
+        console.log("end");
         
         // Find the best options within budget
         const options = [];
@@ -28,17 +29,19 @@ export const getSuggestions = async (req, res) => {
                     // Check if the total cost is within the budget
                     if (estimatedCost.total <= budget) {
                         options.push({
-                            tour: { title: tour.title, desc: tour.desc },
+                            tour: { title: tour.title, desc: tour.desc, price: tour.price },
                             flight: {
                                 flightNumber: flight.flightNumber,
                                 airline: flight.airline,
                                 airplaneType: flight.airplaneType,
                                 departureDate: flight.departureDate,
-                                class: flight.class
+                                class: flight.class,
+                                price: flight.price * 2,
                             },
                             hotel: {
                                 hotelName: hotel.hotelName, 
-                                amenities: hotel.amenities
+                                amenities: hotel.amenities,
+                                price: hotel.pricePerNight * duration,
                             },
                             totalCost: estimatedCost.total,
                             estimatedDetails: estimatedCost
