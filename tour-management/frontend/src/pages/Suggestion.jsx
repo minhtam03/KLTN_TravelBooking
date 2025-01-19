@@ -23,8 +23,21 @@ const Suggestion = () => {
   const [selectedHotel, setSelectedHotel] = useState(null);
   const [totalCost, setTotalCost] = useState(0);
 
+  const isOptionDisabled = (type, option) => {
+    let tempTotalCost = totalCost;
+
+    if (type === 'tour') {
+      tempTotalCost = (option?.price || 0) + (selectedFlight?.price || 0) + (selectedHotel?.price || 0);
+    } else if (type === 'flight') {
+      tempTotalCost = (selectedTour?.price || 0) + (option?.price || 0) + (selectedHotel?.price || 0);
+    } else if (type === 'hotel') {
+      tempTotalCost = (selectedTour?.price || 0) + (selectedFlight?.price || 0) + (option?.price || 0);
+    }
+
+    return tempTotalCost > budget;
+  };
+
   const handleSubmit = async () => {
-    // Reset total cost and selections
     setTotalCost(0);
     setSelectedTour(null);
     setSelectedFlight(null);
@@ -58,7 +71,6 @@ const Suggestion = () => {
 
       const data = await response.json();
 
-      // Filter unique tours, flights, and hotels
       const uniqueTours = Array.from(
         new Map(data.options.map((item) => [item.tour.title, item.tour])).values()
       );
@@ -85,7 +97,6 @@ const Suggestion = () => {
     let newFlight = selectedFlight;
     let newHotel = selectedHotel;
 
-    // Update selection based on type
     if (type === 'tour') {
       newTour = value;
       setSelectedTour(value);
@@ -97,7 +108,6 @@ const Suggestion = () => {
       setSelectedHotel(value);
     }
 
-    // Calculate total cost
     const total =
       (newTour?.price || 0) +
       (newFlight?.price || 0) +
@@ -210,7 +220,8 @@ const Suggestion = () => {
                       <MenuItem
                         key={index}
                         value={tour}
-                        disabled={tour.price > budget}
+                        disabled={isOptionDisabled('tour', tour)}
+                        title={isOptionDisabled('tour', tour) ? "This option exceeds your budget" : ""}
                       >
                         {tour.title} - ${tour.price}
                       </MenuItem>
@@ -229,7 +240,8 @@ const Suggestion = () => {
                       <MenuItem
                         key={index}
                         value={flight}
-                        disabled={flight.price > budget}
+                        disabled={isOptionDisabled('flight', flight)}
+                        title={isOptionDisabled('flight', flight) ? "This option exceeds your budget" : ""}
                       >
                         {flight.flightNumber} - ${flight.price}
                       </MenuItem>
@@ -248,7 +260,8 @@ const Suggestion = () => {
                       <MenuItem
                         key={index}
                         value={hotel}
-                        disabled={hotel.price > budget}
+                        disabled={isOptionDisabled('hotel', hotel)}
+                        title={isOptionDisabled('hotel', hotel) ? "This option exceeds your budget" : ""}
                       >
                         {hotel.hotelName} - ${hotel.price}
                       </MenuItem>
