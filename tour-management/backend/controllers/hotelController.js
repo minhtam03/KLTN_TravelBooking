@@ -1,5 +1,6 @@
 import Hotel from '../models/Hotel.js'
 
+// create new hotel
 export const createHotel = async (req, res) => {
     const newHotel = new Hotel(req.body)
     try {
@@ -21,3 +22,11 @@ export const createHotel = async (req, res) => {
             })
     }
 }
+
+// update hotel
+
+// delete hotel
+
+// getSingle hotel
+
+// getAll hotel

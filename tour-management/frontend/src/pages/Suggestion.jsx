@@ -119,39 +119,44 @@ const Suggestion = () => {
   return (
     <Container>
       <CommonSection title={"Suggestion"} />
-      <Box sx={{ padding: 3 }}>
-        <Typography variant="h4" gutterBottom>
+      <Box sx={{ padding: 4, backgroundColor: '#f9f9f9', borderRadius: 2 }}>
+        <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', color: '#333', fontWeight: 'bold' }}>
           Search Tours, Flights, and Hotels
         </Typography>
 
-        <Grid container spacing={3}>
+        <Grid container spacing={4} sx={{ marginBottom: 3 }}>
           <Grid item xs={12} sm={6}>
-            <TextField
+          <TextField
               fullWidth
               label="Budget"
-              type="number"
+              type="text"
               value={budget}
-              onChange={(e) => setBudget(Number(e.target.value))}
+              onChange={(e) => setBudget(e.target.value)}
               disabled={loading}
+              variant="outlined"
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth
               label="Duration (Days)"
-              type="number"
+              type="text"
               value={duration}
-              onChange={(e) => setDuration(Number(e.target.value))}
+              onChange={(e) => setDuration((e.target.value))}
               disabled={loading}
+              variant="outlined"
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel>Departure</InputLabel>
+            <FormControl fullWidth sx={{ borderColor: '#ccc', borderWidth: 1, borderRadius: 1 }}>
+              <InputLabel id="select-departure">Departure</InputLabel>
               <Select
+                labelId="select-departure"
+                label="Departure"
                 value={departure}
                 onChange={(e) => setDeparture(e.target.value)}
                 disabled={loading}
+                renderValue={(selected) => selected || "Select a departure"}
               >
                 {provinces.map((province) => (
                   <MenuItem key={province} value={province}>
@@ -162,12 +167,15 @@ const Suggestion = () => {
             </FormControl>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel>Destination</InputLabel>
+            <FormControl fullWidth sx={{ borderColor: '#ccc', borderWidth: 1, borderRadius: 1 }}>
+              <InputLabel id="select-destination">Destination</InputLabel>
               <Select
+                labelId="select-destination"
+                label="Destination"
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}
                 disabled={loading}
+                renderValue={(selected) => selected || "Select a destination"}
               >
                 {provinces.map((province) => (
                   <MenuItem key={province} value={province}>
@@ -188,31 +196,35 @@ const Suggestion = () => {
                 shrink: true,
               }}
               disabled={loading}
+              variant="outlined"
             />
           </Grid>
         </Grid>
 
         <Button
           variant="contained"
-          sx={{ marginTop: 3 }}
+          color="primary"
+          sx={{ marginTop: 2, fontWeight: 'bold', fontSize: '1rem', padding: '0.75rem' }}
           fullWidth
           onClick={handleSubmit}
           disabled={loading}
         >
-          {loading ? <CircularProgress size={24} /> : 'Search'}
+          {loading ? <CircularProgress size={24} color="inherit" /> : 'Search'}
         </Button>
 
         {results.tours && results.tours.length > 0 && (
           <Box sx={{ marginTop: 3 }}>
-            <Typography variant="h5" gutterBottom>
+            <Typography variant="h5" gutterBottom sx={{ color: '#444', fontWeight: 'medium' }}>
               Results:
             </Typography>
 
-            <Grid container spacing={3}>
+            <Grid container spacing={4}>
               <Grid item xs={12} sm={6}>
                 <FormControl fullWidth>
-                  <InputLabel>Tour</InputLabel>
+                  <InputLabel id="select-tour">Tour</InputLabel>
                   <Select
+                    labelId="select-tour"
+                    label="Tour"
                     value={selectedTour || ''}
                     onChange={(e) => handleSelect('tour', e.target.value)}
                   >
@@ -231,8 +243,10 @@ const Suggestion = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <FormControl fullWidth>
-                  <InputLabel>Flight</InputLabel>
+                  <InputLabel id="select-flight">Flight</InputLabel>
                   <Select
+                    labelId="select-flight"
+                    label="Flight"
                     value={selectedFlight || ''}
                     onChange={(e) => handleSelect('flight', e.target.value)}
                   >
@@ -251,8 +265,10 @@ const Suggestion = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <FormControl fullWidth>
-                  <InputLabel>Hotel</InputLabel>
+                  <InputLabel id="select-hotel">Hotel</InputLabel>
                   <Select
+                    labelId="select-hotel"
+                    label="Hotel"
                     value={selectedHotel || ''}
                     onChange={(e) => handleSelect('hotel', e.target.value)}
                   >
@@ -271,7 +287,7 @@ const Suggestion = () => {
               </Grid>
             </Grid>
 
-            <Typography variant="h6" sx={{ marginTop: 3 }}>
+            <Typography variant="h6" sx={{ marginTop: 3, color: '#555' }}>
               Total Cost: <strong>${totalCost}</strong>
             </Typography>
           </Box>
