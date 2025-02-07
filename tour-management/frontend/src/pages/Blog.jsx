@@ -5,10 +5,14 @@ import CommonSection from '../shared/CommonSection'
 
 const Blog = () => {
   return (
-    <Container className="blog">
+    <>
       <CommonSection title={"Blog"}/>
-      <PostList/>
-    </Container>
+      <Container>
+         <PostList/>
+      </Container>
+     
+    </>
+    
   )
 }
 

@@ -4,9 +4,11 @@ import CommonSection from '../shared/CommonSection'
 
 const About = () => {
   return (
-    <Container>
+    <>
       <CommonSection  title={"About"}/>
-    </Container>
+    </>
+    
+    
   )
 }
 

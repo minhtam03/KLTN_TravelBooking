@@ -4,9 +4,10 @@ import CommonSection from '../shared/CommonSection'
 
 const Flights = () => {
   return (
-    <Container>
+    <>
       <CommonSection  title={"Flights"}/>
-    </Container>
+    </>
+    
   )
 }
 

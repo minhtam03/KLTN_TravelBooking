@@ -44,37 +44,28 @@ const BookingHistory = () => {
   }, [user]);
 
   return (
-    <Container className="booking-history">
+    <>
       <CommonSection title={"Your Booking History"}/>
+      <Container className="booking-history">
+        
 
-      {loading && <p>Loading...</p>}
-      {error && <p className="error-text">{error}</p>}
-      {!loading && bookings.length === 0 && !error && <p>No bookings found.</p>}
+        {loading && <p>Loading...</p>}
+        {error && <p className="error-text">{error}</p>}
+        {!loading && bookings.length === 0 && !error && <p>No bookings found.</p>}
 
-      {/* {bookings.length > 0 && (
-        <ListGroup>
+        
+        <Row>
           {bookings.map((booking) => (
-            <ListGroupItem key={booking._id} className="booking-item">
-              <h5>{booking.tourName}</h5>
-              <p>Full Name: {booking.fullName}</p>
-              <p>Phone: {booking.phone}</p>
-              <p>Guests: {booking.guestSize}</p>
-              <p>Booking Date: {new Date(booking.bookAt).toLocaleDateString()}</p>
-            </ListGroupItem>
+            <Col lg="3" md="6" sm="12" key={booking._id} className="mb-4">
+              <BookingCard booking={booking} />
+            </Col>
           ))}
-        </ListGroup>
-      )} */}
-      
-      <Row>
-        {bookings.map((booking) => (
-          <Col lg="3" md="6" sm="12" key={booking._id} className="mb-4">
-            <BookingCard booking={booking} />
-          </Col>
-        ))}
-      </Row>
+        </Row>
 
-    </Container>
+      </Container>
+    </>
   );
+  
 };
 
 export default BookingHistory;
