@@ -3,6 +3,7 @@ import { TextField, Button, Grid, Typography, MenuItem, Select, FormControl, Inp
 import { BASE_URL } from '../utils/config';
 import { Container } from 'reactstrap';
 import CommonSection from '../shared/CommonSection';
+import { Tooltip } from '@mui/material';
 
 const provinces = [
   'Ho Chi Minh', 'Ha Noi', 'Da Nang', 'Hai Phong', 'Can Tho',
@@ -126,7 +127,7 @@ const Suggestion = () => {
 
         <Grid container spacing={4} sx={{ marginBottom: 3 }}>
           <Grid item xs={12} sm={6}>
-          <TextField
+            <TextField
               fullWidth
               label="Budget"
               type="text"

@@ -1,12 +1,5 @@
 import React from 'react'
 import CommonSection from '../shared/CommonSection'
-import { faBed } from "@fortawesome/free-solid-svg-icons/faBed";
-import { faCalendarDays } from "@fortawesome/free-solid-svg-icons/faCalendarDays";
-import { faPerson } from "@fortawesome/free-solid-svg-icons/faPerson";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { DateRange } from "react-date-range";
-import { useContext, useState } from "react";
-import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import SearchBarStay from '../shared/SearchBarStay';
 import { Container, Row, Col } from 'reactstrap'
