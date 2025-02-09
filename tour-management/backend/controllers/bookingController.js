@@ -66,7 +66,7 @@ export const getBookingHistory = async (req, res) => {
     }
 
     try {
-        const bookings = await Booking.find({ userId });
+        const bookings = await Booking.find({ userId }).populate("tourId");
 
         if (!bookings || bookings.length === 0) {
             return res.status(404).json({

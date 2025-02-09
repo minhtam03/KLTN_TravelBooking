@@ -8,7 +8,7 @@ import { AuthContext } from '../../context/AuthContext'
 import { BASE_URL } from '../../utils/config'
 
 const Booking = ({ tour, avgRating }) => {
-    const { price, reviews, title, photo } = tour
+    const { _id, price, reviews, title, photo } = tour
     const navigate = useNavigate()
 
     const { user } = useContext(AuthContext)
@@ -16,6 +16,7 @@ const Booking = ({ tour, avgRating }) => {
     const [booking, setBooking] = useState({
         userId: user && user._id,
         userEmail: user && user.email,
+        tourId: tour && tour._id,
         tourName: title,
         fullName: '',
         phone: '',
@@ -44,6 +45,8 @@ const Booking = ({ tour, avgRating }) => {
     //     if (bookingDate < currentDate) {
     //         return alert("Booking date must be today or later.");
     //     }
+
+    //     console.log(booking);
 
     //     try {
     //         if (!user || user === undefined || user === null) {
