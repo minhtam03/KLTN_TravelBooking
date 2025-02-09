@@ -3,10 +3,10 @@ import { Container, ListGroup, ListGroupItem, Row, Col } from 'reactstrap';
 import { AuthContext } from '../context/AuthContext';
 import { BASE_URL } from '../utils/config';
 import CommonSection from '../shared/CommonSection'
-import BookingCard from '../shared/BookingCard'; 
+import BookingCard from '../shared/BookingCard';
 
 const BookingHistory = () => {
-  const { user } = useContext(AuthContext); // Lấy thông tin người dùng từ AuthContext
+  const { user } = useContext(AuthContext);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -45,15 +45,15 @@ const BookingHistory = () => {
 
   return (
     <>
-      <CommonSection title={"Your Booking History"}/>
+      <CommonSection title={"Your Booking History"} />
       <Container className="booking-history">
-        
+
 
         {loading && <p>Loading...</p>}
         {error && <p className="error-text">{error}</p>}
         {!loading && bookings.length === 0 && !error && <p>No bookings found.</p>}
 
-        
+
         <Row>
           {bookings.map((booking) => (
             <Col lg="3" md="6" sm="12" key={booking._id} className="mb-4">
@@ -65,7 +65,7 @@ const BookingHistory = () => {
       </Container>
     </>
   );
-  
+
 };
 
 export default BookingHistory;

@@ -13,6 +13,8 @@ import flightRoute from './routes/flights.js'
 import hotelRoute from './routes/hotels.js'
 import suggestionRoute from './routes/suggestions.js'
 import postRoute from './routes/posts.js'
+import paymentRoute from './routes/payment.js'
+
 
 dotenv.config()
 const app = express()
@@ -24,7 +26,7 @@ const corsOptions = {
 
 // database connection
 mongoose.set('strictQuery', false)
-const connect = async() => {
+const connect = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URI, {
             useNewUrlParser: true,
@@ -50,6 +52,7 @@ app.use('/api/v1/flights', flightRoute)
 app.use('/api/v1/hotels', hotelRoute)
 app.use('/api/v1/suggestions', suggestionRoute)
 app.use('/api/v1/posts', postRoute)
+app.use('/api/v1/payments', paymentRoute)
 
 app.listen(port, () => {
     connect()

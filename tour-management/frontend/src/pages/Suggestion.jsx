@@ -221,6 +221,8 @@ const Suggestion = () => {
 
             <Grid container spacing={4}>
               <Grid item xs={12} sm={6}>
+
+
                 <FormControl fullWidth>
                   <InputLabel id="select-tour">Tour</InputLabel>
                   <Select
@@ -228,19 +230,39 @@ const Suggestion = () => {
                     label="Tour"
                     value={selectedTour || ''}
                     onChange={(e) => handleSelect('tour', e.target.value)}
+                    renderValue={(selected) => selected?.title || "Select a tour"}
                   >
                     {results.tours.map((tour, index) => (
-                      <MenuItem
-                        key={index}
-                        value={tour}
-                        disabled={isOptionDisabled('tour', tour)}
-                        title={isOptionDisabled('tour', tour) ? "This option exceeds your budget" : ""}
-                      >
-                        {tour.title} - ${tour.price}
+                      <MenuItem key={index} value={tour} disabled={isOptionDisabled('tour', tour)}>
+                        <Tooltip
+                          title={
+                            <Box sx={{ p: 2, maxWidth: 300 }}>
+                              {/* Hiển thị ảnh của tour */}
+                              <Box
+                                component="img"
+                                src={tour.photo}
+                                alt={tour.title}
+                                sx={{ width: '100%', height: 'auto', borderRadius: 2, mb: 1 }}
+                              />
+
+                              {/* Hiển thị giá tour */}
+                              <Typography variant="body1" fontWeight="bold">Price: ${tour.price}</Typography>
+
+                              {/* Hiển thị mô tả tour */}
+                              <Typography variant="body2" sx={{ mt: 1, whiteSpace: 'pre-line' }}>
+                                {tour.desc}
+                              </Typography>
+                            </Box>
+                          }
+                          placement="right"
+                        >
+                          <span>{tour.title} - ${tour.price}</span>
+                        </Tooltip>
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
+
               </Grid>
               <Grid item xs={12} sm={6}>
                 <FormControl fullWidth>
@@ -250,15 +272,32 @@ const Suggestion = () => {
                     label="Flight"
                     value={selectedFlight || ''}
                     onChange={(e) => handleSelect('flight', e.target.value)}
+                    renderValue={(selected) => selected?.flightNumber || "Select a flight"}
                   >
                     {results.flights.map((flight, index) => (
-                      <MenuItem
-                        key={index}
-                        value={flight}
-                        disabled={isOptionDisabled('flight', flight)}
-                        title={isOptionDisabled('flight', flight) ? "This option exceeds your budget" : ""}
-                      >
-                        {flight.flightNumber} - ${flight.price}
+                      <MenuItem key={index} value={flight} disabled={isOptionDisabled('flight', flight)}>
+                        <Tooltip
+                          title={
+                            <Box sx={{ p: 2, maxWidth: 300 }}>
+                              {/* Hiển thị giá vé */}
+                              <Typography variant="body1" fontWeight="bold">Price: ${flight.price}</Typography>
+
+                              {/* Hiển thị hãng hàng không */}
+                              <Typography variant="body2">Airline: {flight.airline}</Typography>
+
+                              {/* Hiển thị ngày khởi hành */}
+                              <Typography variant="body2">
+                                Departure Date: {new Date(flight.departureDate).toLocaleDateString()}
+                              </Typography>
+
+                              {/* Hiển thị hạng ghế */}
+                              <Typography variant="body2">Class: {flight.class}</Typography>
+                            </Box>
+                          }
+                          placement="right"
+                        >
+                          <span>{flight.flightNumber} - ${flight.price}</span>
+                        </Tooltip>
                       </MenuItem>
                     ))}
                   </Select>
@@ -272,19 +311,31 @@ const Suggestion = () => {
                     label="Hotel"
                     value={selectedHotel || ''}
                     onChange={(e) => handleSelect('hotel', e.target.value)}
+                    renderValue={(selected) => selected?.hotelName || "Select a hotel"}
                   >
                     {results.hotels.map((hotel, index) => (
-                      <MenuItem
-                        key={index}
-                        value={hotel}
-                        disabled={isOptionDisabled('hotel', hotel)}
-                        title={isOptionDisabled('hotel', hotel) ? "This option exceeds your budget" : ""}
-                      >
-                        {hotel.hotelName} - ${hotel.price}
+                      <MenuItem key={index} value={hotel} disabled={isOptionDisabled('hotel', hotel)}>
+                        {
+                          console.log("hotel: ", hotel)
+                        }
+                        <Tooltip
+                          title={
+                            <Box sx={{ p: 2, maxWidth: 300 }}>
+                              <Typography variant="body1" fontWeight="bold">Price per Night: ${hotel.price}</Typography>
+
+                              <Typography variant="body2">Stars: {hotel.stars} ⭐</Typography>
+                              <Typography variant="body2">Rooms Available: {hotel.roomsAvailable}</Typography>
+                            </Box>
+                          }
+                          placement="right"
+                        >
+                          <span>{hotel.hotelName} - ${hotel.pricePerNight}/night</span>
+                        </Tooltip>
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
+
               </Grid>
             </Grid>
 
