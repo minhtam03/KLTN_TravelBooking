@@ -15,6 +15,7 @@ import BookingHistory from '../pages/BookingHistory'
 import Suggestion from '../pages/Suggestion'
 import SearchResultListHotel from '../pages/SearchResultListHotel'
 import HotelDetails from '../pages/HotelDetails'
+import BookingDetail from '../pages/BookingDetail'
 
 const Routers = () => {
   return (
@@ -35,6 +36,8 @@ const Routers = () => {
       <Route path='/suggestion' element={<Suggestion />} />
       <Route path='/hotels' element={<SearchResultListHotel />} />
       <Route path='/hotels/single' element={<HotelDetails />} />
+      <Route path='/history/:bookingId' element={<BookingDetail />} />
+
     </Routes>
   )
 }

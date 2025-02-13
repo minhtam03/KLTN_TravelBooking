@@ -4,6 +4,7 @@ import { BASE_URL } from '../utils/config';
 import { Container } from 'reactstrap';
 import CommonSection from '../shared/CommonSection';
 import { Tooltip } from '@mui/material';
+import CustomTooltip from '../components/Tooltip/Tooltip';
 
 const provinces = [
   'Ho Chi Minh', 'Ha Noi', 'Da Nang', 'Hai Phong', 'Can Tho',
@@ -32,7 +33,7 @@ const Suggestion = () => {
     } else if (type === 'flight') {
       tempTotalCost = (selectedTour?.price || 0) + (option?.price || 0) + (selectedHotel?.price || 0);
     } else if (type === 'hotel') {
-      tempTotalCost = (selectedTour?.price || 0) + (selectedFlight?.price || 0) + (option?.price || 0);
+      tempTotalCost = (selectedTour?.price || 0) + (selectedFlight?.price || 0) + (option?.pricePerNight * duration || 0);
     }
 
     return tempTotalCost > budget;
@@ -112,7 +113,7 @@ const Suggestion = () => {
     const total =
       (newTour?.price || 0) +
       (newFlight?.price || 0) +
-      (newHotel?.price || 0);
+      (newHotel?.pricePerNight * duration || 0);
 
     setTotalCost(total);
   };
@@ -234,30 +235,9 @@ const Suggestion = () => {
                   >
                     {results.tours.map((tour, index) => (
                       <MenuItem key={index} value={tour} disabled={isOptionDisabled('tour', tour)}>
-                        <Tooltip
-                          title={
-                            <Box sx={{ p: 2, maxWidth: 300 }}>
-                              {/* Hiển thị ảnh của tour */}
-                              <Box
-                                component="img"
-                                src={tour.photo}
-                                alt={tour.title}
-                                sx={{ width: '100%', height: 'auto', borderRadius: 2, mb: 1 }}
-                              />
 
-                              {/* Hiển thị giá tour */}
-                              <Typography variant="body1" fontWeight="bold">Price: ${tour.price}</Typography>
+                        <CustomTooltip title={tour.title} image={tour.photo} details={[`Price: $${tour.price}`, tour.desc]} price={tour.price} />
 
-                              {/* Hiển thị mô tả tour */}
-                              <Typography variant="body2" sx={{ mt: 1, whiteSpace: 'pre-line' }}>
-                                {tour.desc}
-                              </Typography>
-                            </Box>
-                          }
-                          placement="right"
-                        >
-                          <span>{tour.title} - ${tour.price}</span>
-                        </Tooltip>
                       </MenuItem>
                     ))}
                   </Select>
@@ -276,28 +256,8 @@ const Suggestion = () => {
                   >
                     {results.flights.map((flight, index) => (
                       <MenuItem key={index} value={flight} disabled={isOptionDisabled('flight', flight)}>
-                        <Tooltip
-                          title={
-                            <Box sx={{ p: 2, maxWidth: 300 }}>
-                              {/* Hiển thị giá vé */}
-                              <Typography variant="body1" fontWeight="bold">Price: ${flight.price}</Typography>
+                        <CustomTooltip title={flight.flightNumber} details={[`Price: $${flight.price}`, `Airline: ${flight.airline}`, `Departure Date: ${new Date(flight.departureDate).toLocaleDateString()}`, `Class: ${flight.class}`]} price={flight.price} />
 
-                              {/* Hiển thị hãng hàng không */}
-                              <Typography variant="body2">Airline: {flight.airline}</Typography>
-
-                              {/* Hiển thị ngày khởi hành */}
-                              <Typography variant="body2">
-                                Departure Date: {new Date(flight.departureDate).toLocaleDateString()}
-                              </Typography>
-
-                              {/* Hiển thị hạng ghế */}
-                              <Typography variant="body2">Class: {flight.class}</Typography>
-                            </Box>
-                          }
-                          placement="right"
-                        >
-                          <span>{flight.flightNumber} - ${flight.price}</span>
-                        </Tooltip>
                       </MenuItem>
                     ))}
                   </Select>
@@ -318,19 +278,7 @@ const Suggestion = () => {
                         {
                           console.log("hotel: ", hotel)
                         }
-                        <Tooltip
-                          title={
-                            <Box sx={{ p: 2, maxWidth: 300 }}>
-                              <Typography variant="body1" fontWeight="bold">Price per Night: ${hotel.price}</Typography>
-
-                              <Typography variant="body2">Stars: {hotel.stars} ⭐</Typography>
-                              <Typography variant="body2">Rooms Available: {hotel.roomsAvailable}</Typography>
-                            </Box>
-                          }
-                          placement="right"
-                        >
-                          <span>{hotel.hotelName} - ${hotel.pricePerNight}/night</span>
-                        </Tooltip>
+                        <CustomTooltip title={hotel.hotelName} details={[`Price per Night: $${hotel.pricePerNight}`, `Stars: ${hotel.stars} ⭐`, `Rooms Available: ${hotel.roomsAvailable}`]} price={hotel.pricePerNight * duration} />
                       </MenuItem>
                     ))}
                   </Select>
