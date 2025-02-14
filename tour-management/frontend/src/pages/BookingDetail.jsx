@@ -11,6 +11,7 @@ const BookingDetail = () => {
     const [booking, setBooking] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const serviceFee = 10
 
     useEffect(() => {
         const fetchBookingDetail = async () => {
@@ -63,7 +64,7 @@ const BookingDetail = () => {
                     <p><strong>Price per person:</strong> ${booking.tourId?.price}</p>
                     <p><strong>Date:</strong> {new Date(booking.bookAt).toLocaleDateString()}</p>
                     <p><strong>Guest:</strong> {booking.guestSize} people</p>
-                    <p><strong>Total Payment:</strong> ${booking.guestSize * booking.tourId?.price}</p>
+                    <p><strong>Total Payment:</strong> ${booking.guestSize * booking.tourId?.price + serviceFee}</p>
                     <p><strong>Booked by:</strong> {booking.fullName} ({booking.userEmail})</p>
                     <p><strong>Contact Number:</strong> {booking.phone}</p>
                     <p><strong>Payment Status:</strong> {booking.paymentStatus || "Pending"}</p>

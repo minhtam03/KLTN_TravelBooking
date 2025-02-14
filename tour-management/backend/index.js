@@ -38,11 +38,13 @@ const connect = async () => {
     }
 }
 
+app.use('/api/v1/payments/webhook', express.raw({ type: 'application/json' }), paymentRoute);
 
 // middleware
 app.use(express.json())
 app.use(cors(corsOptions))
 app.use(cookieParser())
+
 app.use('/api/v1/auth', authRoute)
 app.use('/api/v1/tours', tourRoute)
 app.use('/api/v1/users', userRoute)
@@ -53,6 +55,7 @@ app.use('/api/v1/hotels', hotelRoute)
 app.use('/api/v1/suggestions', suggestionRoute)
 app.use('/api/v1/posts', postRoute)
 app.use('/api/v1/payments', paymentRoute)
+
 
 app.listen(port, () => {
     connect()

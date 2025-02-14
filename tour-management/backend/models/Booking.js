@@ -32,7 +32,17 @@ const bookingSchema = new mongoose.Schema(
     bookAt: {
       type: Date,
       required: true
-    }
+    },
+    paymentId: {
+      type: mongoose.Schema.Types.ObjectId, // Liên kết với bảng Payment
+      ref: "Payment",
+      default: null,
+    },
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "paid", "failed"], // Trạng thái thanh toán
+      default: "pending",
+    },
   },
   { timestamps: true }
 );

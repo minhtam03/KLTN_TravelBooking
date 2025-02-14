@@ -13,7 +13,8 @@ const BookingCard = ({ booking }) => {
   // Lấy thông tin từ `tourId` sau khi populate
   const tourName = tourId?.title || "Unknown Tour";
   const tourPhoto = tourId?.photo || defaultImg;
-  const tourPrice = tourId?.price || "Unknown Price"
+  const tourPrice = tourId?.price || "Unknown Price";
+  const serviceFee = 10
 
   const handleClick = () => {
     navigate(`/history/${_id}`); // Chuyển đến trang chi tiết booking
@@ -31,7 +32,7 @@ const BookingCard = ({ booking }) => {
           <div className="booking__details">
             <p><i className="ri-calendar-line"></i> {bookAt ? new Date(bookAt).toLocaleDateString() : "Unknown Date"}</p>
             <p><i className="ri-user-line"></i> Guest: {guestSize} {guestSize > 1 ? "people" : "person"}</p>
-            <p><i className="ri-money-dollar-circle-line"></i> Total payment: ${tourPrice}</p>
+            <p><i className="ri-money-dollar-circle-line"></i> Total payment: ${tourPrice * guestSize + serviceFee}</p>
           </div>
         </CardBody>
       </Card>

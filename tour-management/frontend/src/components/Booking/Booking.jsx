@@ -36,38 +36,6 @@ const Booking = ({ tour, avgRating }) => {
 
 
     // send data to the server
-    // const handleClick = async (e) => {
-    //     e.preventDefault();
-
-    //     const currentDate = new Date().setHours(0, 0, 0, 0);
-    //     const bookingDate = new Date(booking.bookAt).setHours(0, 0, 0, 0);
-
-    //     if (bookingDate < currentDate) {
-    //         return alert("Booking date must be today or later.");
-    //     }
-
-    //     console.log(booking);
-
-    //     try {
-    //         if (!user || user === undefined || user === null) {
-    //             return alert("Please sign in");
-    //         }
-
-    //         const res = await fetch(`${BASE_URL}/booking`, {
-    //             method: "post",
-    //             headers: {
-    //                 "content-type": "application/json",
-    //             },
-    //             credentials: "include",
-    //             body: JSON.stringify(booking),
-    //         });
-
-    //         navigate('/thank-you');
-
-    //     } catch (err) {
-    //         alert(err.message);
-    //     }
-    // };
 
     const handleClick = async (e) => {
         e.preventDefault();
@@ -101,11 +69,22 @@ const Booking = ({ tour, avgRating }) => {
 
             console.log("Booking response:", result);
 
-            // Gửi request thanh toán (Chỉ lấy dữ liệu cần thiết)
+            // **LẤY bookingId từ phản hồi API**
+            const bookingId = result?.data?._id;
+
+            if (!bookingId) {
+                return alert("Failed to create booking.");
+            }
+
+            // **Chuẩn bị dữ liệu thanh toán**
             const paymentData = {
-                title: booking.tourName,
-                price: booking.tourPrice,
+                bookingId: bookingId,  // Đã lấy từ response booking
+                userId: booking.userId,
+                tourName: booking.tourName, // Đảm bảo khớp với backend
+                price: totalAmount,  // Đã bao gồm phí dịch vụ
             };
+
+            console.log("Sending payment request:", paymentData);
 
             const resPayment = await fetch(`${BASE_URL}/payments`, {
                 method: "POST",

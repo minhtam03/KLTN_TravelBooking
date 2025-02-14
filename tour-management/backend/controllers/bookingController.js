@@ -22,7 +22,7 @@ export const createBooking = async (req, res) => {
 export const getBooking = async (req, res) => {
     const id = req.params.id
     try {
-        const book = await Booking.findById(id).populate("tourId")
+        const book = await Booking.findById(id).populate("tourId").populate("paymentId");
         res.status(200).json({
             success: true,
             message: "Successful",
