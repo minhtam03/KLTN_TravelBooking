@@ -1,5 +1,6 @@
 import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
+
 import Home from '../pages/Home'
 import Tours from '../pages/Tours'
 import TourDetails from '../pages/TourDetails'
@@ -17,9 +18,16 @@ import SearchResultListHotel from '../pages/SearchResultListHotel'
 import HotelDetails from '../pages/HotelDetails'
 import BookingDetail from '../pages/BookingDetail'
 
+import AdminLayout from '../components/Layout/AdminLayout'
+import HomeAdmin from '../pages/admin/home/HomeAdmin'
+import New from '../pages/admin/new/New'
+import List from '../pages/admin/list/List'
+import Single from '../pages/admin/single/Single'
+
 const Routers = () => {
   return (
     <Routes>
+      {/* Routes dành cho user */}
       <Route path='/' element={<Navigate to="/home" />} />
       <Route path='/home' element={<Home />} />
       <Route path='/tours' element={<Tours />} />
@@ -37,6 +45,15 @@ const Routers = () => {
       <Route path='/hotels' element={<SearchResultListHotel />} />
       <Route path='/hotels/single' element={<HotelDetails />} />
       <Route path='/history/:bookingId' element={<BookingDetail />} />
+
+      {/* Routes dành cho admin */}
+      <Route path='/admin/' element={<HomeAdmin />} />
+      <Route path='/admin/home' element={<HomeAdmin />} />
+      <Route path='/admin/users' element={<List />} />
+      <Route path='/admin/users/:id' element={<Single />} />
+      <Route path='/admin/users/new' element={<New />} />
+
+
 
     </Routes>
   )

@@ -1,0 +1,21 @@
+.list {
+    display: flex;
+
+
+    .listContainer {
+        margin-top: 0px;
+        flex: 6;
+        display: flex;
+        /* Thêm dòng này */
+        flex-direction: column;
+
+        justify-content: flex-start;
+        /* Đẩy nội dung lên trên */
+        height: 100vh;
+        /* Đảm bảo toàn bộ chiều cao */
+        padding-top: 0;
+        /* Đảm bảo không có khoảng trống trên */
+
+
+    }
+}
