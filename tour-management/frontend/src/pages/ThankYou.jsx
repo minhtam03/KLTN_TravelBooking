@@ -54,7 +54,6 @@ const ThankYou = () => {
                 return alert("Failed to update payment status: " + result.message);
             }
 
-            alert("Payment successful! Your booking is confirmed.");
         } catch (error) {
             console.error("Error updating payment status:", error);
             alert("Something went wrong. Please contact support.");

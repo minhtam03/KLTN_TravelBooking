@@ -38,7 +38,7 @@ const connect = async () => {
     }
 }
 
-app.use('/api/v1/payments/webhook', express.raw({ type: 'application/json' }), paymentRoute);
+// app.use('/api/v1/payments/webhook', express.raw({ type: 'application/json' }), paymentRoute);
 
 // middleware
 app.use(express.json())

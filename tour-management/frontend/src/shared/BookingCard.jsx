@@ -7,7 +7,7 @@ import defaultImg from "../assets/images/tour-img04.jpg"; // Ảnh mặc định
 import { useNavigate } from 'react-router-dom';
 
 const BookingCard = ({ booking }) => {
-  const { _id, guestSize, bookAt, tourId } = booking;
+  const { _id, guestSize, bookAt, tourId, createdAt, paymentStatus } = booking;
   const navigate = useNavigate();
 
   // Lấy thông tin từ `tourId` sau khi populate
@@ -30,9 +30,12 @@ const BookingCard = ({ booking }) => {
         <CardBody>
           <h5 className="booking__title">{tourName}</h5>
           <div className="booking__details">
-            <p><i className="ri-calendar-line"></i> {bookAt ? new Date(bookAt).toLocaleDateString() : "Unknown Date"}</p>
-            <p><i className="ri-user-line"></i> Guest: {guestSize} {guestSize > 1 ? "people" : "person"}</p>
+            <p><i className="ri-calendar-line"></i> Tour Date: {bookAt ? new Date(bookAt).toLocaleDateString() : "Unknown Date"}</p>
+            {/* <p><i className="ri-calendar-line"></i> Booking Date: {new Date(createdAt).toLocaleDateString()}</p> */}
+            {/* <p><i className="ri-user-line"></i> Guest: {guestSize} {guestSize > 1 ? "people" : "person"}</p> */}
             <p><i className="ri-money-dollar-circle-line"></i> Total payment: ${tourPrice * guestSize + serviceFee}</p>
+            <p><i className="ri-calendar-line"></i> Payment Status: {paymentStatus}</p>
+
           </div>
         </CardBody>
       </Card>

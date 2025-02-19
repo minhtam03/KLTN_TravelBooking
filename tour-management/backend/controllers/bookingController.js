@@ -55,8 +55,44 @@ export const getAllBooking = async (req, res) => {
 }
 
 
-export const getBookingHistory = async (req, res) => {
-    const userId = req.user?.id; // Đảm bảo userId có tồn tại
+// export const getBookingHistory = async (req, res) => {
+//     const userId = req.user?.id; // Đảm bảo userId có tồn tại
+
+//     if (!userId) {
+//         return res.status(401).json({
+//             success: false,
+//             message: "Unauthorized: No user ID found in token",
+//         });
+//     }
+
+//     try {
+//         const bookings = await Booking.find({ userId }).populate("tourId");
+
+//         if (!bookings || bookings.length === 0) {
+//             return res.status(404).json({
+//                 success: false,
+//                 message: "No bookings found for this user",
+//             });
+//         }
+
+//         res.status(200).json({
+//             success: true,
+//             message: "Successful",
+//             data: bookings,
+//         });
+//     } catch (error) {
+//         res.status(500).json({
+//             success: false,
+//             message: error.name === "MongoNetworkError" ? "Database connection error" : "Internal server error",
+//         });
+//     }
+// };
+
+
+
+// Get total count of bookings for a specific user (for pagination)
+export const getBookingCount = async (req, res) => {
+    const userId = req.user?.id;
 
     if (!userId) {
         return res.status(401).json({
@@ -66,19 +102,47 @@ export const getBookingHistory = async (req, res) => {
     }
 
     try {
-        const bookings = await Booking.find({ userId }).populate("tourId");
+        const count = await Booking.countDocuments({ userId }); // Đếm số lượng booking của user đó
+        res.status(200).json({
+            success: true,
+            message: "User booking count retrieved",
+            count
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+};
 
-        if (!bookings || bookings.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "No bookings found for this user",
-            });
-        }
+// Get booking history for a specific user with pagination
+export const getBookingHistory = async (req, res) => {
+    const userId = req.user?.id;
+
+    if (!userId) {
+        return res.status(401).json({
+            success: false,
+            message: "Unauthorized: No user ID found in token",
+        });
+    }
+
+    const page = parseInt(req.query.page) || 0; // Trang hiện tại (mặc định là 0)
+    const limit = 8; // Số lượng booking mỗi trang
+
+    try {
+        const totalBookings = await Booking.countDocuments({ userId }); // Chỉ tính số lượng booking của user đó
+        const bookings = await Booking.find({ userId })
+            .populate("tourId")
+            .sort({ createdAt: -1 }) // Sắp xếp theo thời gian đặt mới nhất
+            .skip(page * limit) // Bỏ qua các phần tử của trang trước đó
+            .limit(limit); // Giới hạn số lượng mỗi trang
 
         res.status(200).json({
             success: true,
             message: "Successful",
             data: bookings,
+            totalBookings, // Tổng số booking của user đó để tính số trang
         });
     } catch (error) {
         res.status(500).json({
