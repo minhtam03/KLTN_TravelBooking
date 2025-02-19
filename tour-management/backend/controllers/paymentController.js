@@ -36,7 +36,7 @@ export const createPayment = async (req, res) => {
                 },
             ],
             mode: 'payment',
-            success_url: 'http://localhost:3000/thank-you',
+            success_url: 'http://localhost:3000/thank-you?session_id={CHECKOUT_SESSION_ID}',
             cancel_url: 'http://localhost:3000/payment-failed'
         })
 
@@ -77,42 +77,93 @@ export const createPayment = async (req, res) => {
 }
 
 
-export const stripeWebhook = async (req, res) => {
-    const sig = req.headers["stripe-signature"];
-    let event;
+// export const stripeWebhook = async (req, res) => {
+//     const sig = req.headers["stripe-signature"];
+//     let event;
 
-    console.log(" Webhook received. Headers:", req.headers);
+//     console.log(" Webhook received. Headers:", req.headers);
 
+//     try {
+//         event = stripe.webhooks.constructEvent(
+//             req.body,
+//             sig,
+//             process.env.STRIPE_WEBHOOK_SECRET
+//         );
+//         console.log(" Webhook verified successfully!");
+//     } catch (err) {
+//         return res.status(400).json({ success: false, message: "Webhook error", error: err.message });
+//     }
+
+//     console.log("Webhook Event Type:", event.type);
+//     console.log("Webhook Data:", event.data.object);
+
+//     // Xử lý sự kiện thanh toán thành công
+//     if (event.type === "checkout.session.completed") {
+//         const session = event.data.object;
+//         const payment = await Payment.findOne({ transactionId: session.id });
+
+//         if (payment) {
+//             // Cập nhật trạng thái thanh toán thành công
+//             payment.status = "success";
+//             await payment.save();
+
+//             // Cập nhật trạng thái booking là "paid"
+//             await Booking.findByIdAndUpdate(payment.bookingId, {
+//                 paymentStatus: "paid",
+//             });
+//         }
+//     }
+
+//     res.status(200).json({ success: true, message: "Webhook received" });
+// };
+
+
+export const updatePaymentStatus = async (req, res) => {
     try {
-        event = stripe.webhooks.constructEvent(
-            req.body,
-            sig,
-            process.env.STRIPE_WEBHOOK_SECRET
-        );
-        console.log(" Webhook verified successfully!");
-    } catch (err) {
-        return res.status(400).json({ success: false, message: "Webhook error", error: err.message });
-    }
+        const { transactionId } = req.body;
 
-    console.log("Webhook Event Type:", event.type);
-    console.log("Webhook Data:", event.data.object);
-
-    // Xử lý sự kiện thanh toán thành công
-    if (event.type === "checkout.session.completed") {
-        const session = event.data.object;
-        const payment = await Payment.findOne({ transactionId: session.id });
-
-        if (payment) {
-            // Cập nhật trạng thái thanh toán thành công
-            payment.status = "success";
-            await payment.save();
-
-            // Cập nhật trạng thái booking là "paid"
-            await Booking.findByIdAndUpdate(payment.bookingId, {
-                paymentStatus: "paid",
+        if (!transactionId) {
+            return res.status(400).json({
+                success: false,
+                message: "Missing transaction ID",
             });
         }
-    }
 
-    res.status(200).json({ success: true, message: "Webhook received" });
+        // Tìm thanh toán theo transactionId
+        const payment = await Payment.findOne({ transactionId });
+
+        if (!payment) {
+            return res.status(404).json({
+                success: false,
+                message: "Payment not found",
+            });
+        }
+
+        if (payment.status === "success") {
+            return res.status(400).json({
+                success: false,
+                message: "Payment is already successful",
+            });
+        }
+
+        // Cập nhật trạng thái thanh toán
+        payment.status = "success";
+        await payment.save();
+
+        // Cập nhật trạng thái booking tương ứng
+        await Booking.findByIdAndUpdate(payment.bookingId, {
+            paymentStatus: "paid",
+        });
+
+        res.status(200).json({
+            success: true,
+            message: "Payment status updated successfully",
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+            error: error.message,
+        });
+    }
 };
