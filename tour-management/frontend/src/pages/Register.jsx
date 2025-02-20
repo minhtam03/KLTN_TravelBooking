@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react'
+import React, { useState, useContext } from 'react'
 import { Container, Row, Col, Form, FormGroup, Button } from 'reactstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import '../styles/login.css'
@@ -14,13 +14,13 @@ const Register = () => {
     username: undefined,
     email: undefined,
     password: undefined
-})
+  })
 
-const {dispatch} = useContext(AuthContext)
-const navigate = useNavigate()
+  const { dispatch } = useContext(AuthContext)
+  const navigate = useNavigate()
 
   const handleChange = e => {
-    setCredentials(prev=>({...prev, [e.target.id]:e.target.value}))
+    setCredentials(prev => ({ ...prev, [e.target.id]: e.target.value }))
   }
 
   const handleClick = async e => {
@@ -37,7 +37,7 @@ const navigate = useNavigate()
 
       if (!res.ok) alert(result.message)
 
-      dispatch({type:'REGISTER_SUCCESS'})
+      dispatch({ type: 'REGISTER_SUCCESS' })
       navigate("/login")
 
     } catch (error) {
@@ -54,7 +54,7 @@ const navigate = useNavigate()
               <div className='login__img'>
                 <img src={registerImg} alt="" />
               </div>
-            
+
 
               <div className='login__form'>
                 <div className='user'>
@@ -64,17 +64,17 @@ const navigate = useNavigate()
                 <Form onSubmit={handleClick}>
                   <FormGroup>
                     <input type="text" placeholder='Username' required id='username'
-                    onChange={handleChange}/>
+                      onChange={handleChange} />
                   </FormGroup>
 
                   <FormGroup>
                     <input type="text" placeholder='Email' required id='email'
-                    onChange={handleChange}/>
+                      onChange={handleChange} />
                   </FormGroup>
-                  
+
                   <FormGroup>
                     <input type="password" placeholder='Password' required id='password'
-                    onChange={handleChange}/>
+                      onChange={handleChange} />
                   </FormGroup>
 
                   <Button className="btn secondary__btn auth__btn" type='submit'>
@@ -82,8 +82,8 @@ const navigate = useNavigate()
                   </Button>
                 </Form>
                 <p>Already have an account
-                    <Link to='/login'>Login</Link>
-                  </p>
+                  <Link to='/login'>Login</Link>
+                </p>
               </div>
             </div>
           </Col>

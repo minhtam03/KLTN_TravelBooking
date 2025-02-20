@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Button, Grid, Typography, MenuItem, Select, FormControl, InputLabel, Box, CircularProgress } from '@mui/material';
 import { BASE_URL } from '../utils/config';
 import { Container } from 'reactstrap';
@@ -24,6 +24,27 @@ const Suggestion = () => {
   const [selectedFlight, setSelectedFlight] = useState(null);
   const [selectedHotel, setSelectedHotel] = useState(null);
   const [totalCost, setTotalCost] = useState(0);
+
+  useEffect(() => {
+    // Nếu results.tours, results.flights, results.hotels đã có dữ liệu
+    if (results.tours?.length > 0) {
+      setSelectedTour(results.tours[0]);
+    }
+    if (results.flights?.length > 0) {
+      setSelectedFlight(results.flights[0]);
+    }
+    if (results.hotels?.length > 0) {
+      setSelectedHotel(results.hotels[0]);
+    }
+
+    // Tính total cost mặc định
+    const initialTotal =
+      (results.tours?.[0]?.price || 0) +
+      (results.flights?.[0]?.price || 0) +
+      ((results.hotels?.[0]?.pricePerNight || 0) * duration || 0);
+
+    setTotalCost(!isNaN(initialTotal) ? initialTotal : 0);
+  }, [results, duration]);
 
   const isOptionDisabled = (type, option) => {
     let tempTotalCost = totalCost;

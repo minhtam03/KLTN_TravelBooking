@@ -1,24 +1,36 @@
+import bcrypt from 'bcryptjs';
 import User from '../models/User.js'
 
 // create new User
 
 export const createUser = async (req, res) => {
-    const newUser = new User(req.body)
+    // const newUser = new User(req.body)
     try {
+        // hashing password
+        const salt = bcrypt.genSaltSync(10)
+        const hash = bcrypt.hashSync(req.body.password, salt)
+
+        const newUser = new User({
+            username: req.body.username,
+            email: req.body.email,
+            password: hash,
+            role: req.body.role,
+            // photo: req.body.photo
+        })
         const savedUser = await newUser.save()
 
         res
-            .status(200)    
+            .status(200)
             .json({
                 success: true,
                 message: "Successfully created",
                 data: savedUser,
             })
     } catch (error) {
-        res 
+        res
             .status(500)
             .json({
-                success:false,
+                success: false,
                 message: "Failed to create. Try again"
             })
     }
@@ -32,7 +44,7 @@ export const updateUser = async (req, res) => {
     try {
         const updatedUser = await User.findByIdAndUpdate(id, {
             $set: req.body
-        }, {new: true})
+        }, { new: true })
         res.status(200).json({
             success: true,
             message: "Successfully updated",

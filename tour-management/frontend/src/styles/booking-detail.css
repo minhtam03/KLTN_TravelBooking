@@ -101,3 +101,7 @@
 .booking-actions .btn-success:hover {
     background: #1e7e34;
 }
+
+.tour-link {
+    text-decoration: none;
+}

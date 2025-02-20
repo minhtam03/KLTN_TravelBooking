@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Container } from "reactstrap";
 import { AuthContext } from "../context/AuthContext";
 import { BASE_URL } from "../utils/config";
@@ -99,7 +99,12 @@ const BookingDetail = () => {
                     <img src={booking.tourId?.photo || ""} alt={booking.tourId?.title || "Tour Image"} />
                 </div>
                 <div className="booking-detail__info">
-                    <h3>{booking.tourId?.title}</h3>
+                    {/* <h3>{booking.tourId?.title}</h3> */}
+                    <h3>
+                        <Link to={`/tours/${booking.tourId?._id}`} className="tour-link">
+                            {booking.tourId?.title}
+                        </Link>
+                    </h3>
                     <p><strong>Booked by:</strong> {booking.fullName} ({booking.userEmail})</p>
                     <p><strong>Contact Number:</strong> {booking.phone}</p>
 

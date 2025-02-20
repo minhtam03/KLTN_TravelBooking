@@ -11,12 +11,22 @@ import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import SettingsSystemDaydreamOutlinedIcon from "@mui/icons-material/SettingsSystemDaydreamOutlined";
 import PsychologyOutlinedIcon from "@mui/icons-material/PsychologyOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // import { DarkModeContext } from "../../context/darkModeContext";
-import { useContext } from "react";
+import React, { useRef, useEffect, useContext } from "react";
+import { AuthContext } from "../../../context/AuthContext";
+import { Button } from "@mui/material";
 
 const Sidebar = () => {
     // const { dispatch } = useContext();
+    const navigate = useNavigate()
+    const { user, dispatch } = useContext(AuthContext)
+
+    const logout = () => {
+        dispatch({ type: 'LOGOUT' })
+        navigate('/')
+    }
+
     return (
         <div className="sidebar">
             <div className="top">
@@ -58,7 +68,7 @@ const Sidebar = () => {
                         <LocalShippingIcon className="icon" />
                         <span>Rooms</span>
                     </li>
-                    <p className="title">USEFUL</p>
+                    {/* <p className="title">USEFUL</p>
                     <li>
                         <InsertChartIcon className="icon" />
                         <span>Stats</span>
@@ -66,8 +76,8 @@ const Sidebar = () => {
                     <li>
                         <NotificationsNoneIcon className="icon" />
                         <span>Notifications</span>
-                    </li>
-                    <p className="title">SERVICE</p>
+                    </li> */}
+                    {/* <p className="title">SERVICE</p>
                     <li>
                         <SettingsSystemDaydreamOutlinedIcon className="icon" />
                         <span>System Health</span>
@@ -75,7 +85,7 @@ const Sidebar = () => {
                     <li>
                         <PsychologyOutlinedIcon className="icon" />
                         <span>Logs</span>
-                    </li>
+                    </li> */}
                     <li>
                         <SettingsApplicationsIcon className="icon" />
                         <span>Settings</span>
@@ -87,7 +97,10 @@ const Sidebar = () => {
                     </li>
                     <li>
                         <ExitToAppIcon className="icon" />
-                        <span>Logout</span>
+                        {/* <Button onClick={logout}>
+                            Logout
+                        </Button > */}
+                        <span onClick={logout}>Logout</span>
                     </li>
                 </ul>
             </div>

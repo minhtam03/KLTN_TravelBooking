@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react'
+import React, { useState, useContext } from 'react'
 import { Container, Row, Col, Form, FormGroup, Button } from 'reactstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import '../styles/login.css'
@@ -17,18 +17,18 @@ const Login = () => {
   })
 
 
-  const {dispatch} = useContext(AuthContext)
+  const { dispatch } = useContext(AuthContext)
   const navigate = useNavigate()
 
 
   const handleChange = e => {
-    setCredentials(prev=>({...prev, [e.target.id]:e.target.value}))
+    setCredentials(prev => ({ ...prev, [e.target.id]: e.target.value }))
   }
 
   const handleClick = async e => {
     e.preventDefault()
 
-    dispatch({type:'LOGIN_START'})
+    dispatch({ type: 'LOGIN_START' })
 
     try {
       const res = await fetch(`${BASE_URL}/auth/login`, {
@@ -36,21 +36,26 @@ const Login = () => {
         headers: {
           'content-type': 'application/json'
         },
-        credentials:'include',
+        credentials: 'include',
         body: JSON.stringify(credentials)
       })
 
       const result = await res.json()
-      
+
       if (!res.ok) alert(result.message)
 
       console.log(result.data)
 
-      dispatch({type:'LOGIN_SUCCESS', payload:result.data})
-      navigate('/')
+      dispatch({ type: 'LOGIN_SUCCESS', payload: result.data })
+      // navigate('/')
+      if (result.role === "admin") {
+        navigate("/admin/home"); // Điều hướng admin
+      } else {
+        navigate("/"); // Điều hướng user bình thường
+      }
 
     } catch (err) {
-      dispatch({type:'LOGIN_FAILURE', payload:err.message})
+      dispatch({ type: 'LOGIN_FAILURE', payload: err.message })
     }
   }
 
@@ -63,7 +68,7 @@ const Login = () => {
               <div className='login__img'>
                 <img src={loginImg} alt="" />
               </div>
-            
+
 
               <div className='login__form'>
                 <div className='user'>
@@ -73,12 +78,12 @@ const Login = () => {
                 <Form onSubmit={handleClick}>
                   <FormGroup>
                     <input type="text" placeholder='Email' required id='email'
-                    onChange={handleChange}/>
+                      onChange={handleChange} />
                   </FormGroup>
 
                   <FormGroup>
                     <input type="password" placeholder='Password' required id='password'
-                    onChange={handleChange}/>
+                      onChange={handleChange} />
                   </FormGroup>
 
                   <Button className="btn secondary__btn auth__btn" type='submit'>
@@ -86,8 +91,8 @@ const Login = () => {
                   </Button>
                 </Form>
                 <p>Don't have an account
-                    <Link to='/register'>Create</Link>
-                  </p>
+                  <Link to='/register'>Create</Link>
+                </p>
               </div>
             </div>
           </Col>

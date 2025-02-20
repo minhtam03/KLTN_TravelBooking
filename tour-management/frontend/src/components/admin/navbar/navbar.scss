@@ -66,6 +66,21 @@
                     right: -5px;
                 }
             }
+
+            .username {
+                border-radius: 20px;
+                /* Bo tròn */
+                border: 1px solid #ccc;
+                /* Viền xám nhạt */
+                padding: 6px 12px;
+
+                &:hover {
+                    background-color: #f5f5f5;
+                    /* Hiệu ứng hover */
+                }
+
+                cursor: pointer;
+            }
         }
     }
 }
