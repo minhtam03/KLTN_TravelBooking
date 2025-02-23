@@ -8,6 +8,8 @@ import useFetch from '../hooks/useFetch';
 import '../styles/tour-details.css';
 import calculateAvgRating from '../utils/avgRating';
 import { BASE_URL } from '../utils/config';
+import useReview from '../hooks/useReview';
+import ReviewSummary from '../components/ReviewSummary/ReviewSummary';
 
 const TourDetails = () => {
   const { id } = useParams();
@@ -238,12 +240,11 @@ const TourDetails = () => {
                     </Form>
 
                     <ListGroup className="user__reviews">
-                      {reviews?.map((review) => (
+                      {reviews?.slice().reverse().map((review) => ( // Đảo ngược mảng reviews
                         <div className="review__item" key={review.createdAt}>
                           <img src={avatar} alt="" />
                           <div className="w-100">
-                            <div
-                              className="d-flex align-items-center justify-content-between">
+                            <div className="d-flex align-items-center justify-content-between">
                               <div>
                                 <h5>{review.username}</h5>
                                 <p>{new Date(review.createdAt).toLocaleDateString('en-US', options)}</p>

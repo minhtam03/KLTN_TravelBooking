@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { TextField, Button, Grid, Typography, MenuItem, Select, FormControl, InputLabel, Box, CircularProgress } from '@mui/material';
 import { BASE_URL } from '../utils/config';
 import { Container } from 'reactstrap';
 import CommonSection from '../shared/CommonSection';
 import { Tooltip } from '@mui/material';
 import CustomTooltip from '../components/Tooltip/Tooltip';
+import { AuthContext } from '../context/AuthContext';
 
 const provinces = [
   'Ho Chi Minh', 'Ha Noi', 'Da Nang', 'Hai Phong', 'Can Tho',
@@ -13,6 +14,8 @@ const provinces = [
 ];
 
 const Suggestion = () => {
+  const { user } = useContext(AuthContext);
+  const userId = user?._id || '';
   const [budget, setBudget] = useState('');
   const [duration, setDuration] = useState('');
   const [departure, setDeparture] = useState('');
@@ -65,13 +68,14 @@ const Suggestion = () => {
     setSelectedTour(null);
     setSelectedFlight(null);
     setSelectedHotel(null);
-    if (!budget || !duration || !departure || !destination || !startDate) {
-      return alert('Please fill in all fields!');
+    if (!budget || !duration || !departure || !startDate) {
+      return alert('Please fill in fields!');
     }
 
     if (budget <= 0) {
       return alert('Budget must be greater than 0!');
     }
+    console.log("User is: ", user)
 
     setLoading(true);
     try {
@@ -80,7 +84,7 @@ const Suggestion = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ budget, duration, departure, destination, startDate }),
+        body: JSON.stringify({ budget, duration, departure, destination, startDate, userId }),
       });
 
       if (!response.ok) {
@@ -143,9 +147,9 @@ const Suggestion = () => {
     <Container>
       <CommonSection title={"Suggestion"} />
       <Box sx={{ padding: 4, backgroundColor: '#f9f9f9', borderRadius: 2 }}>
-        <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', color: '#333', fontWeight: 'bold' }}>
+        {/* <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', color: '#333', fontWeight: 'bold' }}>
           Search Tours, Flights, and Hotels
-        </Typography>
+        </Typography> */}
 
         <Grid container spacing={4} sx={{ marginBottom: 3 }}>
           <Grid item xs={12} sm={6}>
@@ -232,7 +236,7 @@ const Suggestion = () => {
           onClick={handleSubmit}
           disabled={loading}
         >
-          {loading ? <CircularProgress size={24} color="inherit" /> : 'Search'}
+          {loading ? <CircularProgress size={24} color="inherit" /> : 'Suggest'}
         </Button>
 
         {results.tours && results.tours.length > 0 && (

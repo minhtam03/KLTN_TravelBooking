@@ -8,5 +8,6 @@ const router = express.Router();
 
 // create new tour
 router.post("/suggest", getSuggestions)
+// router.get("/suggested-destination/:userId", getSuggestedDestination)
 
 export default router
