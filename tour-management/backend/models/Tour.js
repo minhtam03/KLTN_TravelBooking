@@ -27,6 +27,10 @@ const tourSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    duration: {
+      type: Number,
+      required: true,
+    },
     price: {
       type: Number,
       required: true,
@@ -51,12 +55,12 @@ const tourSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-tourSchema.statics.getAvailableTours = async function (destination) {
+tourSchema.statics.getAvailableTours = async function (destination, duration) {
   try {
-      return await this.find({ city: destination });
+    return await this.find({ city: destination, duration: duration });
   } catch (error) {
-      console.error("Error fetching available tours: ", error);
-      throw new Error('Error fetching available tours');
+    console.error("Error fetching available tours: ", error);
+    throw new Error('Error fetching available tours');
   }
 };
 

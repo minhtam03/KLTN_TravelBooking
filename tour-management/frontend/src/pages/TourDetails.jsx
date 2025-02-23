@@ -8,9 +8,6 @@ import useFetch from '../hooks/useFetch';
 import '../styles/tour-details.css';
 import calculateAvgRating from '../utils/avgRating';
 import { BASE_URL } from '../utils/config';
-// import { GoogleGenerativeAI } from "@google/generative-ai";
-import { HumanMessage } from "@langchain/core/messages";
-import { ChatGroq } from "@langchain/groq";
 
 const TourDetails = () => {
   const { id } = useParams();
@@ -27,82 +24,71 @@ const TourDetails = () => {
   // Format date
   const options = { day: 'numeric', month: 'long', year: 'numeric' };
 
-  // Get summary from API
-  const getSummary = async (reviews) => {
+  // API lấy summary từ backend
+  const fetchSummary = async () => {
+    try {
+      const res = await fetch(`${BASE_URL}/review/summary/${id}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
 
-    const model = new ChatGroq({
-      apiKey: process.env.REACT_APP_API_KEY, // Default value.
-    });
+      const result = await res.json();
 
-    const message = new HumanMessage(`
-          Summarize the following reviews:
-          ${reviews.join('\n')}
-          
-          Summarize the following reviews briefly and usefully. 
-          Structure the summary into three separate paragraphs: one for the positive aspects, one for the negative aspects, and one for general user impressions. 
-          Each paragraph should be short and to the point, include two sentences 
-        `);
-      
-    const res = await model.invoke([message]);
-
-    if (res && res.content) {
-      return res.content;
+      if (result.success) {
+        setSummary(result.summary);
+      } else {
+        setSummary('Không thể tải tóm tắt đánh giá.');
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy tóm tắt đánh giá:", error);
+      setSummary('Không thể tải tóm tắt đánh giá.');
     }
-    
-    // Return res if content is missing to help with error debugging
-    return res;
+  };
+
+  // Gọi API lấy summary khi component được tải
+  useEffect(() => {
+    if (id) {
+      fetchSummary();
+    }
+  }, [id]);
+
+  // Gọi API lấy summary khi có review mới
+  const handleNewReview = async () => {
+    await fetchSummary(); // Gọi lại API để cập nhật tóm tắt
   };
 
 
-  useEffect(() => {
-    if (reviews && reviews.length > 0) {
-      (async function () {
-        try {
-          const summaryText = await getSummary(reviews.map((review) => review.reviewText));
-          console.log("API Summary Content:", summaryText);
-  
-          if (summaryText) {
-            setSummary(summaryText);
-          } else {
-            console.error("Unexpected summary structure:", summaryText);
-            setSummary('Unable to load summary.');
-          }
-        } catch (error) {
-          console.error("Error in fetching summary:", error);
-          setSummary('Unable to load summary.');
-        }
-      })();
-    }
-  }, [reviews]);
-
   // Updated renderSummary function
-const renderSummary = () => {
-  if (summary) {
-    // Split summary text into sections based on known headers
-    const positive = summary.match(/Positive Aspects:\s*(.*?)(?=Negative Aspects:|$)/s)?.[1]?.trim();
-    const negative = summary.match(/Negative Aspects:\s*(.*?)(?=General User Impressions:|$)/s)?.[1]?.trim();
-    const impression = summary.match(/General User Impressions:\s*(.*?)(?=$)/s)?.[1]?.trim();
+  const renderSummary = () => {
+    if (summary) {
+      // Loại bỏ các dấu * bằng cách thay thế chúng bằng khoảng trắng hoặc chuỗi rỗng
+      const cleanedSummary = summary.replace(/\*/g, "").trim();
 
-    return (
-      <div className="review__summary">
-        <div>
-          <h6>Positive Reviews:</h6>
-          <p>{positive || 'No positive reviews yet.'}</p>
-        </div>
-        <div>
-          <h6>Negative Reviews:</h6>
-          <p>{negative || 'No negative reviews yet.'}</p>
-        </div>
-        <div>
-          <h6>Overall Impression:</h6>
-          <p>{impression || 'No overall impression yet.'}</p>
-        </div>
-      </div>
-    );
-  }
+      // Tách summary thành các đoạn khác nhau dựa trên các tiêu đề
+      const positive = cleanedSummary.match(/Positive Aspects:\s*(.*?)(?=Negative Aspects:|$)/s)?.[1]?.trim();
+      const negative = cleanedSummary.match(/Negative Aspects:\s*(.*?)(?=General User Impressions:|$)/s)?.[1]?.trim();
+      const impression = cleanedSummary.match(/General User Impressions:\s*(.*?)(?=$)/s)?.[1]?.trim();
 
-  return <p>Loading summary...</p>;
-};
+      return (
+        <div className="review__summary">
+          <div>
+            <h6>Positive Reviews:</h6>
+            <p>{positive || 'No positive reviews yet.'}</p>
+          </div>
+          <div>
+            <h6>Negative Reviews:</h6>
+            <p>{negative || 'No negative reviews yet.'}</p>
+          </div>
+          <div>
+            <h6>Overall Impression:</h6>
+            <p>{impression || 'No overall impression yet.'}</p>
+          </div>
+        </div>
+      );
+    }
+
+    return <p>Loading summary...</p>;
+  };
 
 
   const submitHandler = async (e) => {
@@ -169,6 +155,10 @@ const renderSummary = () => {
       tour.reviews = [...reviews, newReview];
       reviewMsgRef.current.value = '';
       setTourRating(null);
+
+      // update summary after add review
+      handleNewReview();
+
     } catch (err) {
       alert(err.message);
     }
@@ -177,6 +167,8 @@ const renderSummary = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [tour]);
+
+
 
   return (
     <>
