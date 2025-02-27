@@ -4,6 +4,7 @@
     padding: 20px;
     width: 100%;
 
+
     .datatableTitle {
         width: 100%;
         font-size: 24px;
@@ -87,5 +88,11 @@
             cursor: pointer;
             line-height: 30px;
         }
+
     }
+}
+
+.MuiDataGrid-cell:focus,
+.MuiDataGrid-cell:active {
+    outline: none !important;
 }

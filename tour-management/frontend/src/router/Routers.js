@@ -23,7 +23,8 @@ import HomeAdmin from '../pages/admin/home/HomeAdmin'
 import New from '../pages/admin/new/New'
 import List from '../pages/admin/list/List'
 import Single from '../pages/admin/single/Single'
-import { userInputs } from '../resource/datatableSource'
+import { userInputs, tourInputs } from '../resource/formSource'
+import { userColumns, tourColumns, hotelColumns } from '../resource/datatableSource'
 
 const Routers = () => {
   return (
@@ -51,14 +52,17 @@ const Routers = () => {
       <Route path='/admin/' element={<HomeAdmin />} />
       <Route path='/admin/home' element={<HomeAdmin />} />
 
-      {/* <Route path='/admin/users' element={<List />} />
-      <Route path='/admin/users/:id' element={<Single />} />
-      <Route path='/admin/users/new' element={<New />} /> */}
-
       <Route path='/admin/users'>
-        <Route index element={<List />} />
+        <Route index element={<List columns={userColumns} />} />
         <Route path=':id' element={<Single />} />
         <Route path='new' element={<New inputs={userInputs} title="Add New User" />} />
+
+      </Route>
+
+      <Route path='/admin/tours'>
+        <Route index element={<List columns={tourColumns} />} />
+        <Route path=':id' element={<Single />} />
+        <Route path='new' element={<New inputs={tourInputs} title="Add New Tour" />} />
 
       </Route>
 
