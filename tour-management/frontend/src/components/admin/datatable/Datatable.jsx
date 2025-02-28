@@ -5,28 +5,6 @@ import './datatable.scss'
 import { BASE_URL } from '../../../utils/config'
 import useFetch from '../../../hooks/useFetch'
 
-const columnsConfig = {
-    users: [
-        { field: '_id', headerName: 'ID', width: 200 },
-        { field: 'username', headerName: 'User Name', width: 200 },
-        { field: 'email', headerName: 'Email', width: 200 },
-        { field: 'role', headerName: 'Role', width: 150 },
-    ],
-    tours: [
-        { field: '_id', headerName: 'ID', width: 120 },
-        { field: 'title', headerName: 'Title', width: 200 },
-        { field: 'city', headerName: 'City', width: 150 },
-        { field: 'address', headerName: 'Address', width: 150 },
-        { field: 'price', headerName: 'Price ($)', width: 120 },
-    ],
-    hotels: [
-        { field: '_id', headerName: 'ID', width: 120 },
-        { field: 'name', headerName: 'Hotel Name', width: 200 },
-        { field: 'city', headerName: 'City', width: 150 },
-        { field: 'rating', headerName: 'Rating', width: 100 },
-    ],
-}
-
 
 const Datatable = ({ columns }) => {
     const location = useLocation()
@@ -120,7 +98,6 @@ const Datatable = ({ columns }) => {
                 key={path}
                 className="datagrid"
                 rows={rows}
-                // columns={(columnsConfig[path] || []).concat(actionColumn)}
                 columns={columns.concat(actionColumn)}
 
                 getRowId={(row) => row._id}

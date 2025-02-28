@@ -20,3 +20,30 @@ export const hotelColumns = [
     { field: 'city', headerName: 'City', width: 150 },
     { field: 'rating', headerName: 'Rating', width: 100 },
 ]
+
+export const bookingColumns = [
+    { field: '_id', headerName: 'ID', width: 200 },
+    { field: 'userEmail', headerName: 'User Email', width: 200 },
+    { field: 'tourName', headerName: 'Tour Name', width: 200 },
+    { field: 'fullName', headerName: 'Full Name', width: 180 },
+    { field: 'guestSize', headerName: 'Guest Size', width: 150, type: 'number' },
+    { field: 'phone', headerName: 'Phone', width: 150 },
+    { field: 'bookAt', headerName: 'Booking Date', width: 180, type: 'date' },
+    {
+        field: 'paymentStatus',
+        headerName: 'Payment Status',
+        width: 150,
+        renderCell: (params) => {
+            let color = "gray";
+            if (params.value === "paid") color = "green";
+            else if (params.value === "pending") color = "goldenrod";
+            else if (params.value === "failed") color = "red";
+
+            return (
+                <span style={{ color, fontWeight: "bold" }}>
+                    {params.value.toUpperCase()}
+                </span>
+            );
+        }
+    }
+];

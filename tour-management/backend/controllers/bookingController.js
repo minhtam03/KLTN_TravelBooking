@@ -52,6 +52,7 @@ export const getAllBooking = async (req, res) => {
             message: "Internal server error",
         })
     }
+
 }
 
 
@@ -148,6 +149,35 @@ export const getBookingHistory = async (req, res) => {
         res.status(500).json({
             success: false,
             message: error.name === "MongoNetworkError" ? "Database connection error" : "Internal server error",
+        });
+    }
+};
+
+
+export const getAllBookingsWithAmount = async (req, res) => {
+    try {
+        const bookings = await Booking.find()
+            .populate("paymentId") // Lấy thông tin Payment của booking
+            .sort({ createdAt: -1 }); // Sắp xếp theo thời gian đặt mới nhất
+
+        console.log("Bookings data:", bookings);
+
+        // Map dữ liệu và thêm trường amount từ Payment
+        const bookingsWithAmount = bookings.map(booking => ({
+            ...booking._doc,
+            amount: booking.paymentId ? booking.paymentId.amount : 0, // Nếu có paymentId thì lấy amount, nếu không thì 0
+        }));
+
+        res.status(200).json({
+            success: true,
+            message: "Successfully retrieved bookings with payment amounts",
+            data: bookingsWithAmount,
+        });
+    } catch (error) {
+        console.error("Error fetching bookings with payment amounts:", error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
         });
     }
 };
