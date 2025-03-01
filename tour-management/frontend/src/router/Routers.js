@@ -23,6 +23,7 @@ import HomeAdmin from '../pages/admin/home/HomeAdmin'
 import New from '../pages/admin/new/New'
 import List from '../pages/admin/list/List'
 import Single from '../pages/admin/single/Single'
+import Edit from '../pages/admin/edit/Edit'
 import { userInputs, tourInputs } from '../resource/formSource'
 import { userColumns, tourColumns, hotelColumns } from '../resource/datatableSource'
 
@@ -56,6 +57,7 @@ const Routers = () => {
         <Route index element={<List columns={userColumns} />} />
         <Route path=':id' element={<Single />} />
         <Route path='new' element={<New inputs={userInputs} title="Add New User" />} />
+        <Route path=":id/edit" element={<Edit inputs={userInputs} title="Edit User" />} />
 
       </Route>
 
@@ -63,6 +65,7 @@ const Routers = () => {
         <Route index element={<List columns={tourColumns} />} />
         <Route path=':id' element={<Single />} />
         <Route path='new' element={<New inputs={tourInputs} title="Add New Tour" />} />
+        <Route path=":id/edit" element={<Edit inputs={tourInputs} title="Edit Tour" />} />
 
       </Route>
 

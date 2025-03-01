@@ -1,23 +1,62 @@
 import "./widget.scss";
+import { useState, useEffect } from "react";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
+import { BASE_URL } from "../../../utils/config";
+import { useNavigate, Link } from "react-router-dom";
+import { faL } from "@fortawesome/free-solid-svg-icons";
 
 const Widget = ({ type }) => {
-    let data;
+    const navigate = useNavigate()
+    const [data, setData] = useState(null);
+    const [growth, setGrowth] = useState(null);
 
-    //temporary
-    const amount = 100;
-    const diff = 20;
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await fetch(`${BASE_URL}/stats/widget-data`);
+                if (!res.ok) throw new Error("Failed to fetch widget data");
+                const result = await res.json();
+                setData(result.data);
+            } catch (error) {
+                console.error("Error fetching widget data:", error);
+            }
+        };
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        const fetchGrowth = async () => {
+            try {
+                const res = await fetch(`${BASE_URL}/stats/growth`);
+                if (!res.ok) throw new Error("Failed to fetch growth");
+                const result = await res.json();
+                setGrowth(result.data[type]);
+            } catch (error) {
+                console.error("Error fetching user growth:", error);
+            }
+        };
+        fetchGrowth();
+    }, [type]);
+
+    let widgetData;
+
+    if (!data) {
+        return <div>Loading...</div>;
+    }
 
     switch (type) {
         case "user":
-            data = {
+            widgetData = {
                 title: "USERS",
                 isMoney: false,
+                amount: data.user,
                 link: "See all users",
+                url: "/admin/users",
                 icon: (
                     <PersonOutlinedIcon
                         className="icon"
@@ -29,11 +68,13 @@ const Widget = ({ type }) => {
                 ),
             };
             break;
-        case "order":
-            data = {
-                title: "ORDERS",
+        case "booking":
+            widgetData = {
+                title: "BOOKINGS",
                 isMoney: false,
-                link: "View all orders",
+                amount: data.booking,
+                link: "View all bookings",
+                url: "/admin/bookings",
                 icon: (
                     <ShoppingCartOutlinedIcon
                         className="icon"
@@ -46,9 +87,10 @@ const Widget = ({ type }) => {
             };
             break;
         case "earning":
-            data = {
+            widgetData = {
                 title: "EARNINGS",
                 isMoney: true,
+                amount: data.earning,
                 link: "View net earnings",
                 icon: (
                     <MonetizationOnOutlinedIcon
@@ -58,11 +100,13 @@ const Widget = ({ type }) => {
                 ),
             };
             break;
-        case "balance":
-            data = {
-                title: "BALANCE",
-                isMoney: true,
-                link: "See details",
+        case "tour":
+            widgetData = {
+                title: "TOURS",
+                isMoney: false,
+                amount: data.tour,
+                link: "See all tour",
+                url: "/admin/tours",
                 icon: (
                     <AccountBalanceWalletOutlinedIcon
                         className="icon"
@@ -77,25 +121,33 @@ const Widget = ({ type }) => {
         default:
             break;
     }
+    const growthClass = growth !== null && growth < 0 ? "negative" : "positive";
+    const displayGrowth = growth !== null ? Math.abs(growth) : "Loading...";
+    const GrowthIcon = growth < 0 ? KeyboardArrowDownIcon : KeyboardArrowUpIcon;
 
     return (
         <div className="widget">
             <div className="left">
-                <span className="title">{data.title}</span>
+                <span className="title">{widgetData.title}</span>
                 <span className="counter">
-                    {data.isMoney && "$"} {amount}
+                    {widgetData.isMoney && "$"} {widgetData.amount}
                 </span>
-                <span className="link">{data.link}</span>
+                <span>
+                    <Link to={widgetData.url} className="link">
+                        {widgetData.link}
+                    </Link>
+                </span>
             </div>
             <div className="right">
-                <div className="percentage positive">
-                    <KeyboardArrowUpIcon />
-                    {diff} %
+                <div className={`percentage ${growthClass}`}>
+                    <GrowthIcon />
+                    {displayGrowth}%
                 </div>
-                {data.icon}
+                {widgetData.icon}
             </div>
         </div>
     );
 };
 
 export default Widget;
+

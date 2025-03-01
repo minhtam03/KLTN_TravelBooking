@@ -79,6 +79,10 @@ const Datatable = ({ columns }) => {
                         >
                             Delete
                         </div>
+
+                        <Link to={`/admin/${path}/${params.row._id}/edit`} style={{ textDecoration: 'none' }}>
+                            <div className="editButton">Edit</div>
+                        </Link>
                     </div>
                 )
             },

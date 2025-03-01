@@ -18,9 +18,9 @@ const HomeAdmin = () => {
                     <Navbar />
                     <div className="widgets">
                         <Widget type="user" />
-                        <Widget type="order" />
+                        <Widget type="tour" />
+                        <Widget type="booking" />
                         <Widget type="earning" />
-                        <Widget type="balance" />
                     </div>
                     <div className="charts">
                         <Featured />

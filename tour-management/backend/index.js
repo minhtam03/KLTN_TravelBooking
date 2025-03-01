@@ -14,6 +14,7 @@ import hotelRoute from './routes/hotels.js'
 import suggestionRoute from './routes/suggestions.js'
 import postRoute from './routes/posts.js'
 import paymentRoute from './routes/payment.js'
+import statRoute from './routes/stats.js'
 
 
 dotenv.config()
@@ -55,6 +56,8 @@ app.use('/api/v1/hotels', hotelRoute)
 app.use('/api/v1/suggestions', suggestionRoute)
 app.use('/api/v1/posts', postRoute)
 app.use('/api/v1/payments', paymentRoute)
+app.use('/api/v1/stats', statRoute)
+
 
 
 app.listen(port, () => {
