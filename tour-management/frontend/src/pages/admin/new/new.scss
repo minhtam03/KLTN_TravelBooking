@@ -13,6 +13,7 @@
             padding: 10px;
             margin: 20px;
             display: flex;
+            align-items: flex-start; // Đảm bảo tất cả phần tử thẳng hàng
 
             h1 {
                 color: lightgray;
@@ -21,13 +22,17 @@
 
             .left {
                 flex: 1;
-                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start; // Căn ảnh về bên trái
 
                 img {
                     width: 100px;
                     height: 100px;
                     border-radius: 50%;
                     object-fit: cover;
+                    border: 2px solid #ddd; // Viền nhẹ để nhìn rõ hơn
+                    padding: 5px;
                 }
             }
 
@@ -43,11 +48,14 @@
 
                     .formInput {
                         width: 40%;
+                        position: relative; // Cần để căn chỉnh icon mắt
 
                         label {
                             display: flex;
                             align-items: center;
                             gap: 10px;
+                            font-weight: bold;
+                            color: #444;
 
                             .icon {
                                 cursor: pointer;
@@ -56,9 +64,41 @@
 
                         input {
                             width: 100%;
-                            padding: 5px;
+                            padding: 8px;
                             border: none;
                             border-bottom: 1px solid gray;
+                            font-size: 16px;
+                            transition: border 0.3s;
+
+                            &:focus {
+                                border-bottom: 2px solid teal;
+                                outline: none;
+                            }
+                        }
+
+                        // Styling cho trường nhập mật khẩu
+                        .passwordInputWrapper {
+                            position: relative;
+                            display: flex;
+                            align-items: center;
+
+                            input {
+                                width: 100%;
+                                padding-right: 40px; // Tạo không gian cho icon mắt
+                            }
+
+                            .togglePassword {
+                                position: absolute;
+                                right: 10px;
+                                cursor: pointer;
+                                font-size: 22px;
+                                color: gray;
+                                transition: color 0.3s;
+
+                                &:hover {
+                                    color: teal;
+                                }
+                            }
                         }
                     }
 
@@ -71,6 +111,11 @@
                         font-weight: bold;
                         cursor: pointer;
                         margin-top: 10px;
+                        transition: background 0.3s ease-in-out;
+
+                        &:hover {
+                            background-color: darkcyan;
+                        }
                     }
                 }
             }

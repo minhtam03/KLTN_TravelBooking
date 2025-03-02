@@ -53,13 +53,13 @@ export const tourInputs = [
         placeholder: "10",
         name: "distance",
     },
-    {
-        id: "photo",
-        label: "Photo URL",
-        type: "text",
-        placeholder: "https://example.com/tour.jpg",
-        name: "photo",
-    },
+    // {
+    //     id: "photo",
+    //     label: "Photo URL",
+    //     type: "text",
+    //     placeholder: "https://example.com/tour.jpg",
+    //     name: "photo",
+    // },
     {
         id: "desc",
         label: "Description",

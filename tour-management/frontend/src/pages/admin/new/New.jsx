@@ -5,6 +5,8 @@ import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUpload
 import { useState } from "react";
 import { BASE_URL } from "../../../utils/config";
 import { useNavigate, useLocation } from "react-router-dom";
+import { ClassSharp, Visibility, VisibilityOff } from "@mui/icons-material";
+import axios from "axios"
 
 const New = ({ inputs, title }) => {
     const [info, setInfo] = useState({});
@@ -13,10 +15,13 @@ const New = ({ inputs, title }) => {
     const location = useLocation();
     const path = location.pathname.split("/")[2];
 
+    const [showPassword, setShowPassword] = useState(false);
+    const [file, setFile] = useState("");
+
     const [credentials, setCredentials] = useState({
         username: undefined,
         email: undefined,
-        password: undefined
+        password: undefined,
     })
 
     const handleChange = (e) => {
@@ -32,6 +37,25 @@ const New = ({ inputs, title }) => {
     const handleClick = async (e) => {
         e.preventDefault();
 
+        let photoUrl = "";
+
+        if (file) {
+            const data = new FormData();
+            data.append("file", file);
+            data.append("upload_preset", "upload");
+
+            const uploadRes = await axios.post(
+                "https://api.cloudinary.com/v1_1/djvjlojfn/image/upload",
+                data
+            );
+
+            photoUrl = uploadRes.data.url;
+            console.log(photoUrl)
+        }
+
+        const updatedInfo = { ...info, photo: photoUrl };
+        const updatedCredentials = { ...credentials, photo: photoUrl };
+
         try {
             // Gửi request tạo user
             if (path === "users") {
@@ -41,7 +65,7 @@ const New = ({ inputs, title }) => {
                         "Content-Type": "application/json",
                     },
                     credentials: 'include',
-                    body: JSON.stringify(credentials),
+                    body: JSON.stringify(updatedCredentials),
 
                 });
                 const result = await res.json();
@@ -55,7 +79,7 @@ const New = ({ inputs, title }) => {
                         "Content-Type": "application/json",
                     },
                     credentials: 'include',
-                    body: JSON.stringify(info),
+                    body: JSON.stringify(updatedInfo),
 
                 });
                 const result = await res.json();
@@ -75,8 +99,6 @@ const New = ({ inputs, title }) => {
         }
     };
 
-
-    console.log(info);
     return (
         <div className="new">
             <Sidebar />
@@ -88,10 +110,9 @@ const New = ({ inputs, title }) => {
                 <div className="bottom">
                     <div className="left">
                         <img
-                            src={
-
-                                "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
-                            }
+                            src={file ? URL.createObjectURL(file)
+                                : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"}
+                            // src={"https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"}
                             alt=""
                         />
                     </div>
@@ -104,20 +125,39 @@ const New = ({ inputs, title }) => {
                                 <input
                                     type="file"
                                     id="file"
-
+                                    onChange={e => setFile(e.target.files[0])}
                                     style={{ display: "none" }}
                                 />
                             </div>
+
                             {inputs.map((input) => (
                                 <div className="formInput" key={input.id}>
                                     <label>{input.label}</label>
-                                    <input
-                                        onChange={handleChange}
-                                        type={input.type}
-                                        placeholder={input.placeholder}
-                                        // id={input.id}
-                                        name={input.id}
-                                    />
+                                    {/* Trường hợp là password, hiển thị icon mắt */}
+                                    {input.id === "password" ? (
+                                        <div className="passwordInputWrapper">
+                                            <input
+                                                onChange={handleChange}
+                                                type={showPassword ? "text" : "password"}
+                                                placeholder={input.placeholder}
+                                                name={input.id}
+                                            />
+
+                                            <span
+                                                className="togglePassword"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                            >
+                                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                                            </span>
+                                        </div>
+                                    ) : (
+                                        <input
+                                            onChange={handleChange}
+                                            type={input.type}
+                                            placeholder={input.placeholder}
+                                            name={input.id}
+                                        />
+                                    )}
                                 </div>
                             ))}
 

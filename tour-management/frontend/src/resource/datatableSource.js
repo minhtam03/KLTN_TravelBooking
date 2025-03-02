@@ -1,7 +1,18 @@
+import { dividerClasses } from "@mui/material";
 
 export const userColumns = [
     { field: '_id', headerName: 'ID', width: 200 },
-    { field: 'username', headerName: 'User Name', width: 200 },
+    {
+        field: 'username', headerName: 'User Name', width: 200,
+        renderCell: (params) => {
+            return (
+                <div className="cellWithImg">
+                    <img className="cellImg" src={params.row.photo} alt="avatar" />
+                    {params.row.username}
+                </div>
+            )
+        }
+    },
     { field: 'email', headerName: 'Email', width: 200 },
     { field: 'role', headerName: 'Role', width: 150 },
 ]

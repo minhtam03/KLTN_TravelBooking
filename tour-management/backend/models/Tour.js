@@ -21,7 +21,6 @@ const tourSchema = new mongoose.Schema(
     },
     photo: {
       type: String,
-      required: true,
     },
     desc: {
       type: String,

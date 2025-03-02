@@ -15,7 +15,7 @@ export const createUser = async (req, res) => {
             email: req.body.email,
             password: hash,
             role: req.body.role,
-            // photo: req.body.photo
+            photo: req.body.photo
         })
         const savedUser = await newUser.save()
 
@@ -39,23 +39,54 @@ export const createUser = async (req, res) => {
 // update User
 export const updateUser = async (req, res) => {
 
-    const id = req.params.id
+    // const id = req.params.id
+
+    // try {
+    //     const updatedUser = await User.findByIdAndUpdate(id, {
+    //         $set: req.body
+    //     }, { new: true })
+    //     res.status(200).json({
+    //         success: true,
+    //         message: "Successfully updated",
+    //         data: updatedUser
+    //     })
+    // } catch (error) {
+    //     res.status(500).json({
+    //         success: false,
+    //         message: "Failed to update",
+    //     })
+    // }
+
+    const id = req.params.id;
 
     try {
+        const updateData = { ...req.body };
+
+        // Nếu không có password trong request, giữ nguyên password cũ
+        if (!updateData.password) {
+            delete updateData.password;
+        } else {
+            // Nếu có password mới, mã hóa trước khi lưu
+            const salt = bcrypt.genSaltSync(10);
+            updateData.password = bcrypt.hashSync(updateData.password, salt);
+        }
+
         const updatedUser = await User.findByIdAndUpdate(id, {
-            $set: req.body
-        }, { new: true })
+            $set: updateData
+        }, { new: true });
+
         res.status(200).json({
             success: true,
             message: "Successfully updated",
             data: updatedUser
-        })
+        });
     } catch (error) {
         res.status(500).json({
             success: false,
             message: "Failed to update",
-        })
+        });
     }
+
 }
 
 // delete User

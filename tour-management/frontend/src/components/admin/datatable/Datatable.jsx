@@ -94,7 +94,7 @@ const Datatable = ({ columns }) => {
         <div className='datatable'>
             <div className="datatableTitle">
                 <Link to={`/admin/${path}/new`} className="link">
-                    Add new {path}
+                    Add new {path.endsWith("s") ? path.slice(0, -1) : path}
                 </Link>
             </div>
 

@@ -51,11 +51,12 @@ const Login = () => {
       if (result.role === "admin") {
         navigate("/admin/home"); // Điều hướng admin
       } else {
-        navigate("/"); // Điều hướng user bình thường
+        navigate("/"); // Điều hướng user
       }
 
     } catch (err) {
       dispatch({ type: 'LOGIN_FAILURE', payload: err.message })
+      navigate("/login")
     }
   }
 
