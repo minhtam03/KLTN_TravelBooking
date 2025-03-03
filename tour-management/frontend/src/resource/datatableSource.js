@@ -7,7 +7,7 @@ export const userColumns = [
         renderCell: (params) => {
             return (
                 <div className="cellWithImg">
-                    <img className="cellImg" src={params.row.photo} alt="avatar" />
+                    <img className="cellImg" src={params.row.photo || "https://t4.ftcdn.net/jpg/08/75/45/97/360_F_875459719_8i7J3atGbsDoRPT0ZW0DjBpgAFVTrKAe.jpg"} alt="avatar" />
                     {params.row.username}
                 </div>
             )
@@ -19,9 +19,19 @@ export const userColumns = [
 
 export const tourColumns = [
     { field: '_id', headerName: 'ID', width: 120 },
-    { field: 'title', headerName: 'Title', width: 200 },
+    {
+        field: 'title', headerName: 'Title', width: 300,
+        renderCell: (params) => {
+            return (
+                <div className="cellWithImg">
+                    <img className="cellImg" src={params.row.photo || "https://png.pngtree.com/png-vector/20221125/ourmid/pngtree-no-image-available-icon-flatvector-illustration-picture-coming-creative-vector-png-image_40968940.jpg"} alt="image" />
+                    {params.row.title}
+                </div>
+            )
+        }
+    },
     { field: 'city', headerName: 'City', width: 150 },
-    { field: 'address', headerName: 'Address', width: 150 },
+    { field: 'address', headerName: 'Address', width: 200 },
     { field: 'price', headerName: 'Price ($)', width: 120 },
 ]
 
@@ -58,3 +68,8 @@ export const bookingColumns = [
         }
     }
 ];
+
+export const blogColumns = [
+
+]
+

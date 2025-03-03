@@ -10,7 +10,7 @@ import TablePagination from "@mui/material/TablePagination";
 import { useState, useEffect } from "react";
 import { BASE_URL } from "../../../utils/config";
 
-const BookingTable = ({ userId }) => {
+const BookingTable = ({ userId, tourId }) => {
 
     const [bookings, setBookings] = useState([]);
     const [page, setPage] = useState(0);
@@ -46,6 +46,12 @@ const BookingTable = ({ userId }) => {
                     filteredBookings = filteredBookings.filter(booking => booking.userId === userId);
                 }
 
+                if (tourId) {
+                    filteredBookings = filteredBookings.filter(booking => booking.tourId === tourId);
+                }
+
+                // console.log(filteredBookings)
+
                 setBookings(filteredBookings);
 
             } catch (error) {
@@ -57,7 +63,7 @@ const BookingTable = ({ userId }) => {
         };
 
         fetchBookings();
-    }, [userId]);
+    }, [userId, tourId]);
 
     return (
         <TableContainer component={Paper} className="table">
@@ -70,8 +76,8 @@ const BookingTable = ({ userId }) => {
                         <TableCell className="tableCell">Customer Name</TableCell>
                         <TableCell className="tableCell">Guest Size</TableCell>
                         <TableCell className="tableCell">Phone</TableCell>
+                        <TableCell className="tableCell">Tour Date</TableCell>
                         <TableCell className="tableCell">Booking Date</TableCell>
-
                         <TableCell className="tableCell">Amount</TableCell>
                         <TableCell className="tableCell">Payment Status</TableCell>
                     </TableRow>
@@ -86,7 +92,7 @@ const BookingTable = ({ userId }) => {
                     ) : bookings.length === 0 ? (
                         <TableRow>
                             <TableCell colSpan={8} align="center">
-                                No bookings available for this user
+                                No bookings available
                             </TableCell>
                         </TableRow>
                     ) : (
@@ -103,6 +109,9 @@ const BookingTable = ({ userId }) => {
                                     <TableCell className="tableCell">{booking.phone}</TableCell>
                                     <TableCell className="tableCell">
                                         {new Date(booking.bookAt).toLocaleDateString()}
+                                    </TableCell>
+                                    <TableCell className="tableCell">
+                                        {new Date(booking.createdAt).toLocaleDateString()}
                                     </TableCell>
                                     <TableCell className="tableCell">
                                         {booking.amount ? `$${booking.amount}` : "N/A"}

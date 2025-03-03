@@ -88,10 +88,10 @@ const Widget = ({ type }) => {
             break;
         case "earning":
             widgetData = {
-                title: "EARNINGS",
+                title: "Revenue",
                 isMoney: true,
                 amount: data.earning,
-                link: "View net earnings",
+                link: "View Revenue",
                 icon: (
                     <MonetizationOnOutlinedIcon
                         className="icon"

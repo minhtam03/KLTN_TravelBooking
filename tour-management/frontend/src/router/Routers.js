@@ -26,6 +26,7 @@ import Single from '../pages/admin/single/Single'
 import Edit from '../pages/admin/edit/Edit'
 import { userInputs, tourInputs } from '../resource/formSource'
 import { userColumns, tourColumns, hotelColumns } from '../resource/datatableSource'
+import SingleTour from '../pages/admin/single-tour/SingleTour'
 
 const Routers = () => {
   return (
@@ -63,9 +64,14 @@ const Routers = () => {
 
       <Route path='/admin/tours'>
         <Route index element={<List columns={tourColumns} />} />
-        <Route path=':id' element={<Single />} />
+        <Route path=':id' element={<SingleTour />} />
         <Route path='new' element={<New inputs={tourInputs} title="Add New Tour" />} />
         <Route path=":id/edit" element={<Edit inputs={tourInputs} title="Edit Tour" />} />
+
+      </Route>
+
+      <Route path='/admin/blogs'>
+        <Route index element={<List columns={tourColumns} />} />
 
       </Route>
 

@@ -5,6 +5,7 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import StoreIcon from "@mui/icons-material/Store";
 import InsertChartIcon from "@mui/icons-material/InsertChart";
+import ArticleIcon from '@mui/icons-material/Article';
 import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
@@ -68,12 +69,12 @@ const Sidebar = () => {
                         <LocalShippingIcon className="icon" />
                         <span>Rooms</span>
                     </li>
-                    {/* <p className="title">USEFUL</p>
+                    <p className="title">USEFUL</p>
                     <li>
                         <InsertChartIcon className="icon" />
                         <span>Stats</span>
                     </li>
-                    <li>
+                    {/* <li>
                         <NotificationsNoneIcon className="icon" />
                         <span>Notifications</span>
                     </li> */}
@@ -86,10 +87,17 @@ const Sidebar = () => {
                         <PsychologyOutlinedIcon className="icon" />
                         <span>Logs</span>
                     </li> */}
-                    <li>
+                    {/* <li>
                         <SettingsApplicationsIcon className="icon" />
                         <span>Settings</span>
-                    </li>
+                    </li> */}
+                    <p className="title">CONTENT</p>
+                    <Link to="/admin/blogs" style={{ textDecoration: "none" }}>
+                        <li>
+                            <ArticleIcon className="icon" />
+                            <span>Blogs</span>
+                        </li>
+                    </Link>
                     <p className="title">USER</p>
                     <li>
                         <AccountCircleOutlinedIcon className="icon" />

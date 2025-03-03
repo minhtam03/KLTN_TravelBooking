@@ -3,32 +3,32 @@ import Sidebar from '../../../components/admin/sidebar/Sidebar'
 import Navbar from '../../../components/admin/navbar/Navbar'
 import Chart from '../../../components/admin/chart/Chart'
 import BookingTable from '../../../components/admin/table/Table'
-import "./single.scss"
+import "../single/single.scss"
 import { useParams } from 'react-router-dom'
 import { BASE_URL } from '../../../utils/config'
 
-const Single = () => {
+const SingleTour = () => {
 
     const { id } = useParams()
-    const [user, setUser] = useState(null);
+    const [tour, setTour] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [spendingData, setSpendingData] = useState([]);
 
     useEffect(() => {
-        const fetchUser = async () => {
+        const fetchTour = async () => {
             try {
-                const res = await fetch(`${BASE_URL}/users/${id}`, {
+                const res = await fetch(`${BASE_URL}/tours/${id}`, {
                     method: "GET",
                     credentials: "include",
                 });
 
                 if (!res.ok) {
-                    throw new Error("Failed to fetch user data");
+                    throw new Error("Failed to fetch tour data");
                 }
 
                 const result = await res.json();
-                setUser(result.data);
+                setTour(result.data);
                 setLoading(false);
             } catch (error) {
                 setError(error.message);
@@ -48,7 +48,7 @@ const Single = () => {
                 }
 
                 const result = await res.json();
-                const userBookings = result.data.filter(booking => booking.userId === id
+                const userBookings = result.data.filter(booking => booking.tourId === id
                     // && booking.paymentStatus === "paid"
                 );
 
@@ -87,9 +87,11 @@ const Single = () => {
             }
         };
 
-        fetchUser();
+        fetchTour();
         fetchSpendingData();
     }, [id]);
+
+
 
     return (
         <div className="single">
@@ -102,13 +104,13 @@ const Single = () => {
                         <h1 className="title">Information</h1>
 
                         {loading ? (
-                            <p>Loading user data...</p>
+                            <p>Loading tour data...</p>
                         ) : error ? (
                             <p>Error: {error}</p>
                         ) : (
                             <div className="item">
                                 <img
-                                    src={user?.photo || "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"}
+                                    src={tour?.photo || "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"}
                                     alt="User Profile"
                                     className="itemImg"
                                 />
@@ -118,31 +120,48 @@ const Single = () => {
                                     className="itemImg"
                                 /> */}
                                 <div className="details">
-                                    <h1 className="itemTitle">{user?.username || "Unknown"}</h1>
+                                    <h1 className="itemTitle">{tour?.title || "Unknown"}</h1>
 
                                     <div className="detailItem">
-                                        <span className="itemKey">Username:</span>
-                                        <span className="itemValue">{user?.username || "N/A"}</span>
+                                        <span className="itemKey">Title:</span>
+                                        <span className="itemValue">{tour?.title || "N/A"}</span>
                                     </div>
+
                                     <div className="detailItem">
-                                        <span className="itemKey">Email:</span>
-                                        <span className="itemValue">{user?.email || "N/A"}</span>
+                                        <span className="itemKey">City:</span>
+                                        <span className="itemValue">{tour?.city || "N/A"}</span>
                                     </div>
+
+                                    <div className="detailItem">
+                                        <span className="itemKey">Address:</span>
+                                        <span className="itemValue">{tour?.address || "N/A"}</span>
+                                    </div>
+
+                                    <div className="detailItem">
+                                        <span className="itemKey">Description:</span>
+                                        <span className="itemValue">{tour?.desc || "N/A"}</span>
+                                    </div>
+
+                                    <div className="detailItem">
+                                        <span className="itemKey">Price:</span>
+                                        <span className="itemValue">{tour?.price || "N/A"} $</span>
+                                    </div>
+
                                 </div>
                             </div>
                         )}
                     </div>
                     <div className="right">
-                        <Chart aspect={3 / 1} title="User Spending ( Last 6 Months)" data={spendingData} />
+                        <Chart aspect={3 / 1} title="Tour Revenue ( Last 6 Months)" data={spendingData} />
                     </div>
                 </div>
                 <div className="bottom">
                     <h1 className="title">Transactions</h1>
-                    <BookingTable userId={id} />
+                    <BookingTable tourId={id} />
                 </div>
             </div>
         </div>
     );
 };
 
-export default Single;
+export default SingleTour;
