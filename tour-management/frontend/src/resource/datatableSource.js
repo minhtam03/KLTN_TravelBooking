@@ -1,4 +1,5 @@
 import { dividerClasses } from "@mui/material";
+import { format } from "date-fns";
 
 export const userColumns = [
     { field: '_id', headerName: 'ID', width: 200 },
@@ -69,7 +70,32 @@ export const bookingColumns = [
     }
 ];
 
-export const blogColumns = [
-
+export const postColumns = [
+    { field: '_id', headerName: 'ID', width: 150 },
+    {
+        field: 'title', headerName: 'Title', width: 300,
+        renderCell: (params) => {
+            return (
+                <div className="cellWithImg">
+                    <img className="cellImg" src={params.row.photo || "https://png.pngtree.com/png-vector/20221125/ourmid/pngtree-no-image-available-icon-flatvector-illustration-picture-coming-creative-vector-png-image_40968940.jpg"} alt="blog" />
+                    {params.row.title}
+                </div>
+            );
+        }
+    },
+    { field: 'author', headerName: 'Author', width: 150 },
+    // { field: 'likeCount', headerName: 'Likes', width: 120, type: 'number' },
+    {
+        field: 'createdAt',
+        headerName: 'Created At',
+        width: 180,
+        renderCell: (params) => params.value ? format(new Date(params.value), "dd/MM/yyyy") : "N/A"
+    },
+    {
+        field: 'updatedAt',
+        headerName: 'Updated At',
+        width: 180,
+        renderCell: (params) => params.value ? format(new Date(params.value), "dd/MM/yyyy") : "N/A"
+    }
 ]
 

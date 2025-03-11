@@ -96,3 +96,28 @@ export const tourInputs = [
     },
 ];
 
+export const postInputs = [
+    {
+        id: "title",
+        label: "Title",
+        type: "text",
+        placeholder: "Enter blog title...",
+        name: "title",
+    },
+    {
+        id: "content",
+        label: "Content",
+        type: "textarea",
+        placeholder: "Write your blog content here...",
+        name: "content",
+    },
+    {
+        id: "author",
+        label: "Author",
+        type: "text",
+        placeholder: "John Doe",
+        name: "author",
+    },
+
+];
+

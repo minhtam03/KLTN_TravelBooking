@@ -13,125 +13,116 @@ const CHATGROQ_API_KEY = process.env.CHATGROQ_API_KEY;
 
 
 
-export const getSuggestions = async (req, res) => {
-    try {
-        let { budget, duration, departure, destination, startDate, userId } = req.body;
-
-        if (!budget || !duration || !departure || !startDate) {
-            return res.status(400).send("Vui lòng nhập đầy đủ thông tin bắt buộc!");
-        }
-
-        // Nếu user không nhập điểm đến, tự động gợi ý bằng ChatGroq AI
-        if (!destination) {
-            destination = await findSuggestedDestination(userId);
-            if (!destination) {
-                return res.status(400).send('Không có lịch sử đặt tour hoặc không tìm thấy điểm đến phù hợp.');
-            }
-        }
-
-        console.log(`Điểm đến gợi ý: ${destination}`);
-
-        // Fetch tour, flight, and hotel data from the database
-        const tours = await Tour.getAvailableTours(destination, duration);
-        const flights = await Flight.getAvailableFlights(departure, destination, startDate);
-        const hotels = await Hotel.getAvailableHotels(destination);
-
-        // Log data to ensure it's correct
-        console.log('Tours:', tours);
-        console.log('Flights:', flights);
-        console.log('Hotels:', hotels);
-        console.log("end");
-
-        // Find the best options within budget
-        const options = [];
-
-        for (let tour of tours) {
-            for (let flight of flights) {
-                for (let hotel of hotels) {
-                    // const estimatedCost = calculateEstimatedCost(tour, flight, hotel, budget, duration);
-
-                    // if (estimatedCost.total <= budget) {
-                    //     options.push({
-                    //         // tour: { title: tour.title, desc: tour.desc, price: tour.price },
-                    //         tour: tour.toObject(),
-                    //         flight: {
-                    //             flightNumber: flight.flightNumber,
-                    //             airline: flight.airline,
-                    //             airplaneType: flight.airplaneType,
-                    //             departureDate: flight.departureDate,
-                    //             class: flight.class,
-                    //             price: flight.price * 2,
-                    //         },
-                    //         // hotel: {
-                    //         //     hotelName: hotel.hotelName,
-                    //         //     amenities: hotel.amenities,
-                    //         //     price: hotel.pricePerNight * duration,
-                    //         //     stars: hotel.stars,
-                    //         //     pricePerNight: hotel.pricePerNight
-                    //         // },
-                    //         hotel: hotel.toObject(),
-                    //         totalCost: estimatedCost.total,
-                    //         estimatedDetails: estimatedCost
-                    //     });
-                    // }
-
-                    const totalCost = tour.price + (flight.price * 2) + (hotel.pricePerNight * duration);
-
-                    if (totalCost <= budget) {
-                        options.push({
-                            tour: tour.toObject(),
-                            flight: flight.toObject(),
-                            hotel: hotel.toObject(),
-                            totalCost
-                        });
-                    }
-
-                }
-            }
-        }
-
-        if (options.length === 0) {
-            return res.status(404).send('No options found within your budget.');
-        }
-
-        return res.json({ options });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error retrieving suggestions');
-    }
-};
-
-// export const getSuggestedDestination = async (req, res) => {
+// export const getSuggestions = async (req, res) => {
 //     try {
-//         const { userId } = req.params;
+//         let { budget, duration, departure, destination, startDate, userId } = req.body;
 
+//         if (!budget || !duration || !departure || !startDate) {
+//             return res.status(400).send("Vui lòng nhập đầy đủ thông tin bắt buộc!");
+//         }
+
+
+//         if (!destination) {
+//             destination = await findSuggestedDestination(userId);
+//             if (!destination) {
+//                 return res.status(400).send('Không có lịch sử đặt tour hoặc không tìm thấy điểm đến phù hợp.');
+//             }
+//         }
+
+//         console.log(`Điểm đến gợi ý: ${destination}`);
+
+//         // Fetch tour, flight, and hotel data from the database
+//         const tours = await Tour.getAvailableTours(destination, duration);
+//         const flights = await Flight.getAvailableFlights(departure, destination, startDate);
+//         const hotels = await Hotel.getAvailableHotels(destination);
+
+//         // Log data to ensure it's correct
+//         console.log('Tours:', tours);
+//         console.log('Flights:', flights);
+//         console.log('Hotels:', hotels);
+//         console.log("end");
+
+//         // Find the best options within budget
+//         const options = [];
+
+//         for (let tour of tours) {
+//             for (let flight of flights) {
+//                 for (let hotel of hotels) {
+//                     // const estimatedCost = calculateEstimatedCost(tour, flight, hotel, budget, duration);
+
+//                     // if (estimatedCost.total <= budget) {
+//                     //     options.push({
+//                     //         // tour: { title: tour.title, desc: tour.desc, price: tour.price },
+//                     //         tour: tour.toObject(),
+//                     //         flight: {
+//                     //             flightNumber: flight.flightNumber,
+//                     //             airline: flight.airline,
+//                     //             airplaneType: flight.airplaneType,
+//                     //             departureDate: flight.departureDate,
+//                     //             class: flight.class,
+//                     //             price: flight.price * 2,
+//                     //         },
+//                     //         // hotel: {
+//                     //         //     hotelName: hotel.hotelName,
+//                     //         //     amenities: hotel.amenities,
+//                     //         //     price: hotel.pricePerNight * duration,
+//                     //         //     stars: hotel.stars,
+//                     //         //     pricePerNight: hotel.pricePerNight
+//                     //         // },
+//                     //         hotel: hotel.toObject(),
+//                     //         totalCost: estimatedCost.total,
+//                     //         estimatedDetails: estimatedCost
+//                     //     });
+//                     // }
+
+//                     const totalCost = tour.price + (flight.price * 2) + (hotel.pricePerNight * duration);
+
+//                     if (totalCost <= budget) {
+//                         options.push({
+//                             tour: tour.toObject(),
+//                             flight: flight.toObject(),
+//                             hotel: hotel.toObject(),
+//                             totalCost
+//                         });
+//                     }
+
+//                 }
+//             }
+//         }
+
+//         if (options.length === 0) {
+//             return res.status(404).send('No options found within your budget.');
+//         }
+
+//         return res.json({ options });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).send('Error retrieving suggestions');
+//     }
+// };
+
+// export const findSuggestedDestination = async (userId) => {
+//     try {
 //         if (!userId) {
-//             console.error("Error: User ID is missing or invalid.");
-//             return res.status(400).json({ message: "User ID is required." });
+//             console.error("User ID is missing or invalid.");
+//             return null;
 //         }
 
 //         const bookings = await Booking.find({ userId }).populate('tourId');
 //         if (!bookings.length) {
 //             console.log(`No bookings found for user: ${userId}`);
-//             return res.status(404).json({ message: "No booking history found for this user." });
+//             return null;
 //         }
 
-//         // Lọc những booking hợp lệ (có `tourId` và `desc`)
 //         const validBookings = bookings.filter(booking => booking.tourId && booking.tourId.desc);
 //         if (!validBookings.length) {
 //             console.log("No valid tours found in booking history.");
-//             return res.status(404).json({ message: "User has bookings, but no valid tour descriptions available." });
+//             return null;
 //         }
 
-//         // Tạo danh sách mô tả tour
 //         const tourDescriptions = validBookings.map(booking => booking.tourId.desc).join("\n");
-//         console.log("Tour descriptions:", tourDescriptions);
 
-//         // Gọi ChatGroq AI để phân tích sở thích du lịch
-//         console.log("Sending request to ChatGroq...");
-//         const model = new ChatGroq({
-//             apiKey: CHATGROQ_API_KEY,
-//         });
+//         const model = new ChatGroq({ apiKey: CHATGROQ_API_KEY });
 
 //         const message = new HumanMessage(`
 //             Summarize the following descriptions:
@@ -144,8 +135,6 @@ export const getSuggestions = async (req, res) => {
 //             Do not return a full sentence or explanation, only a single word.
 //         `);
 
-
-//         // Giới hạn thời gian gọi API ChatGroq (timeout 10 giây)
 //         const response = await Promise.race([
 //             model.invoke([message]),
 //             new Promise((_, reject) => setTimeout(() => reject(new Error("ChatGroq timeout")), 10000))
@@ -153,46 +142,42 @@ export const getSuggestions = async (req, res) => {
 
 //         if (!response || !response.content) {
 //             console.error("ChatGroq API did not return a valid response.");
-//             return res.status(500).json({ message: "AI service failed to process the request." });
+//             return null;
 //         }
 
 //         const keyword = response.content.trim().toLowerCase();
 //         console.log(`User's preferred destination type: ${keyword}`);
 
-//         // Tìm tour phù hợp với sở thích của user
 //         const suggestedTour = await Tour.findOne({ desc: { $regex: keyword, $options: "i" } });
 
-//         if (!suggestedTour) {
-//             console.log(`No tour found matching keyword: ${keyword}`);
-//             return res.status(404).json({ message: `No suggested destination found for preference: ${keyword}` });
-//         }
+//         console.log(suggestedTour.city)
+//         return suggestedTour ? suggestedTour.city : null;
 
-//         console.log(`Suggested Destination: ${suggestedTour.city}`);
-//         return res.status(200).json({ suggestedDestination: suggestedTour.city });
 
 //     } catch (error) {
 //         console.error("Error fetching suggested destination:", error);
-//         return res.status(500).json({ message: "Internal server error.", error: error.message });
+//         return null;
 //     }
 // };
 
-export const findSuggestedDestination = async (userId) => {
+
+export const findSuggestedInfo = async (userId) => {
     try {
         if (!userId) {
             console.error("User ID is missing or invalid.");
-            return null;
+            return { destinations: [], keyword: null };
         }
 
         const bookings = await Booking.find({ userId }).populate('tourId');
         if (!bookings.length) {
             console.log(`No bookings found for user: ${userId}`);
-            return null;
+            return { destinations: [], keyword: null };
         }
 
         const validBookings = bookings.filter(booking => booking.tourId && booking.tourId.desc);
         if (!validBookings.length) {
             console.log("No valid tours found in booking history.");
-            return null;
+            return { destinations: [], keyword: null };
         }
 
         const tourDescriptions = validBookings.map(booking => booking.tourId.desc).join("\n");
@@ -202,11 +187,11 @@ export const findSuggestedDestination = async (userId) => {
         const message = new HumanMessage(`
             Summarize the following descriptions:
             ${tourDescriptions}
-        
+
             Identify the most common theme or keyword that describes the user's travel preferences.
-            
+
             Return only one word that best represents the user's favorite type of destination, such as 'beach', 'mountain', 'city', etc.
-            
+
             Do not return a full sentence or explanation, only a single word.
         `);
 
@@ -215,22 +200,95 @@ export const findSuggestedDestination = async (userId) => {
             new Promise((_, reject) => setTimeout(() => reject(new Error("ChatGroq timeout")), 10000))
         ]);
 
-        if (!response || !response.content) {
-            console.error("ChatGroq API did not return a valid response.");
-            return null;
-        }
+        let keyword = response?.content?.trim().toLowerCase() || null;
+        console.log(`User's preferred destination keyword: ${keyword}`);
 
-        const keyword = response.content.trim().toLowerCase();
-        console.log(`User's preferred destination type: ${keyword}`);
+        const suggestedTours = keyword
+            ? await Tour.find({ desc: { $regex: keyword, $options: "i" } })
+            : [];
 
-        const suggestedTour = await Tour.findOne({ desc: { $regex: keyword, $options: "i" } });
+        let destinations = suggestedTours.map(tour => tour.city);
+        console.log(`Suggested Destinations: ${destinations}`);
 
-        console.log(suggestedTour.city)
-        return suggestedTour ? suggestedTour.city : null;
-
+        return { destinations, keyword };
 
     } catch (error) {
-        console.error("Error fetching suggested destination:", error);
-        return null;
+        console.error("Error fetching suggested information:", error);
+        return { destinations: [], keyword: null };
+    }
+};
+
+
+export const getSuggestions = async (req, res) => {
+    try {
+        let { budget, duration, departure, destination, startDate, userId } = req.body;
+
+        if (!budget || !duration || !departure || !startDate) {
+            return res.status(400).send("Vui lòng nhập đầy đủ thông tin bắt buộc!");
+        }
+
+        // Gọi hàm để lấy danh sách điểm đến và từ khóa gợi ý
+        let { destinations, keyword } = await findSuggestedInfo(userId);
+
+        // Nếu người dùng không nhập destination, dùng danh sách từ gợi ý
+        if (!destination) {
+            if (!destinations.length) {
+                return res.status(400).json({
+                    message: "Không có lịch sử đặt tour hoặc không tìm thấy điểm đến phù hợp.",
+                    suggestedKeyword: keyword
+                });
+            }
+        } else {
+            // Nếu người dùng đã nhập destination, chỉ dùng destination đó
+            destinations = [destination];
+        }
+
+        console.log(`Điểm đến được sử dụng: ${destinations}`);
+        console.log(`Từ khóa gợi ý: ${keyword}`);
+
+        let options = [];
+
+        // Lặp qua tất cả điểm đến được tìm thấy
+        for (let dest of destinations) {
+            // Lấy dữ liệu tour, chuyến bay, khách sạn cho từng điểm đến
+            const tours = await Tour.getAvailableTours(dest, duration);
+            const flights = await Flight.getAvailableFlights(departure, dest, startDate);
+            const hotels = await Hotel.getAvailableHotels(dest);
+
+            console.log(`Data for ${dest}:`);
+            console.log('Tours:', tours);
+            console.log('Flights:', flights);
+            console.log('Hotels:', hotels);
+
+            for (let tour of tours) {
+                for (let flight of flights) {
+                    for (let hotel of hotels) {
+                        const totalCost = tour.price + (flight.price * 2) + (hotel.pricePerNight * duration);
+                        if (totalCost <= budget) {
+                            options.push({
+                                destination: dest,
+                                tour: tour.toObject(),
+                                flight: flight.toObject(),
+                                hotel: hotel.toObject(),
+                                totalCost
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        if (options.length === 0) {
+            return res.status(404).json({
+                message: "No options found within your budget.",
+                suggestedKeyword: keyword
+            });
+        }
+
+        return res.json({ options, suggestedKeyword: keyword });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error retrieving suggestions");
     }
 };

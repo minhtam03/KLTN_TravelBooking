@@ -1,57 +1,106 @@
-import React from 'react'
-import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, IconButton, Typography } from '@mui/material'
+import React, { useState, useEffect, useContext } from 'react'
+import {
+  Avatar, Card, CardActions, CardContent,
+  CardHeader, CardMedia, IconButton, Typography, Tooltip
+} from '@mui/material'
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { AuthContext } from '../../../context/AuthContext';
+import { BASE_URL } from '../../../utils/config';
+import { Link } from 'react-router-dom';
 
 export default function Post({ post }) {
-    // Hàm xử lý khi người dùng click vào like
-    const onLikeBtnClick = () => {
-        
-        console.log("Like button clicked");
+  const { user: currentUser } = useContext(AuthContext);
+  const [likeCount, setLikeCount] = useState(post.likeCount);
+  const [likedUsers, setLikedUsers] = useState(post.likedUsers || []);
+  const [isLiked, setIsLiked] = useState(false);
+
+
+  useEffect(() => {
+    if (currentUser && likedUsers.includes(currentUser._id)) {
+      setIsLiked(true);
+    } else {
+      setIsLiked(false);
     }
+  }, [currentUser, likedUsers]);
+
+
+  // Hàm xử lý khi người dùng click vào like
+  const onLikeBtnClick = async () => {
+    if (!currentUser) {
+      alert("Bạn cần đăng nhập để like bài viết!");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${BASE_URL}/posts/${post._id}/like`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: currentUser._id }) // Gửi userId hiện tại
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to like/unlike post");
+      }
+
+      const updatedPost = await response.json();
+      setLikeCount(updatedPost.data.likeCount);
+      setLikedUsers(updatedPost.data.likedUsers);
+    } catch (error) {
+      console.error("Error liking/unliking post:", error);
+    }
+  };
+
 
   return (
     <Card sx={{ height: '100%' }}>
-      {/* CardHeader: Hiển thị tiêu đề bài viết, tác giả và ngày đăng */}
+
       <CardHeader
-        avatar={<Avatar>{post.author.charAt(0)}</Avatar>}
-        title={post.author}
-        // subheader={moment(post.createdAt).format('HH:mm MMM DD, YYYY')} // Định dạng ngày giờ
-        action={
-          <IconButton>
-            <MoreVertIcon />
-          </IconButton>
-        }
+      // avatar={<Avatar>{post.author.charAt(0)}</Avatar>}
+      // title={<Link to={`/post/${post._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>{post.author}</Link>}
+      // subheader={moment(post.createdAt).format('HH:mm MMM DD, YYYY')} // Định dạng ngày giờ
+      // action={
+      //   <IconButton>
+      //     <MoreVertIcon />
+      //   </IconButton>
+      // }
       />
 
-      {/* CardMedia: Hiển thị ảnh đính kèm bài viết nếu có */}
-      {post.attachment && (
-        <CardMedia 
-          component="img"
-          image={post.attachment}
-          alt={post.title}
-          sx={{ height: '150px', objectFit: 'cover' }} 
-        />
-      )}
+      <Link to={`/post/${post._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+        {post.photo && (
+          <CardMedia
+            component="img"
+            image={post.photo}
+            alt={post.title}
+            sx={{ height: '150px', objectFit: 'cover' }}
+          />
+        )}
+      </Link>
 
-      {/* CardContent: Hiển thị tiêu đề, nội dung bài viết */}
       <CardContent>
-        <Typography variant="h5" color="textPrimary">
-          {post.title}
+        <Typography variant="h5">
+          <Link to={`/post/${post._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+            {post.title}
+          </Link>
         </Typography>
-        <Typography variant="body2" color="textSecondary" paragraph>
-          {post.content.length > 150 ? `${post.content.substring(0, 150)}...` : post.content}
+        <Typography variant="body2" paragraph>
+          <Link to={`/post/${post._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+            {post.content.length > 150 ? `${post.content.substring(0, 150)}...` : post.content}
+          </Link>
         </Typography>
       </CardContent>
 
       {/* CardActions: Hiển thị các hành động như like */}
       <CardActions>
-        <IconButton onClick={onLikeBtnClick}>
-          <FavoriteIcon />
-          <Typography component="span" color="textSecondary">
-            {post.likeCount}
-          </Typography>
-        </IconButton>
+        <Tooltip title={isLiked ? "Unlike" : "Like"}>
+          <IconButton onClick={onLikeBtnClick} color={isLiked ? "error" : "default"}>
+            <FavoriteIcon />
+            <Typography component="span" sx={{ marginLeft: 0.5 }}>
+              {likeCount}
+            </Typography>
+          </IconButton>
+        </Tooltip>
       </CardActions>
     </Card>
   )

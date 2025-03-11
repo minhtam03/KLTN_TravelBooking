@@ -24,9 +24,10 @@ import New from '../pages/admin/new/New'
 import List from '../pages/admin/list/List'
 import Single from '../pages/admin/single/Single'
 import Edit from '../pages/admin/edit/Edit'
-import { userInputs, tourInputs } from '../resource/formSource'
-import { userColumns, tourColumns, hotelColumns } from '../resource/datatableSource'
+import { userInputs, tourInputs, postInputs } from '../resource/formSource'
+import { userColumns, tourColumns, hotelColumns, postColumns } from '../resource/datatableSource'
 import SingleTour from '../pages/admin/single-tour/SingleTour'
+import PostDetail from '../pages/PostDetail'
 
 const Routers = () => {
   return (
@@ -42,7 +43,8 @@ const Routers = () => {
       <Route path='/about' element={<About />} />
       <Route path='/flights' element={<Flights />} />
       <Route path='/stays' element={<Stays />} />
-      <Route path='/Blog' element={<Blog />} />
+      <Route path='/blog' element={<Blog />} />
+      <Route path='/post/:id' element={<PostDetail />} />
       <Route path='/thank-you' element={<ThankYou />} />
       <Route path='/history' element={<BookingHistory />} />
       <Route path='/suggestion' element={<Suggestion />} />
@@ -70,8 +72,9 @@ const Routers = () => {
 
       </Route>
 
-      <Route path='/admin/blogs'>
-        <Route index element={<List columns={tourColumns} />} />
+      <Route path='/admin/posts'>
+        <Route index element={<List columns={postColumns} />} />
+        <Route path='new' element={<New inputs={postInputs} title="Add New Post" />} />
 
       </Route>
 

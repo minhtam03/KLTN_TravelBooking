@@ -74,25 +74,9 @@ const Sidebar = () => {
                         <InsertChartIcon className="icon" />
                         <span>Stats</span>
                     </li>
-                    {/* <li>
-                        <NotificationsNoneIcon className="icon" />
-                        <span>Notifications</span>
-                    </li> */}
-                    {/* <p className="title">SERVICE</p>
-                    <li>
-                        <SettingsSystemDaydreamOutlinedIcon className="icon" />
-                        <span>System Health</span>
-                    </li>
-                    <li>
-                        <PsychologyOutlinedIcon className="icon" />
-                        <span>Logs</span>
-                    </li> */}
-                    {/* <li>
-                        <SettingsApplicationsIcon className="icon" />
-                        <span>Settings</span>
-                    </li> */}
+
                     <p className="title">CONTENT</p>
-                    <Link to="/admin/blogs" style={{ textDecoration: "none" }}>
+                    <Link to="/admin/posts" style={{ textDecoration: "none" }}>
                         <li>
                             <ArticleIcon className="icon" />
                             <span>Blogs</span>

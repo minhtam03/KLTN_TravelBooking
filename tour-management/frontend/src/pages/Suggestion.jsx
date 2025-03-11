@@ -6,6 +6,7 @@ import CommonSection from '../shared/CommonSection';
 import { Tooltip } from '@mui/material';
 import CustomTooltip from '../components/Tooltip/Tooltip';
 import { AuthContext } from '../context/AuthContext';
+import TourCard from '../shared/TourCard';
 
 const provinces = [
   'Ho Chi Minh', 'Ha Noi', 'Da Nang', 'Hai Phong', 'Can Tho',
@@ -27,9 +28,10 @@ const Suggestion = () => {
   const [selectedFlight, setSelectedFlight] = useState(null);
   const [selectedHotel, setSelectedHotel] = useState(null);
   const [totalCost, setTotalCost] = useState(0);
+  const [suggestedKeyword, setSuggestedKeyword] = useState('');
+  const [hoveredTour, setHoveredTour] = useState(null);
 
   useEffect(() => {
-    // Nếu results.tours, results.flights, results.hotels đã có dữ liệu
     if (results.tours?.length > 0) {
       setSelectedTour(results.tours[0]);
     }
@@ -68,6 +70,8 @@ const Suggestion = () => {
     setSelectedTour(null);
     setSelectedFlight(null);
     setSelectedHotel(null);
+    setSuggestedKeyword('');
+
     if (!budget || !duration || !departure || !startDate) {
       return alert('Please fill in fields!');
     }
@@ -88,8 +92,10 @@ const Suggestion = () => {
       });
 
       if (!response.ok) {
+        const errorData = await response.json();
         if (response.status === 404) {
-          alert('No options found within your budget. Please adjust your criteria and try again.');
+          setSuggestedKeyword(errorData.suggestedKeyword || '');
+          alert('No options found within your budget.');
         } else {
           alert('An error occurred while fetching suggestions.');
         }
@@ -97,6 +103,7 @@ const Suggestion = () => {
       }
 
       const data = await response.json();
+      setSuggestedKeyword(data.suggestedKeyword || '');
 
       const uniqueTours = Array.from(
         new Map(data.options.map((item) => [item.tour.title, item.tour])).values()
@@ -211,6 +218,11 @@ const Suggestion = () => {
                 ))}
               </Select>
             </FormControl>
+            {suggestedKeyword && !destination && (
+              <Typography variant="body2" sx={{ color: 'gray', marginTop: 1 }}>
+                Suggestion keyword: {suggestedKeyword} (based on your booking history)
+              </Typography>
+            )}
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -261,12 +273,39 @@ const Suggestion = () => {
                     {results.tours.map((tour, index) => (
                       <MenuItem key={index} value={tour} disabled={isOptionDisabled('tour', tour)}>
 
-                        <CustomTooltip title={tour.title} image={tour.photo} details={[`Price: $${tour.price}`, tour.desc]} price={tour.price} />
+                        {/* <CustomTooltip title={tour.title} image={tour.photo} details={[`Price: $${tour.price}`, tour.desc]} price={tour.price} /> */}
 
+                        <Tooltip
+                          title={
+                            <Box sx={{ width: '250px' }}>
+                              <TourCard tour={tour} />
+                            </Box>
+                          }
+                          arrow
+                          placement="right"
+                          // Override style cho tooltip
+                          sx={{
+                            // Ghi đè style của lớp .MuiTooltip-tooltip
+                            "& .MuiTooltip-tooltip": {
+                              backgroundColor: "#fff",  // Màu nền tooltip
+                              color: "inherit",         // Giữ nguyên màu chữ
+                              boxShadow: "none !important",        // Bỏ bóng đổ (thường gây cảm giác viền đen)
+                              // border: "1px solid #ccc", // Nếu muốn có đường viền xám nhẹ
+                            },
+                            // Ghi đè style của mũi tên tooltip
+                            "& .MuiTooltip-arrow": {
+                              color: "#fff",            // Màu mũi tên đồng bộ với nền tooltip
+                            },
+                          }}
+                        >
+                          <span>{tour.title}</span>
+                        </Tooltip>
                       </MenuItem>
+
                     ))}
                   </Select>
                 </FormControl>
+
 
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -311,6 +350,7 @@ const Suggestion = () => {
 
               </Grid>
             </Grid>
+
 
             <Typography variant="h6" sx={{ marginTop: 3, color: '#555' }}>
               Total Cost: <strong>${totalCost}</strong>

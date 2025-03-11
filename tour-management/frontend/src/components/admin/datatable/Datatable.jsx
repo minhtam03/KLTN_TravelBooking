@@ -15,7 +15,7 @@ const Datatable = ({ columns }) => {
 
 
     const handleDelete = async (id) => {
-        const confirmDelete = window.confirm("Are you sure you want to delete this user?");
+        const confirmDelete = window.confirm("Are you sure you want to delete?");
         if (!confirmDelete) return;
 
         try {
