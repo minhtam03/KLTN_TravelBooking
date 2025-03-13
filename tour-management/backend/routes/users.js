@@ -1,8 +1,15 @@
 import express from "express"
-import { createUser, deleteUser, getAllUser, getSingleUser, updateUser } from "../controllers/userController.js"
+import {
+    createUser, deleteUser,
+    getAllUser, getSingleUser, updateUser, getProfile, updateProfile
+} from "../controllers/userController.js"
 const router = express.Router()
 
 import { verifyAdmin, verifyUser } from "../utils/verifyToken.js"
+
+router.get("/profile", verifyUser, getProfile);
+
+router.put("/profile", verifyUser, updateProfile);
 
 // Create new user
 router.post("/", verifyAdmin, createUser);
@@ -18,5 +25,7 @@ router.get("/:id", verifyUser, getSingleUser)
 
 // get all user
 router.get("/", verifyAdmin, getAllUser)
+
+
 
 export default router

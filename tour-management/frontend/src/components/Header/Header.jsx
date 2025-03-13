@@ -1,43 +1,47 @@
-import React, {useRef, useEffect, useContext} from 'react'
-import {Container, Row, Button} from 'reactstrap'
+import React, { useRef, useEffect, useContext, useState } from 'react'
+import { Container, Row, Button } from 'reactstrap'
 import { NavLink, Link, useNavigate } from 'react-router-dom'
 import logo from '../../assets/images/logo.png'
 import "./header.css"
 
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import ExitToAppIcon from '@mui/icons-material/ExitToApp'
+
 import { AuthContext } from '../../context/AuthContext'
+import { Avatar } from '@mui/material';
 
 const nav__links = [
   {
-    path:'/home',
-    display:'Home'
+    path: '/home',
+    display: 'Home'
   },
   {
-    path:'/about',
-    display:'About'
+    path: '/about',
+    display: 'About'
   },
   {
-    path:'/flights',
-    display:'Flights'
+    path: '/flights',
+    display: 'Flights'
   },
   {
-    path:'/stays',
-    display:'Stays'
+    path: '/stays',
+    display: 'Stays'
   },
   {
-    path:'/tours',
-    display:'Tours'
+    path: '/tours',
+    display: 'Tours'
   },
   {
-    path:'/blog',
-    display:'Blog'
+    path: '/blog',
+    display: 'Blog'
   },
   {
-    path:'/history',
-    display:'History'
+    path: '/history',
+    display: 'History'
   },
   {
-    path:'/suggestion',
-    display:'Suggestion'
+    path: '/suggestion',
+    display: 'Suggestion'
   }
 ]
 
@@ -45,11 +49,16 @@ const Header = () => {
   const headerRef = useRef(null)
   const menuRef = useRef(null)
   const navigate = useNavigate()
-  const {user, dispatch} = useContext(AuthContext)
+  const { user, dispatch } = useContext(AuthContext)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
   const logout = () => {
-    dispatch({type:'LOGOUT'})
+    dispatch({ type: 'LOGOUT' })
     navigate('/')
+  }
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen)
   }
 
   const stickyHeaderFunc = () => {
@@ -73,6 +82,16 @@ const Header = () => {
     menuRef.current.classList.toggle('show__menu')
   }
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(".profile-container")) {
+        setIsDropdownOpen(false)
+      }
+    }
+    document.addEventListener("click", handleClickOutside)
+    return () => document.removeEventListener("click", handleClickOutside)
+  }, [])
+
   return <header className='header' ref={headerRef}>
     <Container>
       <Row>
@@ -90,7 +109,7 @@ const Header = () => {
               {
                 nav__links.map((item, index) => (
                   <li className="nav__item" key={index}>
-                    <NavLink to={item.path} className={navClass => 
+                    <NavLink to={item.path} className={navClass =>
                       navClass.isActive ? "active__link" : ""
                     }>{item.display}</NavLink>
                   </li>
@@ -102,26 +121,45 @@ const Header = () => {
 
           <div className='nav__right d-flex align-items-center gap-4'>
             <div className="nav__btns d-flex align-items-center gap-4">
-              
+
               {
-                user? ( <>
-                  <p className='mb-0 username'>{user.username}</p>
-                  <Button className='btn btn-dark' onClick={logout}>
-                    Logout
-                  </Button>
-                  </>
+                user ? (<>
+
+                  <div className="profile-container" onClick={toggleDropdown}>
+                    <div className="profile-button">
+                      {user.photo ? (
+                        <Avatar src={user.photo} sx={{ width: 40, height: 40 }} />
+                      ) : (
+                        <span className="profile-initial">{user.username.charAt(0).toUpperCase()}</span>
+                      )}
+                    </div>
+
+                    {/* Dropdown menu */}
+                    {isDropdownOpen && (
+                      <div className="profile-dropdown">
+                        <Link to="/profile" className="dropdown-item">
+                          <AccountCircleIcon className="dropdown-icon" /> Profile
+                        </Link>
+                        <button className="dropdown-item logout-btn" onClick={logout}>
+                          <ExitToAppIcon className="dropdown-icon" /> Log out
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </>
+
                 ) : (
                   <>
-                  <Button className='btn secondary__btn'>
-                    <Link to='/login'>Login</Link>
-                  </Button>
-                  <Button className='btn primary__btn'>
-                    <Link to='/register'>Register</Link>
-                  </Button>
-                  </> 
+                    <Button className='btn secondary__btn'>
+                      <Link to='/login'>Login</Link>
+                    </Button>
+                    <Button className='btn primary__btn'>
+                      <Link to='/register'>Register</Link>
+                    </Button>
+                  </>
                 )
               }
-              
+
             </div>
 
             <span className='mobile__menu' onClick={toggleMenu}>

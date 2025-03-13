@@ -1,56 +1,53 @@
-// import jwt from 'jsonwebtoken'
+// import jwt from 'jsonwebtoken';
 
 // const verifyToken = (req, res, next) => {
-//     const token = req.cookies.accessToken
+//     const token = req.cookies.accessToken;
 
 //     if (!token) {
 //         return res.status(401).json({
 //             success: false,
-//             message: "Authorization token is missing", 
-//         })
+//             message: "Authorization token is missing",
+//         });
 //     }
 
-//     // if token is exist then verify the token
 //     jwt.verify(token, process.env.JWT_SECRET_KEY, (err, user) => {
 //         if (err) {
 //             return res.status(401).json({
 //                 success: false,
-//                 message: "Invalid token", 
-//             })
+//                 message: "Invalid token",
+//             });
 //         }
 
-//         req.user = user
-//         next()
-//     })
+//         req.user = user;
+//         next();
+//     });
 // }
 
 // export const verifyUser = (req, res, next) => {
 //     verifyToken(req, res, next, () => {
-
-//         if (req.user.id === req.params.id || req.user.role === 'admin') {
-//             next()
-//         }
-//         else {
+//         // Chỉ cần đảm bảo người dùng đã xác thực
+//         if (req.user) {
+//             next(); // Người dùng đã xác thực
+//         } else {
 //             return res.status(401).json({
 //                 success: false,
-//                 message: "Access denied", 
-//             })
+//                 message: "Access denied",
+//             });
 //         }
-//     })
+//     });
 // }
 
 // export const verifyAdmin = (req, res, next) => {
 //     verifyToken(req, res, next, () => {
 //         if (req.user.role === 'admin') {
-//             next()
-//         }
-//         else {
+//             next();
+//         } else {
 //             return res.status(401).json({
 //                 success: false,
-//                 message: "You are not authorize", 
-//             })
+//                 message: "You are not authorized",
+//             });
 //         }
-//     })
+//     });
 // }
 
 import jwt from 'jsonwebtoken';
@@ -61,46 +58,46 @@ const verifyToken = (req, res, next) => {
     if (!token) {
         return res.status(401).json({
             success: false,
-            message: "Authorization token is missing", 
+            message: "Authorization token is missing",
         });
     }
 
-    jwt.verify(token, process.env.JWT_SECRET_KEY, (err, user) => {
+    jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
         if (err) {
             return res.status(401).json({
                 success: false,
-                message: "Invalid token", 
+                message: "Invalid token",
             });
         }
 
-        req.user = user;
+        req.user = decoded; // Lưu thông tin user vào req
         next();
     });
-}
+};
 
 export const verifyUser = (req, res, next) => {
-    verifyToken(req, res, next, () => {
-        // Chỉ cần đảm bảo người dùng đã xác thực
+    verifyToken(req, res, () => {
         if (req.user) {
             next(); // Người dùng đã xác thực
         } else {
             return res.status(401).json({
                 success: false,
-                message: "Access denied", 
+                message: "Access denied",
             });
         }
     });
-}
+};
 
 export const verifyAdmin = (req, res, next) => {
-    verifyToken(req, res, next, () => {
-        if (req.user.role === 'admin') {
-            next();
+    verifyToken(req, res, () => {
+        if (req.user && req.user.role === 'admin') {
+            next(); // Người dùng có quyền admin
         } else {
-            return res.status(401).json({
+            return res.status(403).json({
                 success: false,
-                message: "You are not authorized", 
+                message: "You are not authorized",
             });
         }
     });
-}
+};
+

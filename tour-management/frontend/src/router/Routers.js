@@ -28,6 +28,7 @@ import { userInputs, tourInputs, postInputs } from '../resource/formSource'
 import { userColumns, tourColumns, hotelColumns, postColumns } from '../resource/datatableSource'
 import SingleTour from '../pages/admin/single-tour/SingleTour'
 import PostDetail from '../pages/PostDetail'
+import Profile from '../pages/Profile'
 
 const Routers = () => {
   return (
@@ -35,6 +36,7 @@ const Routers = () => {
       {/* Routes dành cho user */}
       <Route path='/' element={<Navigate to="/home" />} />
       <Route path='/home' element={<Home />} />
+      <Route path="/profile" element={<Profile />} />
       <Route path='/tours' element={<Tours />} />
       <Route path='/tours/:id' element={<TourDetails />} />
       <Route path='/login' element={<Login />} />

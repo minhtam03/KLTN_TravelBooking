@@ -128,6 +128,18 @@ const Single = () => {
                                         <span className="itemKey">Email:</span>
                                         <span className="itemValue">{user?.email || "N/A"}</span>
                                     </div>
+                                    <div className="detailItem">
+                                        <span className="itemKey">Phone:</span>
+                                        <span className="itemValue">{user?.phone || "N/A"}</span>
+                                    </div>
+                                    <div className="detailItem">
+                                        <span className="itemKey">Address:</span>
+                                        <span className="itemValue">{user?.address || "N/A"}</span>
+                                    </div>
+                                    <div className="detailItem">
+                                        <span className="itemKey">Photo:</span>
+                                        <span className="itemValue">{user?.photo || "N/A"}</span>
+                                    </div>
                                 </div>
                             </div>
                         )}

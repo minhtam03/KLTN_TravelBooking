@@ -1,5 +1,3 @@
-
-
 .header {
     width: 100%;
     height: 80px;
@@ -89,5 +87,89 @@
 
     .mobile__menu {
         display: block;
+    }
+}
+
+/* Profile container */
+.profile-container {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Avatar hoặc icon chữ cái đầu */
+.profile-button {
+    width: 40px;
+    height: 40px;
+    background-color: var(--secondary-color);
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.profile-button:hover {
+    background-color: #4e7971;
+}
+
+/* Dropdown menu */
+.profile-dropdown {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    padding: 10px 0;
+}
+
+.profile-dropdown .dropdown-item {
+    padding: 6px 12px; /* Giảm padding để thu nhỏ item */
+    text-decoration: none;
+    color: #333;
+    transition: background 0.3s ease;
+    font-size: 14px;
+    height: auto; /* Không dùng height cố định */
+    display: flex;
+    align-items: center; /* Căn giữa icon và text */
+    gap: 6px; /* Giảm khoảng cách giữa icon và chữ */
+    min-height: 35px; /* Đặt chiều cao tối thiểu nhỏ hơn */
+    /* font-weight: bold; */
+    font-family: var(--font-name);
+}
+
+.profile-dropdown .dropdown-item:hover {
+    background: #f0f0f0;
+}
+
+.profile-dropdown .logout-btn {
+    border: none;
+    background: none;
+    text-align: left;
+    width: 100%;
+    padding: 10px 15px;
+    cursor: pointer;
+    /* font-weight: bold; */
+}
+
+/* .profile-dropdown .logout-btn:hover {
+    background: #ffe5e5;
+} */
+
+/* Responsive cho dropdown */
+@media only screen and (max-width: 768px) {
+    .profile-dropdown {
+        width: 180px;
     }
 }

@@ -112,7 +112,6 @@ const New = ({ inputs, title }) => {
                         <img
                             src={file ? URL.createObjectURL(file)
                                 : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"}
-                            // src={"https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"}
                             alt=""
                         />
                     </div>
