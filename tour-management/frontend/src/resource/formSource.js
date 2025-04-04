@@ -32,12 +32,32 @@ export const tourInputs = [
         placeholder: "Amazing Beach Tour",
         name: "title",
     },
+    // {
+    //     id: "city",
+    //     label: "City",
+    //     type: "text",
+    //     placeholder: "New York",
+    //     name: "city",
+    // },
     {
         id: "city",
         label: "City",
-        type: "text",
-        placeholder: "New York",
+        type: "select",  // <-- Chuyển sang dropdown
         name: "city",
+        options: [
+            'Ha Noi', 'Ho Chi Minh', 'Da Nang', 'Hai Phong', 'Can Tho',
+            'Binh Duong', 'Bac Ninh', 'Vinh', 'Hue', 'Long An', 'Nghe An',
+            'Bac Giang', 'Quang Ninh', 'Nam Dinh', 'Thanh Hoa', 'Quang Binh',
+            'Son La', 'Tien Giang', 'Vinh Long', 'Dak Lak', 'Binh Thuan',
+            'Quang Tri', 'Lam Dong', 'An Giang', 'Ninh Binh', 'Tay Ninh',
+            'Ben Tre', 'Kien Giang', 'Dong Nai', 'Gia Lai', 'Bac Lieu',
+            'Phu Tho', 'Ca Mau', 'Hau Giang', 'Binh Phuoc', 'Ha Giang',
+            'Soc Trang', 'Dak Nong', 'Thanh Hoa', 'Lai Chau', 'Ha Tinh',
+            'Khanh Hoa', 'Yen Bai', 'Quang Nam', 'Nghe An', 'Bac Kan',
+            'Quang Ngai', 'Lang Son', 'Nam Dinh', 'Thai Nguyen', 'Hoa Binh',
+            'Quang Binh', 'Tuyen Quang', 'Hien Giang', 'Long An', 'Lam Dong',
+            'Sapa', 'Hung Yen', 'Bac Giang', 'Tuyen Quang', 'Quang Tri'
+        ]
     },
     {
         id: "address",

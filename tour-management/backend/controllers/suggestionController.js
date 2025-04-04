@@ -5,123 +5,64 @@ import Booking from '../models/Booking.js'
 import dotenv from 'dotenv';
 import { ChatGroq } from "@langchain/groq";
 import { HumanMessage } from "@langchain/core/messages";
-
 import { calculateEstimatedCost } from '../utils/calculateEstimatedCost.js';
+import { findSuggestedInfo, findToursBasedOnKeywords } from '../utils/suggestionHelper.js';
+import { getKeywordsAndSynonymsFromAI } from '../utils/aiHelper.js';
+import { getAvailableTours } from '../services/tourService.js';
+import { getAvailableFlights } from '../services/flightService.js';
+import { getAvailableHotels } from '../services/hotelService.js';
 
 dotenv.config();
 const CHATGROQ_API_KEY = process.env.CHATGROQ_API_KEY;
 
 
-export const findSuggestedInfo = async (userId) => {
-    try {
-        if (!userId) {
-            console.error("User ID is missing or invalid.");
-            return { destinations: [], keyword: null };
-        }
-
-        const bookings = await Booking.find({ userId }).populate('tourId');
-        if (!bookings.length) {
-            console.log(`No bookings found for user: ${userId}`);
-            return { destinations: [], keyword: null };
-        }
-
-        const validBookings = bookings.filter(booking => booking.tourId && booking.tourId.desc);
-        if (!validBookings.length) {
-            console.log("No valid tours found in booking history.");
-            return { destinations: [], keyword: null };
-        }
-
-        const tourDescriptions = validBookings.map(booking => booking.tourId.desc).join("\n");
-
-        const model = new ChatGroq({ apiKey: CHATGROQ_API_KEY });
-
-        const message = new HumanMessage(`
-            Summarize the following descriptions:
-            ${tourDescriptions}
-
-            Identify the most common theme or keyword that describes the user's travel preferences.
-
-            Return only one word that best represents the user's favorite type of destination, such as 'beach', 'mountain', 'city', etc.
-
-            Do not return a full sentence or explanation, only a single word.
-        `);
-
-        const response = await Promise.race([
-            model.invoke([message]),
-            new Promise((_, reject) => setTimeout(() => reject(new Error("ChatGroq timeout")), 10000))
-        ]);
-
-        let keyword = response?.content?.trim().toLowerCase() || null;
-        console.log(`User's preferred destination keyword: ${keyword}`);
-
-        const suggestedTours = keyword
-            ? await Tour.find({ desc: { $regex: keyword, $options: "i" } })
-            : [];
-
-        let destinations = suggestedTours.map(tour => tour.city);
-        console.log(`Suggested Destinations: ${destinations}`);
-
-        return { destinations, keyword };
-
-    } catch (error) {
-        console.error("Error fetching suggested information:", error);
-        return { destinations: [], keyword: null };
-    }
-};
-
-
 export const getSuggestions = async (req, res) => {
     try {
-        let { budget, duration, departure, destination, startDate, userId } = req.body;
+        const { budget, duration, departure, destination, startDate, userId } = req.body;
 
         if (!budget || !duration || !departure || !startDate) {
             return res.status(400).send("Vui lòng nhập đầy đủ thông tin bắt buộc!");
         }
 
-        // Gọi hàm để lấy danh sách điểm đến và từ khóa gợi ý
-        let { destinations, keyword } = await findSuggestedInfo(userId);
+        let destinations = [];
+        let keyword = null;
 
-        // Nếu người dùng không nhập destination, dùng danh sách từ gợi ý
-        if (!destination) {
-            if (!destinations.length) {
-                return res.status(400).json({
-                    message: "Không có lịch sử đặt tour hoặc không tìm thấy điểm đến phù hợp.",
-                    suggestedKeyword: keyword
-                });
-            }
-        } else {
-            // Nếu người dùng đã nhập destination, chỉ dùng destination đó
+        // Bước 1: Xử lý khi người dùng nhập destination
+        if (destination) {
             destinations = [destination];
+            keyword = await findSuggestedInfo(userId); // Lấy keyword từ lịch sử đặt tour của người dùng
         }
-
-        console.log(`Điểm đến được sử dụng: ${destinations}`);
-        console.log(`Từ khóa gợi ý: ${keyword}`);
+        // Bước 2: Xử lý khi không nhập destination
+        else {
+            // Lấy cả keyword và từ đồng nghĩa từ AI
+            const { keywords, synonyms } = await getKeywordsAndSynonymsFromAI(userId);
+            destinations = await findToursBasedOnKeywords(keywords, synonyms);  // Tìm tour dựa trên từ khóa và từ đồng nghĩa
+        }
 
         let options = [];
 
-        // Lặp qua tất cả điểm đến được tìm thấy
         for (let dest of destinations) {
-            // Lấy dữ liệu tour, chuyến bay, khách sạn cho từng điểm đến
-            const tours = await Tour.getAvailableTours(dest, duration);
-            const flights = await Flight.getAvailableFlights(departure, dest, startDate);
-            const hotels = await Hotel.getAvailableHotels(dest);
-
-            console.log(`Data for ${dest}:`);
-            console.log('Tours:', tours);
-            console.log('Flights:', flights);
-            console.log('Hotels:', hotels);
+            const tours = await getAvailableTours(dest, duration);
+            const flights = await getAvailableFlights(departure, dest, startDate);
+            const hotels = await getAvailableHotels(dest);
 
             for (let tour of tours) {
                 for (let flight of flights) {
                     for (let hotel of hotels) {
                         const totalCost = tour.price + (flight.price * 2) + (hotel.pricePerNight * duration);
                         if (totalCost <= budget) {
+                            // Tính relevanceScore cho tour
+                            let score = 0;
+                            if (keyword && tour.desc.toLowerCase().includes(keyword)) score += 2;
+                            if (keyword && tour.title.toLowerCase().includes(keyword)) score += 1;
+
                             options.push({
                                 destination: dest,
                                 tour: tour.toObject(),
                                 flight: flight.toObject(),
                                 hotel: hotel.toObject(),
-                                totalCost
+                                totalCost,
+                                relevanceScore: score
                             });
                         }
                     }
@@ -129,17 +70,20 @@ export const getSuggestions = async (req, res) => {
             }
         }
 
-        if (options.length === 0) {
+        if (!options.length) {
             return res.status(404).json({
-                message: "No options found within your budget.",
+                message: "Không tìm thấy lịch trình phù hợp với ngân sách.",
                 suggestedKeyword: keyword
             });
         }
 
-        return res.json({ options, suggestedKeyword: keyword });
+        // Sắp xếp kết quả theo relevanceScore và totalCost
+        options.sort((a, b) => b.relevanceScore - a.relevanceScore || a.totalCost - b.totalCost);
+
+        res.json({ options, suggestedKeyword: keyword });
 
     } catch (error) {
         console.error(error);
-        res.status(500).send("Error retrieving suggestions");
+        res.status(500).send("Lỗi máy chủ khi gợi ý lịch trình");
     }
 };

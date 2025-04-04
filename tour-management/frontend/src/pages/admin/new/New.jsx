@@ -5,8 +5,8 @@ import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUpload
 import { useState } from "react";
 import { BASE_URL } from "../../../utils/config";
 import { useNavigate, useLocation } from "react-router-dom";
-import { ClassSharp, Visibility, VisibilityOff } from "@mui/icons-material";
-import axios from "axios"
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import axios from "axios";
 
 const New = ({ inputs, title }) => {
     const [info, setInfo] = useState({});
@@ -22,17 +22,15 @@ const New = ({ inputs, title }) => {
         username: undefined,
         email: undefined,
         password: undefined,
-    })
+    });
 
     const handleChange = (e) => {
         if (path === "users") {
-            setCredentials(prev => ({ ...prev, [e.target.name]: e.target.value }))
-        }
-        else {
-            setInfo(prev => ({ ...prev, [e.target.name]: e.target.value }))
+            setCredentials((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+        } else {
+            setInfo((prev) => ({ ...prev, [e.target.name]: e.target.value }));
         }
     };
-
 
     const handleClick = async (e) => {
         e.preventDefault();
@@ -50,52 +48,32 @@ const New = ({ inputs, title }) => {
             );
 
             photoUrl = uploadRes.data.url;
-            console.log(photoUrl)
         }
 
         const updatedInfo = { ...info, photo: photoUrl };
         const updatedCredentials = { ...credentials, photo: photoUrl };
 
         try {
-            // Gửi request tạo user
-            if (path === "users") {
-                const res = await fetch(`${BASE_URL}/${path}`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify(updatedCredentials),
+            const res = await fetch(`${BASE_URL}/${path}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify(path === "users" ? updatedCredentials : updatedInfo),
+            });
 
-                });
-                const result = await res.json();
-                if (!res.ok) {
-                    return alert(result.message);
-                }
-            } else {
-                const res = await fetch(`${BASE_URL}/${path}`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify(updatedInfo),
+            const result = await res.json();
 
-                });
-                const result = await res.json();
-
-
-                if (!res.ok) {
-                    return alert(result.message);
-                }
+            if (!res.ok) {
+                return alert(result.message);
             }
-
 
             alert("Created successfully!");
             navigate(`/admin/${path}`);
         } catch (err) {
             console.error("Error:", err);
-            alert("Failed to create user. Please try again.");
+            alert("Failed to create. Please try again.");
         }
     };
 
@@ -110,9 +88,12 @@ const New = ({ inputs, title }) => {
                 <div className="bottom">
                     <div className="left">
                         <img
-                            src={file ? URL.createObjectURL(file)
-                                : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"}
-                            alt=""
+                            src={
+                                file
+                                    ? URL.createObjectURL(file)
+                                    : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
+                            }
+                            alt="Preview"
                         />
                     </div>
                     <div className="right">
@@ -124,7 +105,7 @@ const New = ({ inputs, title }) => {
                                 <input
                                     type="file"
                                     id="file"
-                                    onChange={e => setFile(e.target.files[0])}
+                                    onChange={(e) => setFile(e.target.files[0])}
                                     style={{ display: "none" }}
                                 />
                             </div>
@@ -132,7 +113,7 @@ const New = ({ inputs, title }) => {
                             {inputs.map((input) => (
                                 <div className="formInput" key={input.id}>
                                     <label>{input.label}</label>
-                                    {/* Trường hợp là password, hiển thị icon mắt */}
+
                                     {input.id === "password" ? (
                                         <div className="passwordInputWrapper">
                                             <input
@@ -141,7 +122,6 @@ const New = ({ inputs, title }) => {
                                                 placeholder={input.placeholder}
                                                 name={input.id}
                                             />
-
                                             <span
                                                 className="togglePassword"
                                                 onClick={() => setShowPassword(!showPassword)}
@@ -149,6 +129,13 @@ const New = ({ inputs, title }) => {
                                                 {showPassword ? <VisibilityOff /> : <Visibility />}
                                             </span>
                                         </div>
+                                    ) : input.type === "select" ? (
+                                        <select name={input.id} onChange={handleChange} defaultValue="">
+                                            <option value="" disabled>Select a city</option>
+                                            {input.options?.map((opt) => (
+                                                <option key={opt} value={opt}>{opt}</option>
+                                            ))}
+                                        </select>
                                     ) : (
                                         <input
                                             onChange={handleChange}

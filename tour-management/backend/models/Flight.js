@@ -44,19 +44,4 @@ const flightSchema = new mongoose.Schema({
   },
 });
 
-flightSchema.statics.getAvailableFlights = async function (departure, destination, startDate) {
-  try {
-    return await this.find({
-      departureCity: departure,
-      arrivalCity: destination,
-      departureDate: { $gte: new Date(startDate) },
-    });
-  } catch (error) {
-    console.error("Error fetching available flights: ", error);
-    throw new Error('Error fetching available flights');
-  }
-};
-
-const Flight = mongoose.model('Flight', flightSchema);
-
 export default mongoose.model("Flight", flightSchema);

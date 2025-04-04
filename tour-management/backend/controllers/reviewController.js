@@ -50,6 +50,7 @@ export const getReviewSummary = async (req, res) => {
 
         const model = new ChatGroq({
             apiKey: process.env.CHATGROQ_API_KEY,
+            model: "qwen-2.5-32b"
         });
 
         const message = new HumanMessage(`
