@@ -1,27 +1,571 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { TextField, Button, Grid, Typography, MenuItem, Select, FormControl, InputLabel, Box, CircularProgress } from '@mui/material';
-import { BASE_URL } from '../utils/config';
-import { Container } from 'reactstrap';
-import CommonSection from '../shared/CommonSection';
-import { Tooltip } from '@mui/material';
-import CustomTooltip from '../components/Tooltip/Tooltip';
-import { AuthContext } from '../context/AuthContext';
-import TourCard from '../shared/TourCard';
+// import React, { useState, useEffect, useContext } from 'react';
+// import { TextField, Button, Grid, Typography, MenuItem, Select, FormControl, InputLabel, Box, CircularProgress } from '@mui/material';
+// import { BASE_URL } from '../utils/config';
+// import { Container } from 'reactstrap';
+// import CommonSection from '../shared/CommonSection';
+// import { Tooltip } from '@mui/material';
+// import CustomTooltip from '../components/Tooltip/Tooltip';
+// import { AuthContext } from '../context/AuthContext';
+// import TourCard from '../shared/TourCard';
 
-const provinces = [
-  'Ha Noi', 'Ho Chi Minh', 'Da Nang', 'Hai Phong', 'Can Tho',
-  'Binh Duong', 'Bac Ninh', 'Vinh', 'Hue', 'Long An', 'Nghe An',
-  'Bac Giang', 'Quang Ninh', 'Nam Dinh', 'Thanh Hoa', 'Quang Binh',
-  'Son La', 'Tien Giang', 'Vinh Long', 'Dak Lak', 'Binh Thuan',
-  'Quang Tri', 'Lam Dong', 'An Giang', 'Ninh Binh', 'Tay Ninh',
-  'Ben Tre', 'Kien Giang', 'Dong Nai', 'Gia Lai', 'Bac Lieu',
-  'Phu Tho', 'Ca Mau', 'Hau Giang', 'Binh Phuoc', 'Ha Giang',
-  'Soc Trang', 'Dak Nong', 'Thanh Hoa', 'Lai Chau', 'Ha Tinh',
-  'Khanh Hoa', 'Yen Bai', 'Quang Nam', 'Nghe An', 'Bac Kan',
-  'Quang Ngai', 'Lang Son', 'Nam Dinh', 'Thai Nguyen', 'Hoa Binh',
-  'Quang Binh', 'Tuyen Quang', 'Hien Giang', 'Long An', 'Lam Dong',
-  'Sapa', 'Hung Yen', 'Bac Giang', 'Tuyen Quang', 'Quang Tri'
-];
+// const provinces = [
+//   'Ha Noi', 'Ho Chi Minh', 'Da Nang', 'Hai Phong', 'Can Tho',
+//   'Binh Duong', 'Bac Ninh', 'Vinh', 'Hue', 'Long An', 'Nghe An',
+//   'Bac Giang', 'Quang Ninh', 'Nam Dinh', 'Thanh Hoa', 'Quang Binh',
+//   'Son La', 'Tien Giang', 'Vinh Long', 'Dak Lak', 'Binh Thuan',
+//   'Quang Tri', 'Lam Dong', 'An Giang', 'Ninh Binh', 'Tay Ninh',
+//   'Ben Tre', 'Kien Giang', 'Dong Nai', 'Gia Lai', 'Bac Lieu',
+//   'Phu Tho', 'Ca Mau', 'Hau Giang', 'Binh Phuoc', 'Ha Giang',
+//   'Soc Trang', 'Dak Nong', 'Thanh Hoa', 'Lai Chau', 'Ha Tinh',
+//   'Khanh Hoa', 'Yen Bai', 'Quang Nam', 'Nghe An', 'Bac Kan',
+//   'Quang Ngai', 'Lang Son', 'Nam Dinh', 'Thai Nguyen', 'Hoa Binh',
+//   'Quang Binh', 'Tuyen Quang', 'Hien Giang', 'Long An', 'Lam Dong',
+//   'Sapa', 'Hung Yen', 'Bac Giang', 'Tuyen Quang', 'Quang Tri'
+// ];
+
+// const Suggestion = () => {
+//   const { user } = useContext(AuthContext);
+//   const userId = user?._id || '';
+//   const [budget, setBudget] = useState('');
+//   const [duration, setDuration] = useState('');
+//   const [departure, setDeparture] = useState('');
+//   const [destination, setDestination] = useState('');
+//   const [startDate, setStartDate] = useState('');
+//   const [results, setResults] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [selectedTour, setSelectedTour] = useState(null);
+//   const [selectedFlight, setSelectedFlight] = useState(null);
+//   const [selectedHotel, setSelectedHotel] = useState(null);
+//   const [totalCost, setTotalCost] = useState(0);
+//   const [hoveredTour, setHoveredTour] = useState(null);
+//   const [reason, setReason] = useState('');
+
+//   useEffect(() => {
+//     if (results.tours?.length > 0) {
+//       setSelectedTour(results.tours[0]);
+//     }
+//     if (results.flights?.length > 0) {
+//       setSelectedFlight(results.flights[0]);
+//     }
+//     if (results.hotels?.length > 0) {
+//       setSelectedHotel(results.hotels[0]);
+//     }
+
+//     // Tính total cost mặc định
+//     const initialTotal =
+//       (results.tours?.[0]?.price || 0) +
+//       (results.flights?.[0]?.price || 0) +
+//       ((results.hotels?.[0]?.pricePerNight || 0) * duration || 0);
+
+//     setTotalCost(!isNaN(initialTotal) ? initialTotal : 0);
+//   }, [results, duration]);
+
+//   const isOptionDisabled = (type, option) => {
+//     let tempTotalCost = totalCost;
+
+//     if (type === 'tour') {
+//       tempTotalCost = (option?.price || 0) + (selectedFlight?.price || 0) + (selectedHotel?.price || 0);
+//     } else if (type === 'flight') {
+//       tempTotalCost = (selectedTour?.price || 0) + (option?.price || 0) + (selectedHotel?.price || 0);
+//     } else if (type === 'hotel') {
+//       tempTotalCost = (selectedTour?.price || 0) + (selectedFlight?.price || 0) + (option?.pricePerNight * duration || 0);
+//     }
+
+//     return tempTotalCost > budget;
+//   };
+
+//   const handleSubmit = async () => {
+//     setTotalCost(0);
+//     setSelectedTour(null);
+//     setSelectedFlight(null);
+//     setSelectedHotel(null);
+//     setSuggestedKeyword('');
+
+//     if (!budget || !duration || !departure || !startDate) {
+//       return alert('Please fill in fields!');
+//     }
+
+//     if (budget <= 0) {
+//       return alert('Budget must be greater than 0!');
+//     }
+//     console.log("User is: ", user)
+
+//     setLoading(true);
+//     try {
+//       const response = await fetch(`${BASE_URL}/suggestions/suggest`, {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({ budget, duration, departure, destination, startDate, userId }),
+//       });
+
+//       if (!response.ok) {
+//         const errorData = await response.json();
+//         if (response.status === 404) {
+//           setSuggestedKeyword(errorData.suggestedKeyword || '');
+//           alert('No options found within your budget.');
+//         } else {
+//           alert('An error occurred while fetching suggestions.');
+//         }
+//         return;
+//       }
+
+//       const data = await response.json();
+//       setSuggestedKeyword(data.suggestedKeyword || '');
+//       setReason(data.reason || '');
+
+//       const uniqueTours = Array.from(
+//         new Map(data.options.map((item) => [item.tour.title, item.tour])).values()
+//       );
+
+//       const uniqueFlights = Array.from(
+//         new Map(data.options.map((item) => [item.flight.flightNumber, item.flight])).values()
+//       );
+
+//       const uniqueHotels = Array.from(
+//         new Map(data.options.map((item) => [item.hotel.hotelName, item.hotel])).values()
+//       );
+
+//       setResults({ tours: uniqueTours, flights: uniqueFlights, hotels: uniqueHotels });
+//     } catch (error) {
+//       console.error('Error fetching data', error);
+//       alert('An error occurred. Please try again later.');
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const handleSelect = (type, value) => {
+//     let newTour = selectedTour;
+//     let newFlight = selectedFlight;
+//     let newHotel = selectedHotel;
+
+//     if (type === 'tour') {
+//       newTour = value;
+//       setSelectedTour(value);
+//     } else if (type === 'flight') {
+//       newFlight = value;
+//       setSelectedFlight(value);
+//     } else if (type === 'hotel') {
+//       newHotel = value;
+//       setSelectedHotel(value);
+//     }
+
+//     const total =
+//       (newTour?.price || 0) +
+//       (newFlight?.price || 0) +
+//       (newHotel?.pricePerNight * duration || 0);
+
+//     setTotalCost(total);
+//   };
+
+//   return (
+//     <Container>
+//       <CommonSection title={"Suggestion"} />
+//       <Box sx={{ padding: 4, backgroundColor: '#f9f9f9', borderRadius: 2 }}>
+//         {/* <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', color: '#333', fontWeight: 'bold' }}>
+//           Search Tours, Flights, and Hotels
+//         </Typography> */}
+
+//         <Grid container spacing={4} sx={{ marginBottom: 3 }}>
+//           <Grid item xs={12} sm={6}>
+//             <TextField
+//               fullWidth
+//               label="Budget"
+//               type="text"
+//               value={budget}
+//               onChange={(e) => setBudget(e.target.value)}
+//               disabled={loading}
+//               variant="outlined"
+//             />
+//           </Grid>
+//           <Grid item xs={12} sm={6}>
+//             <TextField
+//               fullWidth
+//               label="Duration (Days)"
+//               type="text"
+//               value={duration}
+//               onChange={(e) => setDuration((e.target.value))}
+//               disabled={loading}
+//               variant="outlined"
+//             />
+//           </Grid>
+//           <Grid item xs={12} sm={6}>
+// <FormControl fullWidth sx={{ borderColor: '#ccc', borderWidth: 1, borderRadius: 1 }}>
+//   <InputLabel id="select-departure">Departure</InputLabel>
+//   <Select
+//     labelId="select-departure"
+//     label="Departure"
+//     value={departure}
+//     onChange={(e) => setDeparture(e.target.value)}
+//     disabled={loading}
+//     renderValue={(selected) => selected || "Select a departure"}
+//   >
+//     {provinces.map((province) => (
+//       <MenuItem key={province} value={province}>
+//         {province}
+//       </MenuItem>
+//     ))}
+//   </Select>
+// </FormControl>
+//           </Grid>
+//           <Grid item xs={12} sm={6}>
+// <FormControl fullWidth sx={{ borderColor: '#ccc', borderWidth: 1, borderRadius: 1 }}>
+//   <InputLabel id="select-destination">Destination</InputLabel>
+//   <Select
+//     labelId="select-destination"
+//     label="Destination"
+//     value={destination}
+//     onChange={(e) => setDestination(e.target.value)}
+//     disabled={loading}
+//     renderValue={(selected) => selected || "Select a destination"}
+//   >
+//     {provinces.map((province) => (
+//       <MenuItem key={province} value={province}>
+//         {province}
+//       </MenuItem>
+//     ))}
+//   </Select>
+// </FormControl>
+//             {/* {suggestedKeyword && !destination && (
+//               <Typography variant="body2" sx={{ color: 'gray', marginTop: 1 }}>
+//                 Suggestion keyword: {suggestedKeyword} (based on your booking history)
+//               </Typography>
+//             )} */}
+//             {reason && !destination && (
+//               <Typography variant="body2" sx={{ color: 'gray', marginTop: 1 }}>
+//                 Reason: {reason}
+//               </Typography>
+//             )}
+
+//           </Grid>
+//           <Grid item xs={12} sm={6}>
+//             <TextField
+//               fullWidth
+//               label="Start Date"
+//               type="date"
+//               value={startDate}
+//               onChange={(e) => setStartDate(e.target.value)}
+//               InputLabelProps={{
+//                 shrink: true,
+//               }}
+//               disabled={loading}
+//               variant="outlined"
+//             />
+//           </Grid>
+//         </Grid>
+
+//         <Button
+//           variant="contained"
+//           color="primary"
+//           sx={{ marginTop: 2, fontWeight: 'bold', fontSize: '1rem', padding: '0.75rem' }}
+//           fullWidth
+//           onClick={handleSubmit}
+//           disabled={loading}
+//         >
+//           {loading ? <CircularProgress size={24} color="inherit" /> : 'Suggest'}
+//         </Button>
+
+//         {results.tours && results.tours.length > 0 && (
+// <Box sx={{ marginTop: 3 }}>
+//   <Typography variant="h5" gutterBottom sx={{ color: '#444', fontWeight: 'medium' }}>
+//     Results:
+//   </Typography>
+
+//   <Grid container spacing={4}>
+//     <Grid item xs={12} sm={6}>
+
+
+// <FormControl fullWidth>
+//   <InputLabel id="select-tour">Tour</InputLabel>
+//   <Select
+//     labelId="select-tour"
+//     label="Tour"
+//     value={selectedTour || ''}
+//     onChange={(e) => handleSelect('tour', e.target.value)}
+//     renderValue={(selected) => selected?.title || "Select a tour"}
+//   >
+//     {results.tours.map((tour, index) => (
+//       <MenuItem key={index} value={tour} disabled={isOptionDisabled('tour', tour)}>
+
+//         {/* <CustomTooltip title={tour.title} image={tour.photo} details={[`Price: $${tour.price}`, tour.desc]} price={tour.price} /> */}
+
+//         <Tooltip
+//           title={
+//             <Box sx={{ width: '250px' }}>
+//               <TourCard tour={tour} />
+//             </Box>
+//           }
+//           arrow
+//           placement="right"
+//           // Override style cho tooltip
+//           sx={{
+//             // Ghi đè style của lớp .MuiTooltip-tooltip
+//             "& .MuiTooltip-tooltip": {
+//               backgroundColor: "#fff",  // Màu nền tooltip
+//               color: "inherit",         // Giữ nguyên màu chữ
+//               boxShadow: "none !important",        // Bỏ bóng đổ (thường gây cảm giác viền đen)
+//               // border: "1px solid #ccc", // Nếu muốn có đường viền xám nhẹ
+//             },
+//             // Ghi đè style của mũi tên tooltip
+//             "& .MuiTooltip-arrow": {
+//               color: "#fff",            // Màu mũi tên đồng bộ với nền tooltip
+//             },
+//           }}
+//         >
+//           <span>{tour.title}</span>
+//         </Tooltip>
+//       </MenuItem>
+
+//     ))}
+//   </Select>
+// </FormControl>
+
+
+//     </Grid>
+//     <Grid item xs={12} sm={6}>
+//       <FormControl fullWidth>
+//         <InputLabel id="select-flight">Flight</InputLabel>
+//         <Select
+//           labelId="select-flight"
+//           label="Flight"
+//           value={selectedFlight || ''}
+//           onChange={(e) => handleSelect('flight', e.target.value)}
+//           renderValue={(selected) => selected?.flightNumber || "Select a flight"}
+//         >
+//           {results.flights.map((flight, index) => (
+//             <MenuItem key={index} value={flight} disabled={isOptionDisabled('flight', flight)}>
+//               <CustomTooltip title={flight.flightNumber} details={[`Price: $${flight.price}`, `Airline: ${flight.airline}`, `Departure Date: ${new Date(flight.departureDate).toLocaleDateString()}`, `Class: ${flight.class}`]} price={flight.price} />
+
+//             </MenuItem>
+//           ))}
+//         </Select>
+//       </FormControl>
+//     </Grid>
+//     <Grid item xs={12} sm={6}>
+//       <FormControl fullWidth>
+//         <InputLabel id="select-hotel">Hotel</InputLabel>
+//         <Select
+//           labelId="select-hotel"
+//           label="Hotel"
+//           value={selectedHotel || ''}
+//           onChange={(e) => handleSelect('hotel', e.target.value)}
+//           renderValue={(selected) => selected?.hotelName || "Select a hotel"}
+//         >
+//           {results.hotels.map((hotel, index) => (
+//             <MenuItem key={index} value={hotel} disabled={isOptionDisabled('hotel', hotel)}>
+//               {
+//                 console.log("hotel: ", hotel)
+//               }
+//               <CustomTooltip title={hotel.hotelName} details={[`Price per Night: $${hotel.pricePerNight}`, `Stars: ${hotel.stars} ⭐`, `Rooms Available: ${hotel.roomsAvailable}`]} price={hotel.pricePerNight * duration} />
+//             </MenuItem>
+//           ))}
+//         </Select>
+//       </FormControl>
+
+//     </Grid>
+//   </Grid>
+
+
+//   <Typography variant="h6" sx={{ marginTop: 3, color: '#555' }}>
+//     Total Cost: <strong>${totalCost}</strong>
+//   </Typography>
+// </Box>
+//   )}
+// </Box>
+//     </Container>
+//   );
+// };
+
+// export default Suggestion;
+
+
+// import React, { useState, useEffect, useContext } from 'react';
+// import { Button, Box, CircularProgress, Container } from '@mui/material';
+// import { BASE_URL } from '../utils/config';
+// import CommonSection from '../shared/CommonSection';
+// import { AuthContext } from '../context/AuthContext';
+// import SuggestionForm from '../components/Suggestion/SuggestionForm';
+// import SuggestionResult from '../components/Suggestion/SuggestionResult';
+
+// const Suggestion = () => {
+//   const { user } = useContext(AuthContext);
+//   const userId = user?._id || '';
+//   const [budget, setBudget] = useState('');
+//   const [duration, setDuration] = useState('');
+//   const [departure, setDeparture] = useState('');
+//   const [destination, setDestination] = useState('');
+//   const [startDate, setStartDate] = useState('');
+//   const [results, setResults] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [selectedTour, setSelectedTour] = useState(null);
+//   const [selectedFlight, setSelectedFlight] = useState(null);
+//   const [selectedHotel, setSelectedHotel] = useState(null);
+//   const [totalCost, setTotalCost] = useState(0);
+//   const [reason, setReason] = useState('');
+
+//   useEffect(() => {
+//     if (results.tours?.length > 0) setSelectedTour(results.tours[0]);
+//     if (results.flights?.length > 0) setSelectedFlight(results.flights[0]);
+//     if (results.hotels?.length > 0) setSelectedHotel(results.hotels[0]);
+
+//     const initialTotal =
+//       (results.tours?.[0]?.price || 0) +
+//       (results.flights?.[0]?.price || 0) +
+//       ((results.hotels?.[0]?.pricePerNight || 0) * duration || 0);
+
+//     setTotalCost(!isNaN(initialTotal) ? initialTotal : 0);
+//   }, [results, duration]);
+
+//   const isOptionDisabled = (type, option) => {
+//     let tempTotalCost = totalCost;
+
+//     if (type === 'tour') {
+//       tempTotalCost = (option?.price || 0) + (selectedFlight?.price || 0) + (selectedHotel?.price || 0);
+//     } else if (type === 'flight') {
+//       tempTotalCost = (selectedTour?.price || 0) + (option?.price || 0) + (selectedHotel?.price || 0);
+//     } else if (type === 'hotel') {
+//       tempTotalCost = (selectedTour?.price || 0) + (selectedFlight?.price || 0) + (option?.pricePerNight * duration || 0);
+//     }
+
+//     return tempTotalCost > budget;
+//   };
+
+//   const handleSubmit = async () => {
+//     setTotalCost(0);
+//     setSelectedTour(null);
+//     setSelectedFlight(null);
+//     setSelectedHotel(null);
+//     setReason('');
+
+//     if (!budget || !duration || !departure || !startDate) {
+//       return alert('Please fill in fields!');
+//     }
+
+//     if (budget <= 0) {
+//       return alert('Budget must be greater than 0!');
+//     }
+
+//     setLoading(true);
+//     try {
+//       const response = await fetch(`${BASE_URL}/suggestions/suggest`, {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({ budget, duration, departure, destination, startDate, userId }),
+//       });
+
+//       if (!response.ok) {
+//         const errorData = await response.json();
+//         if (response.status === 404) {
+//           alert('No options found within your budget.');
+//         } else {
+//           alert('An error occurred while fetching suggestions.');
+//         }
+//         return;
+//       }
+
+//       const data = await response.json();
+//       setReason(data.reason || '');
+
+//       const uniqueTours = Array.from(
+//         new Map(data.options.map((item) => [item.tour.title, item.tour])).values()
+//       );
+//       const uniqueFlights = Array.from(
+//         new Map(data.options.map((item) => [item.flight.flightNumber, item.flight])).values()
+//       );
+//       const uniqueHotels = Array.from(
+//         new Map(data.options.map((item) => [item.hotel.hotelName, item.hotel])).values()
+//       );
+
+//       setResults({ tours: uniqueTours, flights: uniqueFlights, hotels: uniqueHotels });
+//     } catch (error) {
+//       console.error('Error fetching data', error);
+//       alert('An error occurred. Please try again later.');
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const handleSelect = (type, value) => {
+//     let newTour = selectedTour;
+//     let newFlight = selectedFlight;
+//     let newHotel = selectedHotel;
+
+//     if (type === 'tour') {
+//       newTour = value;
+//       setSelectedTour(value);
+//     } else if (type === 'flight') {
+//       newFlight = value;
+//       setSelectedFlight(value);
+//     } else if (type === 'hotel') {
+//       newHotel = value;
+//       setSelectedHotel(value);
+//     }
+
+//     const total =
+//       (newTour?.price || 0) +
+//       (newFlight?.price || 0) +
+//       (newHotel?.pricePerNight * duration || 0);
+
+//     setTotalCost(total);
+//   };
+
+//   return (
+//     <Container>
+//       <CommonSection title={"Suggestion"} />
+//       <Box sx={{ padding: 4, backgroundColor: '#f9f9f9', borderRadius: 2 }}>
+//         <SuggestionForm
+//           budget={budget} setBudget={setBudget}
+//           duration={duration} setDuration={setDuration}
+//           departure={departure} setDeparture={setDeparture}
+//           destination={destination} setDestination={setDestination}
+//           startDate={startDate} setStartDate={setStartDate}
+//           loading={loading}
+//           reason={reason}
+//         />
+
+//         <Button
+//           variant="contained"
+//           color="primary"
+//           sx={{ marginTop: 2, fontWeight: 'bold', fontSize: '1rem', padding: '0.75rem' }}
+//           fullWidth
+//           onClick={handleSubmit}
+//           disabled={loading}
+//         >
+//           {loading ? <CircularProgress size={24} color="inherit" /> : 'Suggest'}
+//         </Button>
+
+//         {results.tours?.length > 0 && (
+//           <Box sx={{ marginTop: 3 }}>
+//             <SuggestionResult
+//               results={results}
+//               selectedTour={selectedTour}
+//               selectedFlight={selectedFlight}
+//               selectedHotel={selectedHotel}
+//               duration={duration}
+//               handleSelect={handleSelect}
+//               isOptionDisabled={isOptionDisabled}
+//               totalCost={totalCost}
+//             />
+//           </Box>
+//         )}
+//       </Box>
+//     </Container>
+//   );
+// };
+
+// export default Suggestion;
+
+import React, { useState, useEffect, useContext } from 'react';
+import { Button, Box, CircularProgress, Container } from '@mui/material';
+import { BASE_URL } from '../utils/config';
+import CommonSection from '../shared/CommonSection';
+import { AuthContext } from '../context/AuthContext';
+import SuggestionForm from '../components/Suggestion/SuggestionForm';
+import SuggestionResult from '../components/Suggestion/SuggestionResult';
 
 const Suggestion = () => {
   const { user } = useContext(AuthContext);
@@ -37,36 +581,28 @@ const Suggestion = () => {
   const [selectedFlight, setSelectedFlight] = useState(null);
   const [selectedHotel, setSelectedHotel] = useState(null);
   const [totalCost, setTotalCost] = useState(0);
-  const [suggestedKeyword, setSuggestedKeyword] = useState('');
-  const [hoveredTour, setHoveredTour] = useState(null);
+  const [reason, setReason] = useState('');
 
   useEffect(() => {
-    if (results.tours?.length > 0) {
-      setSelectedTour(results.tours[0]);
-    }
-    if (results.flights?.length > 0) {
-      setSelectedFlight(results.flights[0]);
-    }
-    if (results.hotels?.length > 0) {
-      setSelectedHotel(results.hotels[0]);
-    }
+    if (destination && results.tours?.length > 0) setSelectedTour(results.tours[0]);
+    if (destination && results.flights?.length > 0) setSelectedFlight(results.flights[0]);
+    if (destination && results.hotels?.length > 0) setSelectedHotel(results.hotels[0]);
 
-    // Tính total cost mặc định
     const initialTotal =
       (results.tours?.[0]?.price || 0) +
       (results.flights?.[0]?.price || 0) +
       ((results.hotels?.[0]?.pricePerNight || 0) * duration || 0);
 
     setTotalCost(!isNaN(initialTotal) ? initialTotal : 0);
-  }, [results, duration]);
+  }, [results, duration, destination]);
 
   const isOptionDisabled = (type, option) => {
     let tempTotalCost = totalCost;
 
     if (type === 'tour') {
-      tempTotalCost = (option?.price || 0) + (selectedFlight?.price || 0) + (selectedHotel?.price || 0);
+      tempTotalCost = (option?.price || 0) + (selectedFlight?.price || 0) + (selectedHotel?.pricePerNight * duration || 0);
     } else if (type === 'flight') {
-      tempTotalCost = (selectedTour?.price || 0) + (option?.price || 0) + (selectedHotel?.price || 0);
+      tempTotalCost = (selectedTour?.price || 0) + (option?.price || 0) + (selectedHotel?.pricePerNight * duration || 0);
     } else if (type === 'hotel') {
       tempTotalCost = (selectedTour?.price || 0) + (selectedFlight?.price || 0) + (option?.pricePerNight * duration || 0);
     }
@@ -79,7 +615,7 @@ const Suggestion = () => {
     setSelectedTour(null);
     setSelectedFlight(null);
     setSelectedHotel(null);
-    setSuggestedKeyword('');
+    setReason('');
 
     if (!budget || !duration || !departure || !startDate) {
       return alert('Please fill in fields!');
@@ -88,7 +624,6 @@ const Suggestion = () => {
     if (budget <= 0) {
       return alert('Budget must be greater than 0!');
     }
-    console.log("User is: ", user)
 
     setLoading(true);
     try {
@@ -103,7 +638,6 @@ const Suggestion = () => {
       if (!response.ok) {
         const errorData = await response.json();
         if (response.status === 404) {
-          setSuggestedKeyword(errorData.suggestedKeyword || '');
           alert('No options found within your budget.');
         } else {
           alert('An error occurred while fetching suggestions.');
@@ -112,16 +646,14 @@ const Suggestion = () => {
       }
 
       const data = await response.json();
-      setSuggestedKeyword(data.suggestedKeyword || '');
+      setReason(data.reason || '');
 
       const uniqueTours = Array.from(
         new Map(data.options.map((item) => [item.tour.title, item.tour])).values()
       );
-
       const uniqueFlights = Array.from(
         new Map(data.options.map((item) => [item.flight.flightNumber, item.flight])).values()
       );
-
       const uniqueHotels = Array.from(
         new Map(data.options.map((item) => [item.hotel.hotelName, item.hotel])).values()
       );
@@ -135,22 +667,137 @@ const Suggestion = () => {
     }
   };
 
+  // const handleSelect = (type, value) => {
+  //   let newTour = selectedTour;
+  //   let newFlight = selectedFlight;
+  //   let newHotel = selectedHotel;
+
+  //   if (type === 'tour') {
+  //     newTour = value;
+  //     if (!destination) {
+  //       newFlight = null;
+  //       newHotel = null;
+  //       setSelectedFlight(null);
+  //       setSelectedHotel(null);
+  //     }
+  //     setSelectedTour(newTour);
+
+  //   } else if (type === 'flight') {
+  //     newFlight = value;
+  //     setSelectedFlight(newFlight);
+  //   } else if (type === 'hotel') {
+  //     newHotel = value;
+  //     setSelectedHotel(newHotel);
+  //   }
+
+  //   const total =
+  //     (newTour?.price || 0) +
+  //     (newFlight?.price || 0) +
+  //     (newHotel?.pricePerNight * duration || 0);
+
+  //   setTotalCost(total);
+  // };
+
   const handleSelect = (type, value) => {
+    const flights = results.flights || [];
+    const hotels = results.hotels || [];
+    const tours = results.tours || [];
+
     let newTour = selectedTour;
     let newFlight = selectedFlight;
     let newHotel = selectedHotel;
 
     if (type === 'tour') {
       newTour = value;
-      setSelectedTour(value);
-    } else if (type === 'flight') {
-      newFlight = value;
-      setSelectedFlight(value);
-    } else if (type === 'hotel') {
-      newHotel = value;
-      setSelectedHotel(value);
+      const city = newTour.city;
+      const currentTotal =
+        newTour.price +
+        (selectedFlight?.price || 0) +
+        (selectedHotel?.pricePerNight || 0) * duration;
+
+      if (currentTotal <= budget) {
+        // Vẫn trong ngân sách → giữ nguyên flight + hotel
+      } else {
+        // Vượt ngân sách → tìm combo flight + hotel tốt nhất cho tour này
+        const validFlights = flights.filter(f => f.arrivalCity === city);
+        const validHotels = hotels.filter(h => h.location === city);
+        let best = { total: Infinity, flight: null, hotel: null };
+
+        for (let f of validFlights) {
+          for (let h of validHotels) {
+            const total = newTour.price + f.price + h.pricePerNight * duration;
+            if (total <= budget && total < best.total) {
+              best = { total, flight: f, hotel: h };
+            }
+          }
+        }
+
+        newFlight = best.flight;
+        newHotel = best.hotel;
+      }
+
+      setSelectedTour(newTour);
+      setSelectedFlight(newFlight);
+      setSelectedHotel(newHotel);
     }
 
+    else if (type === 'flight') {
+      newFlight = value;
+
+      if (!selectedTour) return;
+
+      const currentTotal =
+        selectedTour.price + newFlight.price + (selectedHotel?.pricePerNight || 0) * duration;
+
+      if (currentTotal <= budget) {
+        // Vẫn trong ngân sách → giữ hotel
+      } else {
+        const validHotels = hotels.filter(h => h.location === selectedTour.city);
+        let best = { total: Infinity, hotel: null };
+
+        for (let h of validHotels) {
+          const total = selectedTour.price + newFlight.price + h.pricePerNight * duration;
+          if (total <= budget && total < best.total) {
+            best = { total, hotel: h };
+          }
+        }
+
+        newHotel = best.hotel;
+      }
+
+      setSelectedFlight(newFlight);
+      setSelectedHotel(newHotel);
+    }
+
+    else if (type === 'hotel') {
+      newHotel = value;
+
+      if (!selectedTour) return;
+
+      const currentTotal =
+        selectedTour.price + (selectedFlight?.price || 0) + newHotel.pricePerNight * duration;
+
+      if (currentTotal <= budget) {
+        // Vẫn trong ngân sách → giữ flight
+      } else {
+        const validFlights = flights.filter(f => f.arrivalCity === selectedTour.city);
+        let best = { total: Infinity, flight: null };
+
+        for (let f of validFlights) {
+          const total = selectedTour.price + f.price + newHotel.pricePerNight * duration;
+          if (total <= budget && total < best.total) {
+            best = { total, flight: f };
+          }
+        }
+
+        newFlight = best.flight;
+      }
+
+      setSelectedHotel(newHotel);
+      setSelectedFlight(newFlight);
+    }
+
+    // Cập nhật tổng chi phí
     const total =
       (newTour?.price || 0) +
       (newFlight?.price || 0) +
@@ -159,95 +806,21 @@ const Suggestion = () => {
     setTotalCost(total);
   };
 
+
+
   return (
     <Container>
-      <CommonSection title={"Suggestion"} />
+      <CommonSection title={'Suggestion'} />
       <Box sx={{ padding: 4, backgroundColor: '#f9f9f9', borderRadius: 2 }}>
-        {/* <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', color: '#333', fontWeight: 'bold' }}>
-          Search Tours, Flights, and Hotels
-        </Typography> */}
-
-        <Grid container spacing={4} sx={{ marginBottom: 3 }}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Budget"
-              type="text"
-              value={budget}
-              onChange={(e) => setBudget(e.target.value)}
-              disabled={loading}
-              variant="outlined"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Duration (Days)"
-              type="text"
-              value={duration}
-              onChange={(e) => setDuration((e.target.value))}
-              disabled={loading}
-              variant="outlined"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth sx={{ borderColor: '#ccc', borderWidth: 1, borderRadius: 1 }}>
-              <InputLabel id="select-departure">Departure</InputLabel>
-              <Select
-                labelId="select-departure"
-                label="Departure"
-                value={departure}
-                onChange={(e) => setDeparture(e.target.value)}
-                disabled={loading}
-                renderValue={(selected) => selected || "Select a departure"}
-              >
-                {provinces.map((province) => (
-                  <MenuItem key={province} value={province}>
-                    {province}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth sx={{ borderColor: '#ccc', borderWidth: 1, borderRadius: 1 }}>
-              <InputLabel id="select-destination">Destination</InputLabel>
-              <Select
-                labelId="select-destination"
-                label="Destination"
-                value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-                disabled={loading}
-                renderValue={(selected) => selected || "Select a destination"}
-              >
-                {provinces.map((province) => (
-                  <MenuItem key={province} value={province}>
-                    {province}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            {suggestedKeyword && !destination && (
-              <Typography variant="body2" sx={{ color: 'gray', marginTop: 1 }}>
-                Suggestion keyword: {suggestedKeyword} (based on your booking history)
-              </Typography>
-            )}
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Start Date"
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              disabled={loading}
-              variant="outlined"
-            />
-          </Grid>
-        </Grid>
+        <SuggestionForm
+          budget={budget} setBudget={setBudget}
+          duration={duration} setDuration={setDuration}
+          departure={departure} setDeparture={setDeparture}
+          destination={destination} setDestination={setDestination}
+          startDate={startDate} setStartDate={setStartDate}
+          loading={loading}
+          reason={reason}
+        />
 
         <Button
           variant="contained"
@@ -260,110 +833,20 @@ const Suggestion = () => {
           {loading ? <CircularProgress size={24} color="inherit" /> : 'Suggest'}
         </Button>
 
-        {results.tours && results.tours.length > 0 && (
+        {results.tours?.length > 0 && (
           <Box sx={{ marginTop: 3 }}>
-            <Typography variant="h5" gutterBottom sx={{ color: '#444', fontWeight: 'medium' }}>
-              Results:
-            </Typography>
-
-            <Grid container spacing={4}>
-              <Grid item xs={12} sm={6}>
-
-
-                <FormControl fullWidth>
-                  <InputLabel id="select-tour">Tour</InputLabel>
-                  <Select
-                    labelId="select-tour"
-                    label="Tour"
-                    value={selectedTour || ''}
-                    onChange={(e) => handleSelect('tour', e.target.value)}
-                    renderValue={(selected) => selected?.title || "Select a tour"}
-                  >
-                    {results.tours.map((tour, index) => (
-                      <MenuItem key={index} value={tour} disabled={isOptionDisabled('tour', tour)}>
-
-                        {/* <CustomTooltip title={tour.title} image={tour.photo} details={[`Price: $${tour.price}`, tour.desc]} price={tour.price} /> */}
-
-                        <Tooltip
-                          title={
-                            <Box sx={{ width: '250px' }}>
-                              <TourCard tour={tour} />
-                            </Box>
-                          }
-                          arrow
-                          placement="right"
-                          // Override style cho tooltip
-                          sx={{
-                            // Ghi đè style của lớp .MuiTooltip-tooltip
-                            "& .MuiTooltip-tooltip": {
-                              backgroundColor: "#fff",  // Màu nền tooltip
-                              color: "inherit",         // Giữ nguyên màu chữ
-                              boxShadow: "none !important",        // Bỏ bóng đổ (thường gây cảm giác viền đen)
-                              // border: "1px solid #ccc", // Nếu muốn có đường viền xám nhẹ
-                            },
-                            // Ghi đè style của mũi tên tooltip
-                            "& .MuiTooltip-arrow": {
-                              color: "#fff",            // Màu mũi tên đồng bộ với nền tooltip
-                            },
-                          }}
-                        >
-                          <span>{tour.title}</span>
-                        </Tooltip>
-                      </MenuItem>
-
-                    ))}
-                  </Select>
-                </FormControl>
-
-
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormControl fullWidth>
-                  <InputLabel id="select-flight">Flight</InputLabel>
-                  <Select
-                    labelId="select-flight"
-                    label="Flight"
-                    value={selectedFlight || ''}
-                    onChange={(e) => handleSelect('flight', e.target.value)}
-                    renderValue={(selected) => selected?.flightNumber || "Select a flight"}
-                  >
-                    {results.flights.map((flight, index) => (
-                      <MenuItem key={index} value={flight} disabled={isOptionDisabled('flight', flight)}>
-                        <CustomTooltip title={flight.flightNumber} details={[`Price: $${flight.price}`, `Airline: ${flight.airline}`, `Departure Date: ${new Date(flight.departureDate).toLocaleDateString()}`, `Class: ${flight.class}`]} price={flight.price} />
-
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormControl fullWidth>
-                  <InputLabel id="select-hotel">Hotel</InputLabel>
-                  <Select
-                    labelId="select-hotel"
-                    label="Hotel"
-                    value={selectedHotel || ''}
-                    onChange={(e) => handleSelect('hotel', e.target.value)}
-                    renderValue={(selected) => selected?.hotelName || "Select a hotel"}
-                  >
-                    {results.hotels.map((hotel, index) => (
-                      <MenuItem key={index} value={hotel} disabled={isOptionDisabled('hotel', hotel)}>
-                        {
-                          console.log("hotel: ", hotel)
-                        }
-                        <CustomTooltip title={hotel.hotelName} details={[`Price per Night: $${hotel.pricePerNight}`, `Stars: ${hotel.stars} ⭐`, `Rooms Available: ${hotel.roomsAvailable}`]} price={hotel.pricePerNight * duration} />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-
-              </Grid>
-            </Grid>
-
-
-            <Typography variant="h6" sx={{ marginTop: 3, color: '#555' }}>
-              Total Cost: <strong>${totalCost}</strong>
-            </Typography>
+            <SuggestionResult
+              results={results}
+              selectedTour={selectedTour}
+              selectedFlight={selectedFlight}
+              selectedHotel={selectedHotel}
+              duration={duration}
+              handleSelect={handleSelect}
+              isOptionDisabled={isOptionDisabled}
+              totalCost={totalCost}
+              reason={reason}
+              destination={destination}
+            />
           </Box>
         )}
       </Box>
