@@ -21,7 +21,7 @@ const tourSchema = new mongoose.Schema(
         'Khanh Hoa', 'Yen Bai', 'Quang Nam', 'Nghe An', 'Bac Kan',
         'Quang Ngai', 'Lang Son', 'Nam Dinh', 'Thai Nguyen', 'Hoa Binh',
         'Quang Binh', 'Tuyen Quang', 'Hien Giang', 'Long An', 'Lam Dong',
-        'Sapa', 'Hung Yen', 'Bac Giang', 'Tuyen Quang', 'Quang Tri'
+        'Sapa', 'Hung Yen', 'Bac Giang', 'Tuyen Quang', 'Quang Tri',
       ],
       required: true,
     },
@@ -42,7 +42,7 @@ const tourSchema = new mongoose.Schema(
     },
     duration: {
       type: Number,
-      required: true,
+      required: false,
     },
     price: {
       type: Number,
@@ -63,6 +63,10 @@ const tourSchema = new mongoose.Schema(
     featured: {
       type: Boolean,
       default: false,
+    },
+    embedding: {
+      type: [Number],
+      default: [],
     },
   },
   { timestamps: true }

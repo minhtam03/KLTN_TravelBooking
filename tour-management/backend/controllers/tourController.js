@@ -1,28 +1,56 @@
 import Tour from '../models/Tour.js'
+import { getEmbedding } from '../utils/embeddingHelper.js';
 
 // create new tour
 
-export const createTour = async (req, res) => {
-    const newTour = new Tour(req.body)
-    try {
-        const savedTour = await newTour.save()
+// export const createTour = async (req, res) => {
+//     const newTour = new Tour(req.body)
+//     try {
+//         const savedTour = await newTour.save()
 
-        res
-            .status(200)
-            .json({
-                success: true,
-                message: "Successfully created",
-                data: savedTour,
-            })
+//         res
+//             .status(200)
+//             .json({
+//                 success: true,
+//                 message: "Successfully created",
+//                 data: savedTour,
+//             })
+//     } catch (error) {
+//         res
+//             .status(500)
+//             .json({
+//                 success: false,
+//                 message: "Failed to create. Try again"
+//             })
+//     }
+// }
+export const createTour = async (req, res) => {
+    try {
+        const { desc } = req.body;
+
+        // Gọi Hugging Face để tạo embedding
+        const embedding = await getEmbedding(desc);
+
+        const newTour = new Tour({
+            ...req.body,
+            embedding, // thêm embedding vào tour
+        });
+
+        const savedTour = await newTour.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Successfully created with embedding",
+            data: savedTour,
+        });
     } catch (error) {
-        res
-            .status(500)
-            .json({
-                success: false,
-                message: "Failed to create. Try again"
-            })
+        console.error("Create tour failed:", error.message);
+        res.status(500).json({
+            success: false,
+            message: "Failed to create. Try again",
+        });
     }
-}
+};
 
 // update tour
 export const updateTour = async (req, res) => {
