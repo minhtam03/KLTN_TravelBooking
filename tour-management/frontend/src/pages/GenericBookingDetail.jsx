@@ -6,13 +6,13 @@ import { BASE_URL } from "../utils/config";
 import "../styles/booking-detail.css";
 import { Button } from "@mui/material";
 
-const BookingDetail = () => {
+const GenericBookingDetail = ({ type }) => {
     const { user } = useContext(AuthContext);
     const { bookingId } = useParams();
     const [booking, setBooking] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const serviceFee = 10
+    const serviceFee = 10;
 
     useEffect(() => {
         const fetchBookingDetail = async () => {
@@ -23,7 +23,7 @@ const BookingDetail = () => {
                     return;
                 }
 
-                const res = await fetch(`${BASE_URL}/booking/${bookingId}`, {
+                const res = await fetch(`${BASE_URL}/${type}-bookings/${bookingId}`, {
                     method: "GET",
                     headers: {
                         "Authorization": `Bearer ${user.token}`,
@@ -47,25 +47,40 @@ const BookingDetail = () => {
         };
 
         fetchBookingDetail();
-    }, [bookingId, user]);
+    }, [bookingId, user, type]);
 
-
-    // Xử lý thanh toán lại nếu payment đang ở trạng thái pending
     const handleContinuePayment = async () => {
         if (!booking) return;
 
+        let unitPrice = 0;
+        let quantity = 1;
+        let itemName = "";
+
+        if (type === "tour") {
+            unitPrice = booking.tourId?.price || 0;
+            quantity = booking.guestSize;
+            itemName = booking.tourName;
+        } else if (type === "hotel") {
+            unitPrice = booking.hotelId?.pricePerNight || 0;
+            quantity = booking.night;
+            itemName = booking.hotelName;
+        } else {
+            // mở rộng cho flight/others
+            unitPrice = booking.price || 0;
+            itemName = booking.name;
+        }
+
+        const totalAmount = unitPrice * quantity + serviceFee;
+
+        const paymentData = {
+            bookingId: booking._id,
+            userId: booking.userId,
+            name: itemName,
+            type,
+            price: totalAmount,
+        };
+
         try {
-            const totalAmount = booking.guestSize * booking.tourId?.price + serviceFee;
-
-            const paymentData = {
-                bookingId: booking._id,
-                userId: booking.userId,
-                // tourName: booking.tourName,
-                name: booking.tourName,
-                type: "tour",
-                price: totalAmount,  // Tổng giá trị đơn hàng
-            };
-
             const res = await fetch(`${BASE_URL}/payments`, {
                 method: "POST",
                 headers: {
@@ -77,11 +92,10 @@ const BookingDetail = () => {
 
             const result = await res.json();
 
-            if (!res.ok || !result.session || !result.session.url) {
+            if (!res.ok || !result.session?.url) {
                 return alert("Payment failed. Please try again.");
             }
 
-            // Chuyển hướng đến trang thanh toán của Stripe
             window.location.href = result.session.url;
         } catch (err) {
             console.error("Error:", err);
@@ -93,43 +107,47 @@ const BookingDetail = () => {
     if (error) return <p className="error-text">{error}</p>;
     if (!booking) return <p>No booking found.</p>;
 
+    const item = type === "tour" ? booking.tourId : booking.hotelId;
+    const image = item?.photo;
+    const name = item?.title || item?.hotelName || "Service";
+    const dateLabel = type === "tour" ? "Tour Date" : "Check-in Date";
+    const quantityLabel = type === "tour" ? "Guest" : "Nights";
+    const quantity = type === "tour" ? booking.guestSize : booking.night;
+    const unitPrice = type === "tour" ? item?.price : item?.pricePerNight;
+    const totalPrice = unitPrice * quantity + serviceFee;
+    const detailLink = type === "tour" ? `/tours/${item?._id}` : `/hotels/${item?._id}`;
+
     return (
         <Container className="booking-detail">
             <h2>Booking Details</h2>
             <div className="booking-detail__content">
                 <div className="booking-detail__image">
-                    <img src={booking.tourId?.photo || ""} alt={booking.tourId?.title || "Tour Image"} />
+                    <img src={image || ""} alt={name} />
                 </div>
                 <div className="booking-detail__info">
-                    {/* <h3>{booking.tourId?.title}</h3> */}
                     <h3>
-                        <Link to={`/tours/${booking.tourId?._id}`} className="tour-link">
-                            {booking.tourId?.title}
+                        <Link to={detailLink} className="tour-link">
+                            {name}
                         </Link>
                     </h3>
                     <p><strong>Booked by:</strong> {booking.fullName} ({booking.userEmail})</p>
                     <p><strong>Contact Number:</strong> {booking.phone}</p>
-
-                    <p><strong>Tour Date:</strong> {new Date(booking.bookAt).toLocaleDateString()}</p>
+                    <p><strong>{dateLabel}:</strong> {new Date(booking.bookAt).toLocaleDateString()}</p>
                     <p><strong>Booking Date:</strong> {new Date(booking.createdAt).toLocaleDateString()}</p>
-                    <p><strong>Price per person:</strong> ${booking.tourId?.price}</p>
-                    <p><strong>Guest:</strong> {booking.guestSize} people</p>
-
-                    <p><strong>Total Payment:</strong> ${booking.guestSize * booking.tourId?.price + serviceFee}</p>
+                    <p><strong>Price per unit:</strong> ${unitPrice}</p>
+                    <p><strong>{quantityLabel}:</strong> {quantity}</p>
+                    <p><strong>Total Payment:</strong> ${totalPrice}</p>
                     <p><strong>Payment Status:</strong> {booking.paymentStatus || "Pending"}</p>
 
-
                     <div className="booking-actions">
-                        <Button variant="outlined" color="primary" onClick={handleContinuePayment}>
+                        <Button variant="outlined" color="error">
                             Cancel Booking
                         </Button>
 
-                        {/* Nếu trạng thái thanh toán là pending thì hiển thị nút thanh toán */}
                         {booking.paymentStatus === "pending" && (
                             <Button variant="contained" color="primary" onClick={handleContinuePayment}>
                                 Continue Payment
                             </Button>
-
                         )}
                     </div>
                 </div>
@@ -138,4 +156,4 @@ const BookingDetail = () => {
     );
 };
 
-export default BookingDetail;
+export default GenericBookingDetail;

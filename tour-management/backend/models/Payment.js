@@ -31,6 +31,11 @@ const paymentSchema = new mongoose.Schema(
             enum: ["pending", "success", "failed"],
             default: "pending",
         },
+        type: {
+            type: String,
+            enum: ["tour", "hotel", "flight"],
+            required: true
+        },
         createdAt: {
             type: Date,
             default: Date.now,

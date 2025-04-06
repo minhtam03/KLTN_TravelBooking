@@ -163,6 +163,7 @@ import CommonSection from './../shared/CommonSection';
 import Booking from '../components/Booking/Booking';
 import '../styles/hotel-details.css';
 import BookingHotel from '../components/Booking/BookingHotel';
+import BookingForm from '../components/Booking/BookingForm';
 
 const HotelDetail = () => {
     const { id } = useParams();
@@ -175,7 +176,7 @@ const HotelDetail = () => {
 
     return (
         <section>
-            <CommonSection title="Hotel Details" />
+            {/* <CommonSection title="Hotel Details" /> */}
             <Container>
                 {loading && <h4 className="text-center pt-5">Loading...</h4>}
                 {error && <h4 className="text-center pt-5">{error}</h4>}
@@ -199,7 +200,8 @@ const HotelDetail = () => {
                             </div>
                         </Col>
                         <Col lg="4">
-                            <BookingHotel hotel={hotel} />
+                            {/* <BookingHotel hotel={hotel} /> */}
+                            <BookingForm item={hotel} type="hotel" />
                         </Col>
                     </Row>
                 )}

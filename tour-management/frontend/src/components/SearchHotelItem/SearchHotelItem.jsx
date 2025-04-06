@@ -70,7 +70,7 @@ const SearchHotelItem = ({ hotel }) => {
                 <div className="siDetailTexts">
                     <span className="siPrice">${hotel.pricePerNight}</span>
                     <span className="siTaxOp">Includes taxes and fees</span>
-                    <Link to={`/hotels/${hotel._id}`}>
+                    <Link to={`/stays/${hotel._id}`}>
                         <button className="siCheckButton">See availability</button>
                     </Link>
                 </div>

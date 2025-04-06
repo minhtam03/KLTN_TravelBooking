@@ -8,6 +8,8 @@ import {
 
 const router = express.Router();
 
+// /api/v1/hotel-bookings
+
 router.post("/", createHotelBooking);
 router.get("/hotel-history/all", getHotelBookingHistory);
 router.get("/hotel-history/count", getHotelBookingCount);

@@ -21,11 +21,11 @@ const hotelBookingSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    night: {
+    nights: {
         type: Number,
         required: true
     },
-    departureDate: {
+    bookAt: {
         type: Date,
         required: true
     },

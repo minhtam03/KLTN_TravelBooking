@@ -18,7 +18,7 @@ const BookingHotel = ({ hotel }) => {
         fullName: '',
         phone: '',
         night: 1,
-        departureDate: '',
+        bookAt: '',
     });
 
     const handleChange = (e) => {
@@ -32,7 +32,7 @@ const BookingHotel = ({ hotel }) => {
         e.preventDefault();
 
         const today = new Date().setHours(0, 0, 0, 0);
-        const checkDate = new Date(booking.departureDate).setHours(0, 0, 0, 0);
+        const checkDate = new Date(booking.bookAt).setHours(0, 0, 0, 0);
         if (checkDate < today) {
             return alert("Departure date must be today or later.");
         }
@@ -96,7 +96,7 @@ const BookingHotel = ({ hotel }) => {
                         <input type="text" placeholder="Phone" id="phone" required onChange={handleChange} />
                     </FormGroup>
                     <FormGroup className="d-flex align-items-center gap-3">
-                        <input type="date" id="departureDate" required onChange={handleChange} />
+                        <input type="date" id="bookAt" required onChange={handleChange} />
                         <input type="number" placeholder="Nights" id="night" min={1} required onChange={handleChange} />
                     </FormGroup>
                 </Form>

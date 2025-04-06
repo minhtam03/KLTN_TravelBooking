@@ -1,6 +1,7 @@
 import React from 'react'
 import { Container } from 'reactstrap'
 import { faBed } from "@fortawesome/free-solid-svg-icons/faBed";
+import { faDollarSign } from "@fortawesome/free-solid-svg-icons/faDollarSign";
 import { faCalendarDays } from "@fortawesome/free-solid-svg-icons/faCalendarDays";
 import { faPerson } from "@fortawesome/free-solid-svg-icons/faPerson";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -63,7 +64,7 @@ const SearchBarStay = () => {
         }
       });
 
-      navigate("/hotels/search", {
+      navigate("/stays/search", {
         state: {
           data: res.data.data,
           destination,
@@ -88,6 +89,7 @@ const SearchBarStay = () => {
         />
       </div>
       <div className="headerSearchItem">
+        <FontAwesomeIcon icon={faDollarSign} className="headerIcon" />
         <input
           type="number"
           placeholder="Min price"
@@ -98,6 +100,7 @@ const SearchBarStay = () => {
       </div>
 
       <div className="headerSearchItem">
+        <FontAwesomeIcon icon={faDollarSign} className="headerIcon" />
         <input
           type="number"
           placeholder="Max price"

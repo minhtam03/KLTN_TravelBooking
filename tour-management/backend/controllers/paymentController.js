@@ -79,6 +79,7 @@ const stripe = new Stripe(key)
 // }
 
 // cho cả tour và hotel
+
 export const createPayment = async (req, res) => {
     try {
         const { bookingId, userId, price, name, type } = req.body;
@@ -117,6 +118,7 @@ export const createPayment = async (req, res) => {
             paymentMethod: "Stripe",
             transactionId: session.id,
             status: "pending",
+            type,
         });
 
         const savedPayment = await newPayment.save();
@@ -154,7 +156,59 @@ export const createPayment = async (req, res) => {
     }
 };
 
+// cho tour
+// export const updatePaymentStatus = async (req, res) => {
+//     try {
+//         const { transactionId } = req.body;
 
+//         if (!transactionId) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Missing transaction ID",
+//             });
+//         }
+
+//         // Tìm thanh toán theo transactionId
+//         const payment = await Payment.findOne({ transactionId });
+
+//         if (!payment) {
+//             return res.status(404).json({
+//                 success: false,
+//                 message: "Payment not found",
+//             });
+//         }
+
+//         if (payment.status === "success") {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Payment is already successful",
+//             });
+//         }
+
+//         // Cập nhật trạng thái thanh toán
+//         payment.status = "success";
+//         await payment.save();
+
+//         // Cập nhật trạng thái booking tương ứng
+//         await Booking.findByIdAndUpdate(payment.bookingId, {
+//             paymentStatus: "paid",
+//         });
+
+//         res.status(200).json({
+//             success: true,
+//             message: "Payment status updated successfully",
+//         });
+//     } catch (error) {
+//         res.status(500).json({
+//             success: false,
+//             message: "Internal server error",
+//             error: error.message,
+//         });
+//     }
+// };
+
+
+// cho tour và hotel
 export const updatePaymentStatus = async (req, res) => {
     try {
         const { transactionId } = req.body;
@@ -187,15 +241,21 @@ export const updatePaymentStatus = async (req, res) => {
         payment.status = "success";
         await payment.save();
 
-        // Cập nhật trạng thái booking tương ứng
-        await Booking.findByIdAndUpdate(payment.bookingId, {
-            paymentStatus: "paid",
-        });
+        if (payment.type === "tour") {
+            await Booking.findByIdAndUpdate(payment.bookingId, {
+                paymentStatus: "paid",
+            });
+        } else if (payment.type === "hotel") {
+            await HotelBooking.findByIdAndUpdate(payment.bookingId, {
+                paymentStatus: "paid",
+            });
+        }
 
         res.status(200).json({
             success: true,
             message: "Payment status updated successfully",
         });
+
     } catch (error) {
         res.status(500).json({
             success: false,

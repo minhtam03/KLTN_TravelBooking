@@ -10,6 +10,7 @@ import calculateAvgRating from '../utils/avgRating';
 import { BASE_URL } from '../utils/config';
 import useReview from '../hooks/useReview';
 import ReviewSummary from '../components/ReviewSummary/ReviewSummary';
+import BookingForm from '../components/Booking/BookingForm';
 
 const TourDetails = () => {
   const { id } = useParams();
@@ -263,7 +264,8 @@ const TourDetails = () => {
               </Col>
 
               <Col lg="4">
-                <Booking tour={tour} avgRating={avgRating} />
+                {/* <Booking tour={tour} avgRating={avgRating} /> */}
+                <BookingForm item={tour} type="tour" avgRating={avgRating} />
               </Col>
             </Row>
           )}
