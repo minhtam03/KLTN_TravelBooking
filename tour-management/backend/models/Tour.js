@@ -40,6 +40,10 @@ const tourSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    category: {
+      type: String,
+      required: false,
+    },
     duration: {
       type: Number,
       required: false,

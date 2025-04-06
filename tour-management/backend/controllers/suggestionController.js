@@ -237,7 +237,7 @@ export const getSuggestions = async (req, res) => {
 
         // ✅ Khi KHÔNG nhập destination → dùng hàm gợi ý embedding tái sử dụng
         else {
-            const recommendedTours = await getSuggestedTours(userId, 10);
+            const recommendedTours = await getSuggestedTours(userId, 5);
 
             if (!recommendedTours.length) {
                 return res.status(404).json({ message: "User has no bookings yet" });
@@ -253,7 +253,7 @@ export const getSuggestions = async (req, res) => {
             });
 
             const keywords = Array.from(keywordSet).slice(0, 5).join(", ");
-            reason = `Gợi ý dựa trên các tour bạn đã từng đặt trước đó, có liên quan đến: ${keywords}.`;
+            reason = `Suggestions based on the tours you have previously booked, related to: ${keywords}.`;
 
             for (let tour of recommendedTours) {
                 const city = tour.city;
