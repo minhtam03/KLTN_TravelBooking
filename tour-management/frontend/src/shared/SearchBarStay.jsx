@@ -11,42 +11,69 @@ import { useContext, useState } from "react";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import './search-bar-stay.css'
+import axios from 'axios';
+import { BASE_URL } from '../utils/config';
 
 const SearchBarStay = () => {
   const [destination, setDestination] = useState("");
-  const [openDate, setOpenDate] = useState(false);
-  const [dates, setDates] = useState([
-    {
-      startDate: new Date(),
-      endDate: new Date(),
-      key: "selection",
-    },
-  ]);
-  const [openOptions, setOpenOptions] = useState(false);
-  const [options, setOptions] = useState({
-    adult: 1,
-    children: 0,
-    room: 1,
-  });
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  // const [openDate, setOpenDate] = useState(false);
+  // const [dates, setDates] = useState([
+  //   {
+  //     startDate: new Date(),
+  //     endDate: new Date(),
+  //     key: "selection",
+  //   },
+  // ]);
+  // const [openOptions, setOpenOptions] = useState(false);
+  // const [options, setOptions] = useState({
+  //   adult: 1,
+  //   children: 0,
+  //   room: 1,
+  // });
 
   const navigate = useNavigate();
   // const { user } = useContext(AuthContext);
 
 
-  const handleOption = (name, operation) => {
-    setOptions((prev) => {
-      return {
-        ...prev,
-        [name]: operation === "i" ? options[name] + 1 : options[name] - 1,
-      };
-    });
-  };
+  // const handleOption = (name, operation) => {
+  //   setOptions((prev) => {
+  //     return {
+  //       ...prev,
+  //       [name]: operation === "i" ? options[name] + 1 : options[name] - 1,
+  //     };
+  //   });
+  // };
 
   // const { dispatch } = useContext(SearchContext);
 
-  const handleSearch = () => {
-    // dispatch({ type: "NEW_SEARCH", payload: { destination, dates, options } });
-    navigate("/hotels", { state: { destination, dates, options } });
+  // const handleSearch = () => {
+  //   // dispatch({ type: "NEW_SEARCH", payload: { destination, dates, options } });
+  //   navigate("/hotels", { state: { destination, dates, options } });
+  // };
+
+  const handleSearch = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/hotels/search/getHotelBySearch`, {
+        params: {
+          location: destination,
+          minPrice: minPrice || 0,
+          maxPrice: maxPrice || 9999
+        }
+      });
+
+      navigate("/hotels/search", {
+        state: {
+          data: res.data.data,
+          destination,
+          minPrice,
+          maxPrice
+        }
+      });
+    } catch (err) {
+      console.error("Search failed:", err);
+    }
   };
 
   return (
@@ -61,6 +88,26 @@ const SearchBarStay = () => {
         />
       </div>
       <div className="headerSearchItem">
+        <input
+          type="number"
+          placeholder="Min price"
+          className="headerSearchInput"
+          value={minPrice}
+          onChange={(e) => setMinPrice(e.target.value)}
+        />
+      </div>
+
+      <div className="headerSearchItem">
+        <input
+          type="number"
+          placeholder="Max price"
+          className="headerSearchInput"
+          value={maxPrice}
+          onChange={(e) => setMaxPrice(e.target.value)}
+        />
+      </div>
+
+      {/* <div className="headerSearchItem">
         <FontAwesomeIcon icon={faCalendarDays} className="headerIcon" />
         <span
           onClick={() => setOpenDate(!openDate)}
@@ -79,6 +126,39 @@ const SearchBarStay = () => {
             minDate={new Date()}
           />
         )}
+      </div> */}
+
+      {/* <div className="headerSearchItem">
+        <FontAwesomeIcon icon={faCalendarDays} className="headerIcon" />
+        <div className="dateInputs">
+          <input
+            type="date"
+            value={format(dates[0].startDate, "yyyy-MM-dd")}
+            onChange={(e) =>
+              setDates([
+                {
+                  ...dates[0],
+                  startDate: new Date(e.target.value),
+                },
+              ])
+            }
+            className="dateInput"
+          />
+          <span style={{ margin: '0 5px' }}>to</span>
+          <input
+            type="date"
+            value={format(dates[0].endDate, "yyyy-MM-dd")}
+            onChange={(e) =>
+              setDates([
+                {
+                  ...dates[0],
+                  endDate: new Date(e.target.value),
+                },
+              ])
+            }
+            className="dateInput"
+          />
+        </div>
       </div>
       <div className="headerSearchItem">
         <FontAwesomeIcon icon={faPerson} className="headerIcon" />
@@ -153,7 +233,7 @@ const SearchBarStay = () => {
             </div>
           </div>
         )}
-      </div>
+      </div> */}
       <div className="headerSearchItem">
         <button className="headerBtn" onClick={handleSearch}>
           Search

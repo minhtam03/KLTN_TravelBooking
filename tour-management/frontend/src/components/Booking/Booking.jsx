@@ -80,8 +80,10 @@ const Booking = ({ tour, avgRating }) => {
             const paymentData = {
                 bookingId: bookingId,  // Đã lấy từ response booking
                 userId: booking.userId,
-                tourName: booking.tourName, // Đảm bảo khớp với backend
+                // tourName: booking.tourName, // Đảm bảo khớp với backend
                 price: totalAmount,  // Đã bao gồm phí dịch vụ
+                type: "tour",
+                name: booking.tourName,
             };
 
             console.log("Sending payment request:", paymentData);

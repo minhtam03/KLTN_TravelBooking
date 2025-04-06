@@ -25,6 +25,9 @@ const hotelSchema = new mongoose.Schema({
     type: [String],
     required: true,
   },
+  photo: {
+    type: String,
+  },
 }, {
   timestamps: true,  // Thêm timestamp cho thời gian tạo và cập nhật
 });

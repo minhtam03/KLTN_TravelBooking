@@ -50,9 +50,10 @@ const Routers = () => {
       <Route path='/thank-you' element={<ThankYou />} />
       <Route path='/history' element={<BookingHistory />} />
       <Route path='/suggestion' element={<Suggestion />} />
-      <Route path='/hotels' element={<SearchResultListHotel />} />
-      <Route path='/hotels/single' element={<HotelDetails />} />
+      {/* <Route path='/hotels' element={<SearchResultListHotel />} /> */}
+      <Route path='/hotels/:id' element={<HotelDetails />} />
       <Route path='/history/:bookingId' element={<BookingDetail />} />
+      <Route path="/hotels/search" element={<SearchResultListHotel />} />
 
       {/* Routes dành cho admin */}
       <Route path='/admin/' element={<HomeAdmin />} />

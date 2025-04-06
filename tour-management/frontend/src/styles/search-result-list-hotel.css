@@ -82,3 +82,12 @@
 .listResult {
     flex: 3;
 }
+
+.active__page {
+    font-weight: bold;
+    color: #fff;
+    background-color: var(--secondary-color);
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }

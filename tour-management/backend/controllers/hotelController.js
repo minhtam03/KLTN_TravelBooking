@@ -7,17 +7,17 @@ export const createHotel = async (req, res) => {
         const savedHotel = await newHotel.save()
 
         res
-            .status(200)    
+            .status(200)
             .json({
                 success: true,
                 message: "Successfully created hotel",
                 data: savedHotel,
             })
     } catch (error) {
-        res 
+        res
             .status(500)
             .json({
-                success:false,
+                success: false,
                 message: "Failed to create hotel"
             })
     }
@@ -31,7 +31,7 @@ export const updateHotel = async (req, res) => {
     try {
         const updatedHotel = await Hotel.findByIdAndUpdate(id, {
             $set: req.body
-        }, {new: true})
+        }, { new: true })
         res.status(200).json({
             success: true,
             message: "Successfully updated hotel",
@@ -91,7 +91,7 @@ export const getAllHotel = async (req, res) => {
 
     try {
         const hotels = await Hotel.find({})
-        .skip(page * 8).limit(8)
+            .skip(page * 8).limit(8)
 
         res.status(200).json({
             success: true,
@@ -106,3 +106,38 @@ export const getAllHotel = async (req, res) => {
         })
     }
 }
+
+export const getHotelCount = async (req, res) => {
+    try {
+        const count = await Hotel.countDocuments();
+        res.status(200).json({ success: true, count });
+    } catch (err) {
+        res.status(500).json({ success: false, message: "Failed to count hotels" });
+    }
+}
+
+
+export const getHotelBySearch = async (req, res) => {
+    const location = new RegExp(req.query.location, 'i'); // tìm gần đúng
+    const minPrice = parseInt(req.query.minPrice) || 0;
+    const maxPrice = parseInt(req.query.maxPrice) || 999999;
+
+    try {
+        const hotels = await Hotel.find({
+            location,
+            pricePerNight: { $gte: minPrice, $lte: maxPrice }
+        });
+
+        res.status(200).json({
+            success: true,
+            message: "Successfully searched hotels",
+            data: hotels,
+        });
+    } catch (error) {
+        res.status(404).json({
+            success: false,
+            message: "Search failed",
+            error: error.message
+        });
+    }
+};
