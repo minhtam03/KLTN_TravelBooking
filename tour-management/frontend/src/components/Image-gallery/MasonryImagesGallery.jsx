@@ -1,24 +1,43 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import galleryImages from './galleryImages'
-import Masonry, {ResponsiveMasonry} from 'react-responsive-masonry'
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
+import { BASE_URL } from '../../utils/config'
+import './MasonryImagesGallery.css';
 
 const MasonryImagesGallery = () => {
-  return (
-    <ResponsiveMasonry columnsCountBreakPoints={{350:1, 768:3, 992:4}}>
-        <Masonry gutter='1rem'>  
-            {
-                galleryImages.map((item, index) => (
-                    <img 
-                    className='masonry_img'
-                    src={item} 
-                    key={index} 
-                    alt="" 
-                    style={{width: "100%", display: "block", borderRadius: "10px"}}/>
-                ))
-            }
-        </Masonry>
-    </ResponsiveMasonry>
-  )
-}
+  const [images, setImages] = useState([]);
 
-export default MasonryImagesGallery
+  useEffect(() => {
+    const fetchTours = async () => {
+      try {
+        const res = await fetch(`${BASE_URL}/tours`);
+        const result = await res.json();
+        if (res.ok && result.data) {
+          const tourPhotos = result.data
+            .map(tour => tour.photo)
+            .filter(Boolean)
+            .slice(0, 9);
+          setImages(tourPhotos);
+        }
+      } catch (err) {
+        console.error('Failed to fetch tour images', err);
+      }
+    };
+    fetchTours();
+  }, []);
+
+  return (
+    <div className="image-grid">
+      {images.map((src, index) => (
+        <img
+          key={index}
+          src={src}
+          alt={`Tour ${index}`}
+          className="image-item"
+        />
+      ))}
+    </div>
+  );
+};
+
+export default MasonryImagesGallery;

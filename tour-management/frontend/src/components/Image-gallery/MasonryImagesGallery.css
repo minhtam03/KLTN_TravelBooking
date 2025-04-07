@@ -1,0 +1,26 @@
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 200px;
+    grid-auto-flow: dense;
+    gap: 1rem;
+  }
+  
+  .image-item {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .image-item:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Ảnh lớn */
+  .image-grid img:nth-child(5n) {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+  

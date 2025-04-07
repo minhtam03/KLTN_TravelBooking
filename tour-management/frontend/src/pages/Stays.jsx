@@ -40,51 +40,39 @@ const Stays = () => {
 
   return (
     <>
-      <CommonSection title={"Stays"} />
+      <CommonSection title={"All Stays"} />
 
       {/* search bar */}
       <section>
-        <Container>
-          <Row>
-            <SearchBarStay />
-          </Row>
-        </Container>
+        <SearchBarStay />
       </section>
-
       {/*  */}
-      <section className="homeContainer">
-        {/* <FeaturedStay /> */}
-
-        {/* <h1 className="homeTitle">Browse by property type</h1>
-        <PropertyList/>
-
-        <h1 className="homeTitle">Homes guests love</h1>
-        <FeaturedProperties/> */}
+      {/* <section className="homeContainer"> */}
 
 
-        <div className="listHotel">
-          {hotels.length === 0 ? (
-            <p className="text-center">No hotels found</p>
-          ) : (
-            hotels.map(hotel => (
-              <SearchHotelItem hotel={hotel} key={hotel._id} />
-            ))
-          )}
+      <div className="listHotel">
+        {hotels.length === 0 ? (
+          <p className="text-center">No hotels found</p>
+        ) : (
+          hotels.map(hotel => (
+            <SearchHotelItem hotel={hotel} key={hotel._id} />
+          ))
+        )}
 
-          {/* Pagination */}
-          <div className="pagination d-flex align-items-center justify-content-center mt-4 gap-3">
-            {[...Array(pageCount).keys()].map(number => (
-              <span
-                key={number}
-                onClick={() => setPage(number)}
-                className={page === number ? "active__page" : ""}
-              >
-                {number + 1}
-              </span>
-            ))}
-          </div>
+        {/* Pagination */}
+        <div className="pagination d-flex align-items-center justify-content-center mt-4 gap-3">
+          {[...Array(pageCount).keys()].map(number => (
+            <span
+              key={number}
+              onClick={() => setPage(number)}
+              className={page === number ? "active__page" : ""}
+            >
+              {number + 1}
+            </span>
+          ))}
         </div>
-      </section>
+      </div>
+      {/* </section> */}
     </>
 
   )
