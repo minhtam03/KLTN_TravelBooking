@@ -119,7 +119,7 @@
     background-color: #4e7971;
 }
 
-/* Dropdown menu */
+/* Dropdown menu profile */
 .profile-dropdown {
     position: absolute;
     top: 50px;
@@ -135,18 +135,24 @@
 }
 
 .profile-dropdown .dropdown-item {
-    padding: 6px 12px; /* Giảm padding để thu nhỏ item */
+    padding: 6px 12px;
+    /* Giảm padding để thu nhỏ item */
     text-decoration: none;
     color: #333;
     transition: background 0.3s ease;
     font-size: 14px;
-    height: auto; /* Không dùng height cố định */
+    height: auto;
+    /* Không dùng height cố định */
     display: flex;
-    align-items: center; /* Căn giữa icon và text */
-    gap: 6px; /* Giảm khoảng cách giữa icon và chữ */
-    min-height: 35px; /* Đặt chiều cao tối thiểu nhỏ hơn */
+    align-items: center;
+    /* Căn giữa icon và text */
+    gap: 6px;
+    /* Giảm khoảng cách giữa icon và chữ */
+    min-height: 35px;
+    /* Đặt chiều cao tối thiểu nhỏ hơn */
     /* font-weight: bold; */
     font-family: var(--font-name);
+    line-height: 50px;
 }
 
 .profile-dropdown .dropdown-item:hover {
@@ -172,4 +178,62 @@
     .profile-dropdown {
         width: 180px;
     }
+}
+
+.nav__dropdown {
+    position: relative;
+}
+
+.nav__dropdown .nav__link {
+    text-decoration: none;
+    color: var(--heading-color);
+    font-weight: 500;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.nav__dropdown .nav__link:hover {
+    color: var(--secondary-color);
+}
+
+.nav__dropdown:hover .dropdown__menu {
+    display: block;
+}
+
+.dropdown__menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    display: none;
+    background-color: white;
+    /* padding: 0.5rem 1rem; */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    list-style: none;
+    z-index: 1000;
+    border-radius: 6px;
+    min-width: 140px;
+}
+
+.dropdown__menu li {
+    padding: 6px 12px;
+    white-space: nowrap;
+}
+
+.dropdown__menu li:hover {
+    background-color: #f0f0f0;
+}
+
+.dropdown__menu li a {
+    text-decoration: none;
+    color: var(--heading-color);
+    font-size: 1rem;
+}
+
+.nav__dropdown .nav__link:hover {
+    color: var(--heading-color);
+    /* Giữ màu mặc định */
+}
+
+.nav__dropdown.active__link .nav__link {
+    color: var(--secondary-color);
 }

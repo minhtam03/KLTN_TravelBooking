@@ -50,14 +50,14 @@ app.use('/api/v1/auth', authRoute)
 app.use('/api/v1/tours', tourRoute)
 app.use('/api/v1/users', userRoute)
 app.use('/api/v1/review', reviewRoute)
-app.use('/api/v1/booking', bookingRoute)
+app.use('/api/v1/booking/tour', bookingRoute)
 app.use('/api/v1/flights', flightRoute)
 app.use('/api/v1/hotels', hotelRoute)
 app.use('/api/v1/suggestions', suggestionRoute)
 app.use('/api/v1/posts', postRoute)
 app.use('/api/v1/payments', paymentRoute)
 app.use('/api/v1/stats', statRoute)
-app.use('/api/v1/hotel-bookings', hotelBookingRoute);
+app.use('/api/v1/booking/hotel', hotelBookingRoute);
 
 
 app.listen(port, () => {

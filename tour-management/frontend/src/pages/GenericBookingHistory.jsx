@@ -3,7 +3,8 @@ import { Container, Row, Col } from 'reactstrap';
 import { AuthContext } from '../context/AuthContext';
 import { BASE_URL } from '../utils/config';
 import CommonSection from '../shared/CommonSection';
-import BookingCard from '../shared/BookingCard'; // nên xử lý hiển thị theo `type` bên trong
+import BookingCard from '../shared/BookingCard'; // xử lý theo type bên trong
+import axios from 'axios';
 
 const GenericBookingHistory = ({ type, title }) => {
     const { user } = useContext(AuthContext);
@@ -15,25 +16,30 @@ const GenericBookingHistory = ({ type, title }) => {
 
     useEffect(() => {
         const fetchCount = async () => {
-            const res = await fetch(`${BASE_URL}/${type}-bookings/booking-history/count`, {
-                credentials: 'include',
-            });
-            const result = await res.json();
-            if (res.ok) setPageCount(Math.ceil(result.count / 8));
-            else setError(result.message);
+            try {
+                const res = await axios.get(`${BASE_URL}/booking/${type}/count`, {
+                    withCredentials: true,
+                });
+                setPageCount(Math.ceil(res.data.count / 8));
+            } catch (err) {
+                setError(err.response?.data?.message || "Failed to fetch count");
+            }
         };
         if (user) fetchCount();
     }, [user, type]);
 
     useEffect(() => {
         const fetchHistory = async () => {
-            const res = await fetch(`${BASE_URL}/${type}-bookings/booking-history/all?page=${page}`, {
-                credentials: 'include',
-            });
-            const result = await res.json();
-            if (res.ok) setBookings(result.data);
-            else setError(result.message);
-            setLoading(false);
+            try {
+                const res = await axios.get(`${BASE_URL}/booking/${type}/all?page=${page}`, {
+                    withCredentials: true,
+                });
+                setBookings(res.data.data);
+            } catch (err) {
+                setError(err.response?.data?.message || "Failed to fetch bookings");
+            } finally {
+                setLoading(false);
+            }
         };
         fetchHistory();
     }, [user, type, page]);
@@ -43,8 +49,10 @@ const GenericBookingHistory = ({ type, title }) => {
             <CommonSection title={title} />
             <Container>
                 {loading && <p className="text-center pt-5">Loading...</p>}
-                {error && <p className="text-center pt-5">{error}</p>}
-                {!loading && bookings.length === 0 && !error && <p className="text-center pt-5">No bookings found.</p>}
+                {error && <p className="text-center pt-5 text-danger">{error}</p>}
+                {!loading && bookings.length === 0 && !error && (
+                    <p className="text-center pt-5">No bookings found.</p>
+                )}
                 <Row>
                     {bookings.map((booking) => (
                         <Col lg="3" md="6" sm="12" key={booking._id} className="mb-4">
@@ -53,18 +61,21 @@ const GenericBookingHistory = ({ type, title }) => {
                     ))}
                 </Row>
                 <Row>
-                    <Col lg="12" className="d-flex justify-content-center mt-4 gap-3">
-                        {[...Array(pageCount).keys()].map(num => (
-                            <span
-                                key={num}
-                                onClick={() => setPage(num)}
-                                className={page === num ? 'active__page' : ''}
-                            >
-                                {num + 1}
-                            </span>
-                        ))}
+                    <Col lg="12">
+                        <div className="pagination d-flex align-items-center justify-content-center mt-4 gap-3">
+                            {[...Array(pageCount).keys()].map((number) => (
+                                <span
+                                    key={number}
+                                    onClick={() => setPage(number)}
+                                    className={page === number ? "active__page" : ""}
+                                >
+                                    {number + 1}
+                                </span>
+                            ))}
+                        </div>
                     </Col>
                 </Row>
+
             </Container>
         </>
     );

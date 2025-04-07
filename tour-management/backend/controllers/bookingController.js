@@ -81,7 +81,7 @@ export const getBookingCount = async (req, res) => {
     }
 };
 
-// Get booking history for a specific user with pagination
+// Get all booking history for a specific user with pagination
 export const getBookingHistory = async (req, res) => {
     const userId = req.user?.id;
 

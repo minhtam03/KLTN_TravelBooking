@@ -11,42 +11,96 @@ export const createHotelBooking = async (req, res) => {
     }
 };
 
-// Get all hotel bookings of a user
+// Get hotel booking history for a specific user with pagination
 export const getHotelBookingHistory = async (req, res) => {
+    const userId = req.user?.id;
+
+    if (!userId) {
+        return res.status(401).json({
+            success: false,
+            message: "Unauthorized: No user ID found in token",
+        });
+    }
+
+    const page = parseInt(req.query.page) || 0; // Current page (default is 0)
+    const limit = 8; // Number of bookings per page
+
     try {
-        const userId = req.query.userId;
-        const page = parseInt(req.query.page) || 0;
-        const limit = 8;
+        const totalBookings = await HotelBooking.countDocuments({ userId });
+
         const bookings = await HotelBooking.find({ userId })
             .populate("hotelId")
             .sort({ createdAt: -1 })
             .skip(page * limit)
             .limit(limit);
 
-        res.status(200).json({ success: true, data: bookings });
-    } catch (err) {
-        res.status(500).json({ success: false, message: "Failed to fetch history", error: err.message });
+        res.status(200).json({
+            success: true,
+            message: "Successful",
+            data: bookings,
+            totalBookings,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message:
+                error.name === "MongoNetworkError"
+                    ? "Database connection error"
+                    : "Internal server error",
+        });
     }
 };
 
 // Count hotel bookings of a user
 export const getHotelBookingCount = async (req, res) => {
+    const userId = req.user?.id;
+
+    if (!userId) {
+        return res.status(401).json({
+            success: false,
+            message: "Unauthorized: No user ID found in token",
+        });
+    }
+
     try {
-        const userId = req.query.userId;
-        const count = await HotelBooking.countDocuments({ userId });
-        res.status(200).json({ success: true, count });
-    } catch (err) {
-        res.status(500).json({ success: false, message: "Failed to count", error: err.message });
+        const count = await HotelBooking.countDocuments({ userId }); // Count user's hotel bookings
+        res.status(200).json({
+            success: true,
+            message: "User hotel booking count retrieved",
+            count
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
     }
 };
-
 // Get hotel booking detail
-export const getHotelBookingDetail = async (req, res) => {
+export const getHotelBooking = async (req, res) => {
+    const id = req.params.id;
+
     try {
-        const booking = await HotelBooking.findById(req.params.id).populate("hotelId");
-        if (!booking) return res.status(404).json({ success: false, message: "Not found" });
-        res.status(200).json({ success: true, data: booking });
-    } catch (err) {
-        res.status(500).json({ success: false, message: "Failed to fetch detail", error: err.message });
+        const booking = await HotelBooking.findById(id)
+            .populate("hotelId")
+            .populate("paymentId");
+
+        if (!booking) {
+            return res.status(404).json({
+                success: false,
+                message: "Hotel booking not found",
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Successful",
+            data: booking
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
     }
 };

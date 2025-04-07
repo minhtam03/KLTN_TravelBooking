@@ -47,7 +47,7 @@ const SearchHotelItem = ({ hotel }) => {
     return (
         <div className="searchItem">
             <img
-                src="https://plus.unsplash.com/premium_photo-1661964071015-d97428970584?fm=jpg&q=60&w=3000"
+                src={hotel.photo}
                 alt=""
                 className="siImg"
             />

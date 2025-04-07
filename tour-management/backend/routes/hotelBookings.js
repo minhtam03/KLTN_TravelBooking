@@ -1,8 +1,10 @@
 import express from "express";
+import { verifyAdmin, verifyUser } from "../utils/verifyToken.js"
+
 import {
     createHotelBooking,
     getHotelBookingHistory,
-    getHotelBookingDetail,
+    getHotelBooking,
     getHotelBookingCount
 } from "../controllers/hotelBookingController.js";
 
@@ -11,8 +13,8 @@ const router = express.Router();
 // /api/v1/hotel-bookings
 
 router.post("/", createHotelBooking);
-router.get("/hotel-history/all", getHotelBookingHistory);
-router.get("/hotel-history/count", getHotelBookingCount);
-router.get("/:id", getHotelBookingDetail);
+router.get("/all", verifyUser, getHotelBookingHistory);
+router.get("/count", verifyUser, getHotelBookingCount);
+router.get("/:id", getHotelBooking);
 
 export default router;

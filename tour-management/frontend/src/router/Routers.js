@@ -29,7 +29,11 @@ import { userColumns, tourColumns, hotelColumns, postColumns } from '../resource
 import SingleTour from '../pages/admin/single-tour/SingleTour'
 import PostDetail from '../pages/PostDetail'
 import Profile from '../pages/Profile'
+
 import GenericBookingDetail from '../pages/GenericBookingDetail'
+import HotelBookingHistory from "../pages/HotelBookingHistory";
+import TourBookingHistory from "../pages/TourBookingHistory";
+
 
 const Routers = () => {
   return (
@@ -59,7 +63,10 @@ const Routers = () => {
 
       <Route path="/booking/tour/:bookingId" element={<GenericBookingDetail type="tour" />} />
       <Route path="/booking/hotel/:bookingId" element={<GenericBookingDetail type="hotel" />} />
-      <Route path="/booking/flight/:bookingId" element={<GenericBookingDetail type="flight" />} />
+
+
+      <Route path="/booking/hotel" element={<HotelBookingHistory />} />
+      <Route path="/booking/tour" element={<TourBookingHistory />} />
 
 
       {/* Routes dành cho admin */}

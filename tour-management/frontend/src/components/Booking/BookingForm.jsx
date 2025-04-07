@@ -63,7 +63,7 @@ const BookingForm = ({ item, type, avgRating }) => {
                     tourPhoto: photo,
                     tourPrice: price
                 });
-                url = `${BASE_URL}/booking`;
+                url = `${BASE_URL}/booking/tour`;
             } else {
                 Object.assign(bookingData, {
                     hotelId: item._id,
@@ -72,7 +72,7 @@ const BookingForm = ({ item, type, avgRating }) => {
                     hotelPhoto: photo,
                     hotelPrice: price
                 });
-                url = `${BASE_URL}/hotel-bookings`;
+                url = `${BASE_URL}/booking/hotel`;
             }
 
             const res = await fetch(url, {

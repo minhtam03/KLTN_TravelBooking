@@ -296,9 +296,9 @@ const Suggestion = () => {
 
 
   return (
-    <Container>
+    <>
       <CommonSection title={'Suggestion'} />
-      <Box sx={{ padding: 4, backgroundColor: '#f9f9f9', borderRadius: 2 }}>
+      <Box sx={{ padding: 4, backgroundColor: '#f9f9f9', borderRadius: 2, width: "75%", mx: "auto" }}>
         <SuggestionForm
           budget={budget} setBudget={setBudget}
           duration={duration} setDuration={setDuration}
@@ -337,7 +337,7 @@ const Suggestion = () => {
           </Box>
         )}
       </Box>
-    </Container>
+    </>
   );
 };
 

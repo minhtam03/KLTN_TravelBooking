@@ -4,8 +4,11 @@ import { createBooking, getAllBooking, getBooking, getBookingHistory, getBooking
 const router = express.Router()
 
 router.get("/bookings-with-amount", getAllBookingsWithAmount);
-router.get('/booking-history/all', verifyUser, getBookingHistory);  // New route for booking history
-router.get("/booking-history/count", verifyUser, getBookingCount);
+// router.get('/booking-history/all', verifyUser, getBookingHistory);  // New route for booking history
+// router.get("/booking-history/count", verifyUser, getBookingCount);
+
+router.get('/all', verifyUser, getBookingHistory);  // New route for booking history
+router.get("/count", verifyUser, getBookingCount);
 
 router.post('/', verifyUser, createBooking)
 router.get('/:id', verifyUser, getBooking)
