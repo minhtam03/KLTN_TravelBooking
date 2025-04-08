@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Sidebar from '../../../components/admin/sidebar/Sidebar'
 import Navbar from '../../../components/admin/navbar/Navbar'
 import Chart from '../../../components/admin/chart/Chart'
-import BookingTable from '../../../components/admin/table/Table'
+import BookingTable from '../../../components/admin/table/BookingTable'
 import "../single/single.scss"
 import { useParams } from 'react-router-dom'
 import { BASE_URL } from '../../../utils/config'
@@ -38,7 +38,7 @@ const SingleTour = () => {
 
         const fetchSpendingData = async () => {
             try {
-                const res = await fetch(`${BASE_URL}/booking/bookings-with-amount`, {
+                const res = await fetch(`${BASE_URL}/booking/tour/bookings-with-amount`, {
                     method: 'GET',
                     credentials: 'include',
                 });
@@ -156,7 +156,7 @@ const SingleTour = () => {
                     </div>
                 </div>
                 <div className="bottom">
-                    <h1 className="title">Transactions</h1>
+                    <h1 className="title">Tour Transactions</h1>
                     <BookingTable tourId={id} />
                 </div>
             </div>

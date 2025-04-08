@@ -22,11 +22,16 @@ import AdminLayout from '../components/Layout/AdminLayout'
 import HomeAdmin from '../pages/admin/home/HomeAdmin'
 import New from '../pages/admin/new/New'
 import List from '../pages/admin/list/List'
+
 import Single from '../pages/admin/single/Single'
-import Edit from '../pages/admin/edit/Edit'
-import { userInputs, tourInputs, postInputs } from '../resource/formSource'
-import { userColumns, tourColumns, hotelColumns, postColumns } from '../resource/datatableSource'
 import SingleTour from '../pages/admin/single-tour/SingleTour'
+import SingleHotel from '../pages/admin/single-hotel/SingleHotel'
+import SinglePost from '../pages/admin/single-post/SinglePost'
+
+import Edit from '../pages/admin/edit/Edit'
+import { userInputs, tourInputs, postInputs, hotelInputs } from '../resource/formSource'
+import { userColumns, tourColumns, hotelColumns, postColumns } from '../resource/datatableSource'
+
 import PostDetail from '../pages/PostDetail'
 import Profile from '../pages/Profile'
 
@@ -89,10 +94,18 @@ const Routers = () => {
 
       </Route>
 
+      <Route path='/admin/hotels'>
+        <Route index element={<List columns={hotelColumns} />} />
+        <Route path=':id' element={<SingleHotel />} />
+        <Route path='new' element={<New inputs={hotelInputs} title="Add New Hotel" />} />
+        <Route path=':id/edit' element={<Edit inputs={hotelInputs} title="Edit Hotel" />} />
+      </Route>
+
       <Route path='/admin/posts'>
         <Route index element={<List columns={postColumns} />} />
         <Route path='new' element={<New inputs={postInputs} title="Add New Post" />} />
-
+        <Route path=':id' element={<SinglePost />} />
+        <Route path=':id/edit' element={<Edit inputs={postInputs} title="Edit Post" />} />
       </Route>
 
 

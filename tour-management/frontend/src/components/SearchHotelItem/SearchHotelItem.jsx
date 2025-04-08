@@ -92,7 +92,7 @@ const SearchHotelItem = ({ hotel }) => {
                 <Grid item xs={12} md={4} sx={{ textAlign: 'right', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                     <Box sx={{ textAlign: 'right' }}>
                         <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                            Rating
+                            Star
                         </Typography>
                         <Rating value={Number(hotel.stars) || 0} precision={0.5} readOnly size="small" />
                     </Box>

@@ -23,11 +23,17 @@
             padding: 20px;
             margin: 20px;
 
+            // ✅ Thêm dòng dưới để xếp các bảng theo chiều dọc
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+
             .listTitle {
                 font-weight: 500;
                 color: gray;
                 margin-bottom: 15px;
             }
         }
+
     }
 }

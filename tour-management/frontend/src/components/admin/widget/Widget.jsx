@@ -29,19 +29,19 @@ const Widget = ({ type }) => {
         fetchData();
     }, []);
 
-    useEffect(() => {
-        const fetchGrowth = async () => {
-            try {
-                const res = await fetch(`${BASE_URL}/stats/growth`);
-                if (!res.ok) throw new Error("Failed to fetch growth");
-                const result = await res.json();
-                setGrowth(result.data[type]);
-            } catch (error) {
-                console.error("Error fetching user growth:", error);
-            }
-        };
-        fetchGrowth();
-    }, [type]);
+    // useEffect(() => {
+    //     const fetchGrowth = async () => {
+    //         try {
+    //             const res = await fetch(`${BASE_URL}/stats/growth`);
+    //             if (!res.ok) throw new Error("Failed to fetch growth");
+    //             const result = await res.json();
+    //             setGrowth(result.data[type]);
+    //         } catch (error) {
+    //             console.error("Error fetching user growth:", error);
+    //         }
+    //     };
+    //     fetchGrowth();
+    // }, [type]);
 
     let widgetData;
 
@@ -68,19 +68,57 @@ const Widget = ({ type }) => {
                 ),
             };
             break;
-        case "booking":
+        // case "booking":
+        //     widgetData = {
+        //         title: "BOOKINGS",
+        //         isMoney: false,
+        //         amount: data.booking,
+        //         link: "View all bookings",
+        //         url: "/admin/bookings",
+        //         icon: (
+        //             <ShoppingCartOutlinedIcon
+        //                 className="icon"
+        //                 style={{
+        //                     backgroundColor: "rgba(218, 165, 32, 0.2)",
+        //                     color: "goldenrod",
+        //                 }}
+        //             />
+        //         ),
+        //     };
+        //     break;
+
+        case "tour":
             widgetData = {
-                title: "BOOKINGS",
+                title: "TOURS",
                 isMoney: false,
-                amount: data.booking,
-                link: "View all bookings",
-                url: "/admin/bookings",
+                amount: data.tour,
+                link: "See all tours",
+                url: "/admin/tours",
                 icon: (
-                    <ShoppingCartOutlinedIcon
+                    <AccountBalanceWalletOutlinedIcon
                         className="icon"
                         style={{
-                            backgroundColor: "rgba(218, 165, 32, 0.2)",
-                            color: "goldenrod",
+                            backgroundColor: "rgba(128, 0, 128, 0.2)",
+                            color: "purple",
+                        }}
+                    />
+                ),
+            };
+            break;
+
+        case "hotel":
+            widgetData = {
+                title: "HOTELS",
+                isMoney: false,
+                amount: data.tour,
+                link: "See all hotels",
+                url: "/admin/hotels",
+                icon: (
+                    <AccountBalanceWalletOutlinedIcon
+                        className="icon"
+                        style={{
+                            backgroundColor: "rgba(128, 0, 128, 0.2)",
+                            color: "purple",
                         }}
                     />
                 ),
@@ -100,30 +138,12 @@ const Widget = ({ type }) => {
                 ),
             };
             break;
-        case "tour":
-            widgetData = {
-                title: "TOURS",
-                isMoney: false,
-                amount: data.tour,
-                link: "See all tour",
-                url: "/admin/tours",
-                icon: (
-                    <AccountBalanceWalletOutlinedIcon
-                        className="icon"
-                        style={{
-                            backgroundColor: "rgba(128, 0, 128, 0.2)",
-                            color: "purple",
-                        }}
-                    />
-                ),
-            };
-            break;
         default:
             break;
     }
-    const growthClass = growth !== null && growth < 0 ? "negative" : "positive";
-    const displayGrowth = growth !== null ? Math.abs(growth) : "Loading...";
-    const GrowthIcon = growth < 0 ? KeyboardArrowDownIcon : KeyboardArrowUpIcon;
+    // const growthClass = growth !== null && growth < 0 ? "negative" : "positive";
+    // const displayGrowth = growth !== null ? Math.abs(growth) : "Loading...";
+    // const GrowthIcon = growth < 0 ? KeyboardArrowDownIcon : KeyboardArrowUpIcon;
 
     return (
         <div className="widget">
@@ -138,11 +158,16 @@ const Widget = ({ type }) => {
                     </Link>
                 </span>
             </div>
-            <div className="right">
+            {/* <div className="right">
                 <div className={`percentage ${growthClass}`}>
                     <GrowthIcon />
                     {displayGrowth}%
                 </div>
+                {widgetData.icon}
+            </div> */}
+
+            <div className="right">
+
                 {widgetData.icon}
             </div>
         </div>

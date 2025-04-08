@@ -67,13 +67,13 @@ const Sidebar = () => {
                     </Link>
                     <li>
                         <LocalShippingIcon className="icon" />
-                        <span>Rooms</span>
+                        <span>Flight</span>
                     </li>
-                    <p className="title">USEFUL</p>
+                    {/* <p className="title">USEFUL</p>
                     <li>
                         <InsertChartIcon className="icon" />
                         <span>Stats</span>
-                    </li>
+                    </li> */}
 
                     <p className="title">CONTENT</p>
                     <Link to="/admin/posts" style={{ textDecoration: "none" }}>
@@ -83,10 +83,10 @@ const Sidebar = () => {
                         </li>
                     </Link>
                     <p className="title">USER</p>
-                    <li>
+                    {/* <li>
                         <AccountCircleOutlinedIcon className="icon" />
                         <span>Profile</span>
-                    </li>
+                    </li> */}
                     <li>
                         <ExitToAppIcon className="icon" />
                         {/* <Button onClick={logout}>

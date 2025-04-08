@@ -85,27 +85,32 @@ export const getSingleHotel = async (req, res) => {
 
 // getAll hotel
 export const getAllHotel = async (req, res) => {
-
-    // for pagination
-    const page = parseInt(req.query.page)
+    const page = req.query.page ? parseInt(req.query.page) : null;
 
     try {
-        const hotels = await Hotel.find({})
-            .skip(page * 8).limit(8)
+        let hotels;
+
+        if (page !== null) {
+            hotels = await Hotel.find({})
+                .skip(page * 8)
+                .limit(8);
+        } else {
+            hotels = await Hotel.find({});
+        }
 
         res.status(200).json({
             success: true,
             count: hotels.length,
             message: "Successful get all hotel",
             data: hotels
-        })
+        });
     } catch (error) {
         res.status(404).json({
             success: false,
             message: "not found hotel"
-        })
+        });
     }
-}
+};
 
 export const getHotelCount = async (req, res) => {
     try {

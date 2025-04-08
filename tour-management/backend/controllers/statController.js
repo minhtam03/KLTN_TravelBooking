@@ -2,21 +2,24 @@ import Booking from "../models/Booking.js";
 import User from "../models/User.js";
 import Payment from "../models/Payment.js";
 import Tour from "../models/Tour.js";
+import Hotel from "../models/Hotel.js"
 
 export const getWidgetData = async (req, res) => {
     try {
         const userCount = await User.countDocuments();
         const tourCount = await Tour.countDocuments();
+        const hotelCount = await Hotel.countDocuments();
         const bookingCount = await Booking.countDocuments();
-        const earnings = await Payment.aggregate([{ $group: { _id: null, total: { $sum: "$amount" } } }]);
+        // const earnings = await Payment.aggregate([{ $group: { _id: null, total: { $sum: "$amount" } } }]);
 
         res.status(200).json({
             success: true,
             data: {
                 user: userCount,
                 tour: tourCount,
+                hotel: hotelCount,
                 booking: bookingCount,
-                earning: earnings.length > 0 ? earnings[0].total : 0,
+                // earning: earnings.length > 0 ? earnings[0].total : 0,
             },
         });
     } catch (error) {
@@ -47,6 +50,15 @@ export const getTourCount = async (req, res) => {
     try {
         const tourCount = await Tour.countDocuments();
         res.status(200).json({ success: true, count: tourCount });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
+
+export const getHotelCount = async (req, res) => {
+    try {
+        const hotelCount = await Hotel.countDocuments();
+        res.status(200).json({ success: true, count: hotelCount });
     } catch (error) {
         res.status(500).json({ success: false, message: "Internal server error" });
     }

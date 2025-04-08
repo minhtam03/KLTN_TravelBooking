@@ -104,3 +104,29 @@ export const getHotelBooking = async (req, res) => {
         });
     }
 };
+
+export const getAllHotelBookingsWithAmount = async (req, res) => {
+    try {
+        const bookings = await HotelBooking.find()
+            .populate("paymentId") // Lấy thông tin Payment
+            .sort({ createdAt: -1 }); // Sắp xếp theo thời gian đặt mới nhất
+
+        // Gắn thêm amount từ payment
+        const bookingsWithAmount = bookings.map(booking => ({
+            ...booking._doc,
+            amount: booking.paymentId ? booking.paymentId.amount : 0,
+        }));
+
+        res.status(200).json({
+            success: true,
+            message: "Successfully retrieved hotel bookings with payment amounts",
+            data: bookingsWithAmount,
+        });
+    } catch (error) {
+        console.error("Error fetching hotel bookings with amount:", error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+};

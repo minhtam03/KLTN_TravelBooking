@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Sidebar from '../../../components/admin/sidebar/Sidebar'
 import Navbar from '../../../components/admin/navbar/Navbar'
 import Chart from '../../../components/admin/chart/Chart'
-import BookingTable from '../../../components/admin/table/Table'
+import BookingTable from '../../../components/admin/table/BookingTable'
 import "./single.scss"
 import { useParams } from 'react-router-dom'
 import { BASE_URL } from '../../../utils/config'
@@ -36,43 +36,97 @@ const Single = () => {
             }
         };
 
+        // const fetchSpendingData = async () => {
+        //     try {
+        //         const res = await fetch(`${BASE_URL}/booking/tour/bookings-with-amount`, {
+        //             method: 'GET',
+        //             credentials: 'include',
+        //         });
+
+        //         if (!res.ok) {
+        //             throw new Error('Failed to fetch bookings');
+        //         }
+
+        //         const result = await res.json();
+        //         const userBookings = result.data.filter(booking => booking.userId === id
+        //             // && booking.paymentStatus === "paid"
+        //         );
+
+        //         const monthlySpending = {};
+
+        //         // Duyệt qua từng booking và tổng hợp chi tiêu theo tháng
+        //         userBookings.forEach(booking => {
+        //             const date = new Date(booking.createdAt);
+        //             const monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`; // Ví dụ: "3-2024"
+
+        //             if (!monthlySpending[monthYear]) {
+        //                 monthlySpending[monthYear] = 0;
+        //             }
+
+        //             monthlySpending[monthYear] += booking.amount || 0;
+        //         });
+
+        //         // Chuyển object thành mảng để hiển thị trong biểu đồ
+        //         const last6Months = [];
+        //         const currentDate = new Date();
+
+        //         for (let i = 5; i >= 0; i--) {
+        //             const month = currentDate.getMonth() + 1 - i;
+        //             const year = currentDate.getFullYear();
+        //             const key = `${month}-${year}`;
+
+        //             last6Months.push({
+        //                 name: new Date(year, month - 1).toLocaleString('en-US', { month: 'long' }),
+        //                 Total: monthlySpending[key] || 0,
+        //             });
+        //         }
+
+        //         setSpendingData(last6Months);
+        //     } catch (error) {
+        //         console.error('Error fetching spending data:', error);
+        //     }
+        // };
+
         const fetchSpendingData = async () => {
             try {
-                const res = await fetch(`${BASE_URL}/booking/bookings-with-amount`, {
-                    method: 'GET',
-                    credentials: 'include',
-                });
+                const endpoints = [
+                    `${BASE_URL}/booking/tour/bookings-with-amount`,
+                    `${BASE_URL}/booking/hotel/bookings-with-amount`
+                ];
 
-                if (!res.ok) {
-                    throw new Error('Failed to fetch bookings');
+                const responses = await Promise.all(endpoints.map(url =>
+                    fetch(url, { method: "GET", credentials: "include" })
+                ));
+
+                const allResults = await Promise.all(responses.map(res => res.json()));
+
+                let allBookings = [];
+                for (const result of allResults) {
+                    if (result.success) {
+                        const userBookings = result.data.filter(b => b.userId === id);
+                        allBookings = allBookings.concat(userBookings);
+                    }
                 }
-
-                const result = await res.json();
-                const userBookings = result.data.filter(booking => booking.userId === id
-                    // && booking.paymentStatus === "paid"
-                );
 
                 const monthlySpending = {};
 
-                // Duyệt qua từng booking và tổng hợp chi tiêu theo tháng
-                userBookings.forEach(booking => {
+                allBookings.forEach(booking => {
                     const date = new Date(booking.createdAt);
-                    const monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`; // Ví dụ: "3-2024"
-
+                    const monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`;
                     if (!monthlySpending[monthYear]) {
                         monthlySpending[monthYear] = 0;
                     }
-
                     monthlySpending[monthYear] += booking.amount || 0;
                 });
 
-                // Chuyển object thành mảng để hiển thị trong biểu đồ
                 const last6Months = [];
                 const currentDate = new Date();
 
                 for (let i = 5; i >= 0; i--) {
-                    const month = currentDate.getMonth() + 1 - i;
-                    const year = currentDate.getFullYear();
+                    const month = (currentDate.getMonth() - i + 12) % 12 + 1;
+                    const year = currentDate.getMonth() - i < 0
+                        ? currentDate.getFullYear() - 1
+                        : currentDate.getFullYear();
                     const key = `${month}-${year}`;
 
                     last6Months.push({
@@ -86,7 +140,6 @@ const Single = () => {
                 console.error('Error fetching spending data:', error);
             }
         };
-
         fetchUser();
         fetchSpendingData();
     }, [id]);
@@ -149,7 +202,7 @@ const Single = () => {
                     </div>
                 </div>
                 <div className="bottom">
-                    <h1 className="title">Transactions</h1>
+                    <h1 className="title">User Transactions</h1>
                     <BookingTable userId={id} />
                 </div>
             </div>

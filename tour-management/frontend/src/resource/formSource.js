@@ -32,17 +32,10 @@ export const tourInputs = [
         placeholder: "Amazing Beach Tour",
         name: "title",
     },
-    // {
-    //     id: "city",
-    //     label: "City",
-    //     type: "text",
-    //     placeholder: "New York",
-    //     name: "city",
-    // },
     {
         id: "city",
         label: "City",
-        type: "select",  // <-- Chuyển sang dropdown
+        type: "select",
         name: "city",
         options: [
             'Ha Noi', 'Ho Chi Minh', 'Da Nang', 'Hai Phong', 'Can Tho',
@@ -73,13 +66,6 @@ export const tourInputs = [
         placeholder: "10",
         name: "distance",
     },
-    // {
-    //     id: "photo",
-    //     label: "Photo URL",
-    //     type: "text",
-    //     placeholder: "https://example.com/tour.jpg",
-    //     name: "photo",
-    // },
     {
         id: "desc",
         label: "Description",
@@ -141,3 +127,60 @@ export const postInputs = [
 
 ];
 
+export const hotelInputs = [
+    {
+        id: "hotelName",
+        label: "Hotel Name",
+        type: "text",
+        placeholder: "Sunset Beach Resort",
+        name: "hotelName",
+    },
+    {
+        id: "location",
+        label: "Location",
+        type: "select",
+        name: "location",
+        options: [
+            'Ha Noi', 'Ho Chi Minh', 'Da Nang', 'Hai Phong', 'Can Tho',
+            'Binh Duong', 'Bac Ninh', 'Vinh', 'Hue', 'Long An', 'Nghe An',
+            'Bac Giang', 'Quang Ninh', 'Nam Dinh', 'Thanh Hoa', 'Quang Binh',
+            'Son La', 'Tien Giang', 'Vinh Long', 'Dak Lak', 'Binh Thuan',
+            'Quang Tri', 'Lam Dong', 'An Giang', 'Ninh Binh', 'Tay Ninh',
+            'Ben Tre', 'Kien Giang', 'Dong Nai', 'Gia Lai', 'Bac Lieu',
+            'Phu Tho', 'Ca Mau', 'Hau Giang', 'Binh Phuoc', 'Ha Giang',
+            'Soc Trang', 'Dak Nong', 'Thanh Hoa', 'Lai Chau', 'Ha Tinh',
+            'Khanh Hoa', 'Yen Bai', 'Quang Nam', 'Nghe An', 'Bac Kan',
+            'Quang Ngai', 'Lang Son', 'Nam Dinh', 'Thai Nguyen', 'Hoa Binh',
+            'Quang Binh', 'Tuyen Quang', 'Hien Giang', 'Long An', 'Lam Dong',
+            'Sapa', 'Hung Yen', 'Bac Giang', 'Tuyen Quang', 'Quang Tri'
+        ]
+    },
+    {
+        id: "pricePerNight",
+        label: "Price per Night ($)",
+        type: "number",
+        placeholder: "120",
+        name: "pricePerNight",
+    },
+    {
+        id: "stars",
+        label: "Star Rating",
+        type: "number",
+        placeholder: "4",
+        name: "stars",
+    },
+    {
+        id: "roomsAvailable",
+        label: "Rooms Available",
+        type: "number",
+        placeholder: "50",
+        name: "roomsAvailable",
+    },
+    {
+        id: "amenities",
+        label: "Amenities (comma separated)",
+        type: "text",
+        placeholder: "Wifi, Pool, Spa, Gym",
+        name: "amenities",
+    },
+];

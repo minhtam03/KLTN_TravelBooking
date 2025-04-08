@@ -38,9 +38,26 @@ export const tourColumns = [
 
 export const hotelColumns = [
     { field: '_id', headerName: 'ID', width: 120 },
-    { field: 'name', headerName: 'Hotel Name', width: 200 },
-    { field: 'city', headerName: 'City', width: 150 },
-    { field: 'rating', headerName: 'Rating', width: 100 },
+    {
+        field: 'hotelName',
+        headerName: 'Hotel Name',
+        width: 300,
+        renderCell: (params) => {
+            return (
+                <div className="cellWithImg">
+                    <img
+                        className="cellImg"
+                        src={params.row.photo || "https://png.pngtree.com/png-vector/20221125/ourmid/pngtree-no-image-available-icon-flatvector-illustration-picture-coming-creative-vector-png-image_40968940.jpg"}
+                        alt="hotel"
+                    />
+                    {params.row.hotelName}
+                </div>
+            );
+        }
+    },
+    // { field: 'city', headerName: 'City', width: 150 },
+    { field: 'location', headerName: 'City', width: 200 },
+    { field: 'pricePerNight', headerName: 'Price/Night ($)', width: 150 },
 ]
 
 export const bookingColumns = [
