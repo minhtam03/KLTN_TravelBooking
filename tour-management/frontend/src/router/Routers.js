@@ -15,7 +15,9 @@ import ThankYou from '../pages/ThankYou'
 import BookingHistory from '../pages/BookingHistory'
 import Suggestion from '../pages/Suggestion'
 import SearchResultListHotel from '../pages/SearchResultListHotel'
+import SearchResultListFlight from '../pages/SearchResultListFlight'
 import HotelDetails from '../pages/HotelDetails'
+import FlightDetails from '../pages/FlightDetails'
 import BookingDetail from '../pages/BookingDetail'
 
 import AdminLayout from '../components/Layout/AdminLayout'
@@ -47,31 +49,40 @@ const Routers = () => {
       <Route path='/' element={<Navigate to="/home" />} />
       <Route path='/home' element={<Home />} />
       <Route path="/profile" element={<Profile />} />
-      <Route path='/tours' element={<Tours />} />
-      <Route path='/tours/:id' element={<TourDetails />} />
+
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
-      <Route path='/tours/search' element={<SearchResultList />} />
+
       <Route path='/about' element={<About />} />
-      <Route path='/flights' element={<Flights />} />
-      <Route path='/stays' element={<Stays />} />
+
+
       <Route path='/blog' element={<Blog />} />
       <Route path='/post/:id' element={<PostDetail />} />
       <Route path='/thank-you' element={<ThankYou />} />
       <Route path='/history' element={<BookingHistory />} />
       <Route path='/suggestion' element={<Suggestion />} />
 
+
+      <Route path='/tours' element={<Tours />} />
+      <Route path='/tours/:id' element={<TourDetails />} />
+      <Route path='/tours/search' element={<SearchResultList />} />
+
+      <Route path='/stays' element={<Stays />} />
       <Route path='/stays/:id' element={<HotelDetails />} />
       <Route path="/stays/search" element={<SearchResultListHotel />} />
 
-      <Route path='/history/:bookingId' element={<BookingDetail />} />
+      <Route path='/flights' element={<Flights />} />
+      <Route path='/flights/:id' element={<FlightDetails />} />
+      <Route path="/flights/search" element={<SearchResultListFlight />} />
+
+      {/* <Route path='/history/:bookingId' element={<BookingDetail />} /> */}
 
       <Route path="/booking/tour/:bookingId" element={<GenericBookingDetail type="tour" />} />
       <Route path="/booking/hotel/:bookingId" element={<GenericBookingDetail type="hotel" />} />
-
-
       <Route path="/booking/hotel" element={<HotelBookingHistory />} />
       <Route path="/booking/tour" element={<TourBookingHistory />} />
+
+
 
 
       {/* Routes dành cho admin */}

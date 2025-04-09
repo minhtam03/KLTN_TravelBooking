@@ -1,162 +1,214 @@
-import Stripe from 'stripe'
-import dotenv from 'dotenv'
-import Payment from "../models/Payment.js";
-import Booking from "../models/Booking.js";
-import HotelBooking from "../models/HotelBooking.js";
+// import Stripe from 'stripe'
+// import dotenv from 'dotenv'
+// import Payment from "../models/Payment.js";
+// import Booking from "../models/Booking.js";
+// import HotelBooking from "../models/HotelBooking.js";
 
-dotenv.config()
+// dotenv.config()
 
-const key = process.env.STRIPE_SECRET_KEY || undefined
-const stripe = new Stripe(key)
+// const key = process.env.STRIPE_SECRET_KEY || undefined
+// const stripe = new Stripe(key)
 
-// cho tour
+// // cho tour
+// // export const createPayment = async (req, res) => {
+// //     try {
+
+// //         const { bookingId, userId, price, tourName } = req.body;
+
+// //         if (!bookingId || !userId || !price) {
+// //             return res.status(400).json({
+// //                 success: false,
+// //                 message: "Missing required fields",
+// //             });
+// //         }
+
+// //         // tao phien thanh toan tren Stripe
+// //         const session = await stripe.checkout.sessions.create({
+// //             line_items: [
+// //                 {
+// //                     price_data: {
+// //                         currency: 'usd',
+// //                         product_data: {
+// //                             name: req.body.tourName
+// //                         },
+// //                         unit_amount: req.body.price * 100
+// //                     },
+// //                     quantity: 1,
+
+// //                 },
+// //             ],
+// //             mode: 'payment',
+// //             success_url: 'http://localhost:3000/thank-you?session_id={CHECKOUT_SESSION_ID}',
+// //             cancel_url: 'http://localhost:3000/payment-failed'
+// //         })
+
+// //         // Lưu thông tin thanh toán vào database
+// //         const newPayment = new Payment({
+// //             bookingId: req.body.bookingId,
+// //             userId: req.body.userId,
+// //             amount: req.body.price,
+// //             paymentMethod: "Stripe",
+// //             transactionId: session.id,
+// //             status: "pending",
+// //         });
+
+// //         const savedPayment = await newPayment.save();
+
+// //         // Cập nhật trạng thái booking
+// //         await Booking.findByIdAndUpdate(req.body.bookingId, {
+// //             paymentId: savedPayment._id,
+// //             paymentStatus: "pending",
+// //         });
+
+// //         res
+// //             .status(200)
+// //             .json({
+// //                 success: true,
+// //                 message: "Payment Successfully",
+// //                 session: session
+// //             })
+// //     } catch (error) {
+// //         res
+// //             .status(500)
+// //             .json({
+// //                 success: false,
+// //                 message: "Failed Payment",
+// //                 error: error
+// //             })
+// //     }
+// // }
+
+// // cho cả tour và hotel
+
 // export const createPayment = async (req, res) => {
 //     try {
+//         const { bookingId, userId, price, name, type } = req.body;
 
-//         const { bookingId, userId, price, tourName } = req.body;
-
-//         if (!bookingId || !userId || !price) {
+//         if (!bookingId || !userId || !price || !name || !type) {
 //             return res.status(400).json({
 //                 success: false,
-//                 message: "Missing required fields",
+//                 message: "Missing required fields (bookingId, userId, price, name, type)",
 //             });
 //         }
 
-//         // tao phien thanh toan tren Stripe
+//         // Tạo phiên thanh toán Stripe
 //         const session = await stripe.checkout.sessions.create({
 //             line_items: [
 //                 {
 //                     price_data: {
 //                         currency: 'usd',
 //                         product_data: {
-//                             name: req.body.tourName
+//                             name: name,
 //                         },
-//                         unit_amount: req.body.price * 100
+//                         unit_amount: price * 100,
 //                     },
 //                     quantity: 1,
-
 //                 },
 //             ],
 //             mode: 'payment',
 //             success_url: 'http://localhost:3000/thank-you?session_id={CHECKOUT_SESSION_ID}',
-//             cancel_url: 'http://localhost:3000/payment-failed'
-//         })
+//             cancel_url: 'http://localhost:3000/payment-failed',
+//         });
 
 //         // Lưu thông tin thanh toán vào database
 //         const newPayment = new Payment({
-//             bookingId: req.body.bookingId,
-//             userId: req.body.userId,
-//             amount: req.body.price,
+//             bookingId,
+//             userId,
+//             amount: price,
 //             paymentMethod: "Stripe",
 //             transactionId: session.id,
 //             status: "pending",
+//             type,
 //         });
 
 //         const savedPayment = await newPayment.save();
 
 //         // Cập nhật trạng thái booking
-//         await Booking.findByIdAndUpdate(req.body.bookingId, {
-//             paymentId: savedPayment._id,
-//             paymentStatus: "pending",
+//         if (type === "tour") {
+//             await Booking.findByIdAndUpdate(bookingId, {
+//                 paymentId: savedPayment._id,
+//                 paymentStatus: "pending",
+//             });
+//         } else if (type === "hotel") {
+//             await HotelBooking.findByIdAndUpdate(bookingId, {
+//                 paymentId: savedPayment._id,
+//                 paymentStatus: "pending",
+//             });
+//         } else {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Invalid booking type (must be 'tour' or 'hotel')",
+//             });
+//         }
+
+//         res.status(200).json({
+//             success: true,
+//             message: "Payment session created successfully",
+//             session: session,
 //         });
 
-//         res
-//             .status(200)
-//             .json({
-//                 success: true,
-//                 message: "Payment Successfully",
-//                 session: session
-//             })
 //     } catch (error) {
-//         res
-//             .status(500)
-//             .json({
-//                 success: false,
-//                 message: "Failed Payment",
-//                 error: error
-//             })
+//         res.status(500).json({
+//             success: false,
+//             message: "Failed to create payment session",
+//             error: error.message,
+//         });
 //     }
-// }
+// };
 
-// cho cả tour và hotel
+// // cho tour
+// // export const updatePaymentStatus = async (req, res) => {
+// //     try {
+// //         const { transactionId } = req.body;
 
-export const createPayment = async (req, res) => {
-    try {
-        const { bookingId, userId, price, name, type } = req.body;
+// //         if (!transactionId) {
+// //             return res.status(400).json({
+// //                 success: false,
+// //                 message: "Missing transaction ID",
+// //             });
+// //         }
 
-        if (!bookingId || !userId || !price || !name || !type) {
-            return res.status(400).json({
-                success: false,
-                message: "Missing required fields (bookingId, userId, price, name, type)",
-            });
-        }
+// //         // Tìm thanh toán theo transactionId
+// //         const payment = await Payment.findOne({ transactionId });
 
-        // Tạo phiên thanh toán Stripe
-        const session = await stripe.checkout.sessions.create({
-            line_items: [
-                {
-                    price_data: {
-                        currency: 'usd',
-                        product_data: {
-                            name: name,
-                        },
-                        unit_amount: price * 100,
-                    },
-                    quantity: 1,
-                },
-            ],
-            mode: 'payment',
-            success_url: 'http://localhost:3000/thank-you?session_id={CHECKOUT_SESSION_ID}',
-            cancel_url: 'http://localhost:3000/payment-failed',
-        });
+// //         if (!payment) {
+// //             return res.status(404).json({
+// //                 success: false,
+// //                 message: "Payment not found",
+// //             });
+// //         }
 
-        // Lưu thông tin thanh toán vào database
-        const newPayment = new Payment({
-            bookingId,
-            userId,
-            amount: price,
-            paymentMethod: "Stripe",
-            transactionId: session.id,
-            status: "pending",
-            type,
-        });
+// //         if (payment.status === "success") {
+// //             return res.status(400).json({
+// //                 success: false,
+// //                 message: "Payment is already successful",
+// //             });
+// //         }
 
-        const savedPayment = await newPayment.save();
+// //         // Cập nhật trạng thái thanh toán
+// //         payment.status = "success";
+// //         await payment.save();
 
-        // Cập nhật trạng thái booking
-        if (type === "tour") {
-            await Booking.findByIdAndUpdate(bookingId, {
-                paymentId: savedPayment._id,
-                paymentStatus: "pending",
-            });
-        } else if (type === "hotel") {
-            await HotelBooking.findByIdAndUpdate(bookingId, {
-                paymentId: savedPayment._id,
-                paymentStatus: "pending",
-            });
-        } else {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid booking type (must be 'tour' or 'hotel')",
-            });
-        }
+// //         // Cập nhật trạng thái booking tương ứng
+// //         await Booking.findByIdAndUpdate(payment.bookingId, {
+// //             paymentStatus: "paid",
+// //         });
 
-        res.status(200).json({
-            success: true,
-            message: "Payment session created successfully",
-            session: session,
-        });
+// //         res.status(200).json({
+// //             success: true,
+// //             message: "Payment status updated successfully",
+// //         });
+// //     } catch (error) {
+// //         res.status(500).json({
+// //             success: false,
+// //             message: "Internal server error",
+// //             error: error.message,
+// //         });
+// //     }
+// // };
 
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Failed to create payment session",
-            error: error.message,
-        });
-    }
-};
 
-// cho tour
+// // cho tour và hotel
 // export const updatePaymentStatus = async (req, res) => {
 //     try {
 //         const { transactionId } = req.body;
@@ -189,15 +241,21 @@ export const createPayment = async (req, res) => {
 //         payment.status = "success";
 //         await payment.save();
 
-//         // Cập nhật trạng thái booking tương ứng
-//         await Booking.findByIdAndUpdate(payment.bookingId, {
-//             paymentStatus: "paid",
-//         });
+//         if (payment.type === "tour") {
+//             await Booking.findByIdAndUpdate(payment.bookingId, {
+//                 paymentStatus: "paid",
+//             });
+//         } else if (payment.type === "hotel") {
+//             await HotelBooking.findByIdAndUpdate(payment.bookingId, {
+//                 paymentStatus: "paid",
+//             });
+//         }
 
 //         res.status(200).json({
 //             success: true,
 //             message: "Payment status updated successfully",
 //         });
+
 //     } catch (error) {
 //         res.status(500).json({
 //             success: false,
@@ -208,7 +266,103 @@ export const createPayment = async (req, res) => {
 // };
 
 
-// cho tour và hotel
+
+import Stripe from 'stripe';
+import dotenv from 'dotenv';
+import Payment from "../models/Payment.js";
+import Booking from "../models/Booking.js";
+import HotelBooking from "../models/HotelBooking.js";
+import FlightBooking from "../models/FlightBooking.js";
+
+dotenv.config();
+
+const key = process.env.STRIPE_SECRET_KEY || undefined;
+const stripe = new Stripe(key);
+
+// Create payment session for tour, hotel, or flight
+export const createPayment = async (req, res) => {
+    try {
+        const { bookingId, userId, price, name, type } = req.body;
+
+        if (!bookingId || !userId || !price || !name || !type) {
+            return res.status(400).json({
+                success: false,
+                message: "Missing required fields (bookingId, userId, price, name, type)",
+            });
+        }
+
+        // Create Stripe checkout session
+        const session = await stripe.checkout.sessions.create({
+            line_items: [
+                {
+                    price_data: {
+                        currency: 'usd',
+                        product_data: {
+                            name: name,
+                        },
+                        unit_amount: price * 100,
+                    },
+                    quantity: 1,
+                },
+            ],
+            mode: 'payment',
+            success_url: 'http://localhost:3000/thank-you?session_id={CHECKOUT_SESSION_ID}',
+            cancel_url: 'http://localhost:3000/payment-failed',
+        });
+
+        // Save payment to database
+        const newPayment = new Payment({
+            bookingId,
+            userId,
+            amount: price,
+            paymentMethod: "Stripe",
+            transactionId: session.id,
+            status: "pending",
+            type,
+        });
+
+        const savedPayment = await newPayment.save();
+
+        // Update booking paymentStatus and link paymentId
+        if (type === "tour") {
+            await Booking.findByIdAndUpdate(bookingId, {
+                paymentId: savedPayment._id,
+                paymentStatus: "pending",
+            });
+        } else if (type === "hotel") {
+            await HotelBooking.findByIdAndUpdate(bookingId, {
+                paymentId: savedPayment._id,
+                paymentStatus: "pending",
+            });
+        } else if (type === "flight") {
+            await FlightBooking.findByIdAndUpdate(bookingId, {
+                paymentId: savedPayment._id,
+                paymentStatus: "pending",
+            });
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid booking type (must be 'tour', 'hotel', or 'flight')",
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Payment session created successfully",
+            session: session,
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Failed to create payment session",
+            error: error.message,
+        });
+    }
+};
+
+
+// Update payment status when successful
 export const updatePaymentStatus = async (req, res) => {
     try {
         const { transactionId } = req.body;
@@ -220,7 +374,7 @@ export const updatePaymentStatus = async (req, res) => {
             });
         }
 
-        // Tìm thanh toán theo transactionId
+        // Find payment by transactionId
         const payment = await Payment.findOne({ transactionId });
 
         if (!payment) {
@@ -237,7 +391,7 @@ export const updatePaymentStatus = async (req, res) => {
             });
         }
 
-        // Cập nhật trạng thái thanh toán
+        // Update status
         payment.status = "success";
         await payment.save();
 
@@ -247,6 +401,10 @@ export const updatePaymentStatus = async (req, res) => {
             });
         } else if (payment.type === "hotel") {
             await HotelBooking.findByIdAndUpdate(payment.bookingId, {
+                paymentStatus: "paid",
+            });
+        } else if (payment.type === "flight") {
+            await FlightBooking.findByIdAndUpdate(payment.bookingId, {
                 paymentStatus: "paid",
             });
         }

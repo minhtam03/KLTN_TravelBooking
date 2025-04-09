@@ -16,6 +16,7 @@ import postRoute from './routes/posts.js'
 import paymentRoute from './routes/payment.js'
 import statRoute from './routes/stats.js'
 import hotelBookingRoute from './routes/hotelBookings.js';
+import flightBookingRoute from './routes/flightBookings.js';
 
 dotenv.config()
 const app = express()
@@ -58,7 +59,7 @@ app.use('/api/v1/posts', postRoute)
 app.use('/api/v1/payments', paymentRoute)
 app.use('/api/v1/stats', statRoute)
 app.use('/api/v1/booking/hotel', hotelBookingRoute);
-
+app.use('/api/v1/booking/flight', flightBookingRoute);
 
 app.listen(port, () => {
     connect()

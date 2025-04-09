@@ -290,7 +290,7 @@ const Header = () => {
                 <ul className="dropdown__menu profile-dropdown">
                   <li><Link to="/booking/tour" className="dropdown-item">Tour</Link></li>
                   <li><Link to="/booking/hotel" className="dropdown-item">Hotel</Link></li>
-                  <li><Link to="/booking/stay" className="dropdown-item">Stay</Link></li>
+                  <li><Link to="/booking/flight" className="dropdown-item">Flight</Link></li>
                 </ul>
               </li>
 

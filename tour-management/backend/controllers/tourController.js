@@ -148,33 +148,86 @@ export const getAllTour = async (req, res) => {
 }
 
 // get tour by search
+// export const getTourBySearch = async (req, res) => {
+//     try {
+//         const query = {};
+
+//         if (req.query.city) {
+//             query.city = new RegExp(req.query.city, 'i');
+//         }
+
+//         if (req.query.duration) {
+//             query.duration = parseInt(req.query.duration);  // so sánh chính xác
+//         }
+
+//         if (req.query.maxGroupSize) {
+//             query.maxGroupSize = { $gte: parseInt(req.query.maxGroupSize) };
+//         }
+
+//         // Nếu không có bất kỳ query nào được truyền
+//         if (Object.keys(query).length === 0) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Please provide at least one search parameter."
+//             });
+//         }
+
+//         const tours = await Tour.find(query).populate('reviews');
+
+//         res.status(200).json({
+//             success: true,
+//             message: "Successful",
+//             data: tours,
+//         });
+
+//     } catch (error) {
+//         res.status(500).json({
+//             success: false,
+//             message: "Server error",
+//         });
+//     }
+// };
+
 export const getTourBySearch = async (req, res) => {
-
-    const city = new RegExp(req.query.city, 'i')
-    const distance = parseInt(req.query.distance)
-    const maxGroupSize = parseInt(req.query.maxGroupSize)
-
     try {
+        const query = {};
 
-        const tours = await Tour.find({
-            city,
-            distance: { $gte: distance },
-            maxGroupSize: { $gte: maxGroupSize }
-        }).populate('reviews')
+        if (req.query.city) {
+            query.city = new RegExp(req.query.city, 'i');
+        }
+
+        if (req.query.duration) {
+            query.duration = parseInt(req.query.duration);
+        }
+
+        if (req.query.maxGroupSize) {
+            query.maxGroupSize = { $gte: parseInt(req.query.maxGroupSize) };
+        }
+
+        const page = parseInt(req.query.page) || 0;
+        const limit = 8;
+
+        const tours = await Tour.find(query)
+            .populate('reviews')
+            .skip(page * limit)
+            .limit(limit);
+
+        const total = await Tour.countDocuments(query);
 
         res.status(200).json({
             success: true,
             message: "Successful",
             data: tours,
-        })
+            total,
+        });
 
     } catch (error) {
-        res.status(404).json({
+        res.status(500).json({
             success: false,
-            message: "not found"
-        })
+            message: "Server error",
+        });
     }
-}
+};
 
 
 // get featured tour
