@@ -53,14 +53,30 @@ export const getReviewSummary = async (req, res) => {
             model: "qwen-2.5-32b"
         });
 
-        const message = new HumanMessage(`
-            Summarize the following reviews:
-            ${reviewsText}
+        // const message = new HumanMessage(`
+        //     Summarize the following reviews:
+        //     ${reviewsText}
 
-            Summarize the following reviews briefly and usefully. 
-            Structure the summary into three separate paragraphs: one for the positive aspects, one for the negative aspects, and one for general user impressions. 
-            Each paragraph should be short and to the point, include two sentences.
-        `);
+        //     Summarize the following reviews briefly and usefully. 
+        //     Structure the summary into three separate paragraphs: one for the positive aspects, one for the negative aspects, and one for general user impressions. 
+        //     Each paragraph should be short and to the point, include two sentences.
+        // `);
+        const message = new HumanMessage(`
+            You will receive multiple reviews. Your job is to summarize them clearly.
+            Please return the result in the following strict format:
+            
+            Positive Aspects:
+            <Two sentences describing positive aspects>
+            
+            Negative Aspects:
+            <Two sentences describing negative aspects>
+            
+            General User Impressions:
+            <Two sentences giving general overall impressions>
+            
+            Reviews:
+            ${reviewsText}
+            `);
 
         const response = await model.invoke([message]);
 
