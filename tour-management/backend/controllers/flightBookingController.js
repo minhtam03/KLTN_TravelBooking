@@ -112,10 +112,37 @@ export const getFlightBooking = async (req, res) => {
 };
 
 // Get all flight bookings with payment amounts
+// export const getAllFlightBookingsWithAmount = async (req, res) => {
+//     try {
+//         const bookings = await FlightBooking.find()
+//             .populate("paymentId")
+
+//             .sort({ createdAt: -1 });
+
+//         const bookingsWithAmount = bookings.map((booking) => ({
+//             ...booking._doc,
+//             amount: booking.paymentId ? booking.paymentId.amount : 0,
+//         }));
+
+//         res.status(200).json({
+//             success: true,
+//             message: "Successfully retrieved flight bookings with payment amounts",
+//             data: bookingsWithAmount,
+//         });
+//     } catch (error) {
+//         console.error("Error fetching flight bookings with amount:", error);
+//         res.status(500).json({
+//             success: false,
+//             message: "Internal server error",
+//         });
+//     }
+// };
+
 export const getAllFlightBookingsWithAmount = async (req, res) => {
     try {
         const bookings = await FlightBooking.find()
             .populate("paymentId")
+            .populate("flightId") // Thêm dòng này
             .sort({ createdAt: -1 });
 
         const bookingsWithAmount = bookings.map((booking) => ({

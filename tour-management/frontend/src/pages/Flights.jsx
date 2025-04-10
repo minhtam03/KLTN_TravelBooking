@@ -61,13 +61,14 @@ const Flights = () => {
     <>
       <CommonSection title={"All Flights"} />
       <Container>
-        {/* <FlightSearchBar />
-        <Typography variant="h5" sx={{ mt: 4, mb: 4 }}>
 
-        </Typography> */}
         <section>
           <FlightSearchBar />
         </section>
+
+        {/* <Box display="flex" justifyContent="center" mt={4}>
+          <FlightSearchBar />
+        </Box> */}
 
         {loading ? (
           <Typography>Loading...</Typography>

@@ -1,3 +1,5 @@
+
+
 // import "./table.scss";
 // import Table from "@mui/material/Table";
 // import TableBody from "@mui/material/TableBody";
@@ -11,53 +13,64 @@
 // import { BASE_URL } from "../../../utils/config";
 
 // const BookingTable = ({ userId, tourId, hotelId }) => {
-
-//     const [bookings, setBookings] = useState([]);
+//     const [tourBookings, setTourBookings] = useState([]);
+//     const [hotelBookings, setHotelBookings] = useState([]);
 //     const [page, setPage] = useState(0);
 //     const [rowsPerPage, setRowsPerPage] = useState(8);
 //     const [loading, setLoading] = useState(true);
 
 //     const type = tourId ? "tour" : hotelId ? "hotel" : null;
 
-//     const handleChangePage = (event, newPage) => {
-//         setPage(newPage);
-//     };
-
-//     const handleChangeRowsPerPage = (event) => {
-//         setRowsPerPage(parseInt(event.target.value, 10));
+//     const handleChangePage = (_, newPage) => setPage(newPage);
+//     const handleChangeRowsPerPage = (e) => {
+//         setRowsPerPage(parseInt(e.target.value, 10));
 //         setPage(0);
 //     };
 
 //     useEffect(() => {
 //         const fetchBookings = async () => {
+//             setLoading(true);
 //             try {
-//                 let endpoint = "";
+//                 if (userId) {
+//                     const [resTour, resHotel] = await Promise.all([
+//                         fetch(`${BASE_URL}/booking/tour/bookings-with-amount`, { credentials: "include" }),
+//                         fetch(`${BASE_URL}/booking/hotel/bookings-with-amount`, { credentials: "include" }),
+//                     ]);
 
-//                 if (type === "tour") {
-//                     endpoint = `${BASE_URL}/booking/tour/bookings-with-amount`;
-//                 } else if (type === "hotel") {
-//                     endpoint = `${BASE_URL}/booking/hotel/bookings-with-amount`;
-//                 } else {
-//                     return;
+//                     const [tourData, hotelData] = await Promise.all([resTour.json(), resHotel.json()]);
+
+//                     if (resTour.ok) {
+//                         setTourBookings(tourData.data.filter(b => b.userId === userId));
+//                     }
+//                     if (resHotel.ok) {
+//                         setHotelBookings(hotelData.data.filter(b => b.userId === userId));
+//                     }
+
+//                 } else if (tourId || hotelId) {
+//                     const endpoint = `${BASE_URL}/booking/${type}/bookings-with-amount`;
+//                     const res = await fetch(endpoint, { credentials: "include" });
+//                     const result = await res.json();
+//                     const filtered = result.data.filter(b =>
+//                         type === "tour" ? b.tourId === tourId : b.hotelId === hotelId
+//                     );
+
+//                     type === "tour" ? setTourBookings(filtered) : setHotelBookings(filtered);
+//                 }
+//                 else {
+//                     // ✅ Trường hợp không truyền gì, load cả tour và hotel
+//                     const [resTour, resHotel] = await Promise.all([
+//                         fetch(`${BASE_URL}/booking/tour/bookings-with-amount`, { credentials: "include" }),
+//                         fetch(`${BASE_URL}/booking/hotel/bookings-with-amount`, { credentials: "include" }),
+//                     ]);
+
+//                     const [tourData, hotelData] = await Promise.all([resTour.json(), resHotel.json()]);
+
+//                     if (resTour.ok) setTourBookings(tourData.data || []);
+//                     if (resHotel.ok) setHotelBookings(hotelData.data || []);
 //                 }
 
-//                 const res = await fetch(endpoint, {
-//                     method: "GET",
-//                     credentials: "include",
-//                 });
-
-//                 if (!res.ok) throw new Error("Failed to fetch bookings");
-
-//                 const result = await res.json();
-//                 let filtered = result.data;
-
-//                 if (userId) filtered = filtered.filter(b => b.userId === userId);
-//                 if (tourId) filtered = filtered.filter(b => b.tourId === tourId);
-//                 if (hotelId) filtered = filtered.filter(b => b.hotelId === hotelId);
-
-//                 setBookings(filtered);
-//             } catch (error) {
-//                 console.error("Error fetching bookings:", error);
+//             } catch (err) {
+//                 console.error("Booking fetch error:", err);
 //             } finally {
 //                 setLoading(false);
 //             }
@@ -66,40 +79,37 @@
 //         fetchBookings();
 //     }, [userId, tourId, hotelId, type]);
 
-//     return (
-//         <TableContainer component={Paper} className="table">
+//     const renderTable = (bookings, isTour = true) => (
+//         <TableContainer component={Paper} className="table" sx={{ mt: 3 }}>
+//             <h4 style={{ padding: "10px 16px" }}>{isTour ? "Tour Bookings" : "Hotel Bookings"}</h4>
 //             <Table sx={{ minWidth: 650 }} aria-label="booking table">
 //                 <TableHead>
 //                     <TableRow>
-//                         <TableCell className="tableCell">No.</TableCell>
-//                         <TableCell className="tableCell">{type === "tour" ? "Tour Name" : "Hotel Name"}</TableCell>
-//                         <TableCell className="tableCell">Customer Name</TableCell>
-//                         <TableCell className="tableCell">{type === "tour" ? "Guest Size" : "Nights"}</TableCell>
-//                         <TableCell className="tableCell">Phone</TableCell>
-//                         <TableCell className="tableCell">{type === "tour" ? "Tour Date" : "Check-in Date"}</TableCell>
-//                         <TableCell className="tableCell">Booking Date</TableCell>
-//                         <TableCell className="tableCell">Amount</TableCell>
-//                         <TableCell className="tableCell">Payment Status</TableCell>
+//                         <TableCell>No.</TableCell>
+//                         <TableCell>{isTour ? "Tour Name" : "Hotel Name"}</TableCell>
+//                         <TableCell>Customer Name</TableCell>
+//                         <TableCell>{isTour ? "Guest Size" : "Nights"}</TableCell>
+//                         <TableCell>Phone</TableCell>
+//                         <TableCell>{isTour ? "Tour Date" : "Check-in Date"}</TableCell>
+//                         <TableCell>Booking Date</TableCell>
+//                         <TableCell>Amount</TableCell>
+//                         <TableCell>Payment Status</TableCell>
 //                     </TableRow>
 //                 </TableHead>
 //                 <TableBody>
 //                     {loading ? (
-//                         <TableRow>
-//                             <TableCell colSpan={9} align="center">Loading...</TableCell>
-//                         </TableRow>
+//                         <TableRow><TableCell colSpan={9} align="center">Loading...</TableCell></TableRow>
 //                     ) : bookings.length === 0 ? (
-//                         <TableRow>
-//                             <TableCell colSpan={9} align="center">No bookings available</TableCell>
-//                         </TableRow>
+//                         <TableRow><TableCell colSpan={9} align="center">No bookings available</TableCell></TableRow>
 //                     ) : (
 //                         bookings
 //                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 //                             .map((booking, index) => (
 //                                 <TableRow key={booking._id}>
 //                                     <TableCell>{page * rowsPerPage + index + 1}</TableCell>
-//                                     <TableCell>{type === "tour" ? booking.tourName : booking.hotelName}</TableCell>
+//                                     <TableCell>{isTour ? booking.tourName : booking.hotelName}</TableCell>
 //                                     <TableCell>{booking.fullName}</TableCell>
-//                                     <TableCell>{type === "tour" ? booking.guestSize : booking.nights}</TableCell>
+//                                     <TableCell>{isTour ? booking.guestSize : booking.nights}</TableCell>
 //                                     <TableCell>{booking.phone}</TableCell>
 //                                     <TableCell>{new Date(booking.bookAt).toLocaleDateString()}</TableCell>
 //                                     <TableCell>{new Date(booking.createdAt).toLocaleDateString()}</TableCell>
@@ -115,7 +125,7 @@
 //                 </TableBody>
 //             </Table>
 //             <TablePagination
-//                 rowsPerPageOptions={[11]}
+//                 rowsPerPageOptions={[8, 10, 25]}
 //                 component="div"
 //                 count={bookings.length}
 //                 rowsPerPage={rowsPerPage}
@@ -124,6 +134,26 @@
 //                 onRowsPerPageChange={handleChangeRowsPerPage}
 //             />
 //         </TableContainer>
+//     );
+
+//     return (
+//         <>
+//             {userId ? (
+//                 <>
+//                     {renderTable(tourBookings, true)}
+//                     {renderTable(hotelBookings, false)}
+//                 </>
+//             ) : tourId ? (
+//                 renderTable(tourBookings, true)
+//             ) : hotelId ? (
+//                 renderTable(hotelBookings, false)
+//             ) : (
+//                 <>
+//                     {renderTable(tourBookings, true)}
+//                     {renderTable(hotelBookings, false)}
+//                 </>
+//             )}
+//         </>
 //     );
 // };
 
@@ -141,14 +171,15 @@ import TablePagination from "@mui/material/TablePagination";
 import { useState, useEffect } from "react";
 import { BASE_URL } from "../../../utils/config";
 
-const BookingTable = ({ userId, tourId, hotelId }) => {
+const BookingTable = ({ userId, tourId, hotelId, flightId }) => {
     const [tourBookings, setTourBookings] = useState([]);
     const [hotelBookings, setHotelBookings] = useState([]);
+    const [flightBookings, setFlightBookings] = useState([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(8);
     const [loading, setLoading] = useState(true);
 
-    const type = tourId ? "tour" : hotelId ? "hotel" : null;
+    const type = tourId ? "tour" : hotelId ? "hotel" : flightId ? "flight" : null;
 
     const handleChangePage = (_, newPage) => setPage(newPage);
     const handleChangeRowsPerPage = (e) => {
@@ -161,43 +192,54 @@ const BookingTable = ({ userId, tourId, hotelId }) => {
             setLoading(true);
             try {
                 if (userId) {
-                    const [resTour, resHotel] = await Promise.all([
+                    const [resTour, resHotel, resFlight] = await Promise.all([
                         fetch(`${BASE_URL}/booking/tour/bookings-with-amount`, { credentials: "include" }),
                         fetch(`${BASE_URL}/booking/hotel/bookings-with-amount`, { credentials: "include" }),
+                        fetch(`${BASE_URL}/booking/flight/bookings-with-amount`, { credentials: "include" }),
                     ]);
 
-                    const [tourData, hotelData] = await Promise.all([resTour.json(), resHotel.json()]);
+                    const [tourData, hotelData, flightData] = await Promise.all([
+                        resTour.json(),
+                        resHotel.json(),
+                        resFlight.json(),
+                    ]);
 
-                    if (resTour.ok) {
-                        setTourBookings(tourData.data.filter(b => b.userId === userId));
-                    }
-                    if (resHotel.ok) {
-                        setHotelBookings(hotelData.data.filter(b => b.userId === userId));
-                    }
+                    if (resTour.ok) setTourBookings(tourData.data.filter(b => b.userId === userId));
+                    if (resHotel.ok) setHotelBookings(hotelData.data.filter(b => b.userId === userId));
+                    if (resFlight.ok) setFlightBookings(flightData.data.filter(b => b.userId === userId));
 
-                } else if (tourId || hotelId) {
-                    const endpoint = `${BASE_URL}/booking/${type}/bookings-with-amount`;
-                    const res = await fetch(endpoint, { credentials: "include" });
+                } else if (tourId || hotelId || flightId) {
+                    const res = await fetch(`${BASE_URL}/booking/${type}/bookings-with-amount`, { credentials: "include" });
                     const result = await res.json();
+
                     const filtered = result.data.filter(b =>
-                        type === "tour" ? b.tourId === tourId : b.hotelId === hotelId
+                        type === "tour"
+                            ? b.tourId === tourId
+                            : type === "hotel"
+                                ? b.hotelId === hotelId
+                                : b.flightId?._id === flightId
                     );
 
-                    type === "tour" ? setTourBookings(filtered) : setHotelBookings(filtered);
-                }
-                else {
-                    // ✅ Trường hợp không truyền gì, load cả tour và hotel
-                    const [resTour, resHotel] = await Promise.all([
+                    if (type === "tour") setTourBookings(filtered);
+                    if (type === "hotel") setHotelBookings(filtered);
+                    if (type === "flight") setFlightBookings(filtered);
+                } else {
+                    const [resTour, resHotel, resFlight] = await Promise.all([
                         fetch(`${BASE_URL}/booking/tour/bookings-with-amount`, { credentials: "include" }),
                         fetch(`${BASE_URL}/booking/hotel/bookings-with-amount`, { credentials: "include" }),
+                        fetch(`${BASE_URL}/booking/flight/bookings-with-amount`, { credentials: "include" }),
                     ]);
 
-                    const [tourData, hotelData] = await Promise.all([resTour.json(), resHotel.json()]);
+                    const [tourData, hotelData, flightData] = await Promise.all([
+                        resTour.json(),
+                        resHotel.json(),
+                        resFlight.json(),
+                    ]);
 
                     if (resTour.ok) setTourBookings(tourData.data || []);
                     if (resHotel.ok) setHotelBookings(hotelData.data || []);
+                    if (resFlight.ok) setFlightBookings(flightData.data || []);
                 }
-
             } catch (err) {
                 console.error("Booking fetch error:", err);
             } finally {
@@ -206,20 +248,20 @@ const BookingTable = ({ userId, tourId, hotelId }) => {
         };
 
         fetchBookings();
-    }, [userId, tourId, hotelId, type]);
+    }, [userId, tourId, hotelId, flightId, type]);
 
-    const renderTable = (bookings, isTour = true) => (
+    const renderTable = (bookings, label = "Bookings") => (
         <TableContainer component={Paper} className="table" sx={{ mt: 3 }}>
-            <h4 style={{ padding: "10px 16px" }}>{isTour ? "Tour Bookings" : "Hotel Bookings"}</h4>
+            <h4 style={{ padding: "10px 16px" }}>{label}</h4>
             <Table sx={{ minWidth: 650 }} aria-label="booking table">
                 <TableHead>
                     <TableRow>
                         <TableCell>No.</TableCell>
-                        <TableCell>{isTour ? "Tour Name" : "Hotel Name"}</TableCell>
+                        <TableCell>Service</TableCell>
                         <TableCell>Customer Name</TableCell>
-                        <TableCell>{isTour ? "Guest Size" : "Nights"}</TableCell>
+                        <TableCell>Guests</TableCell>
                         <TableCell>Phone</TableCell>
-                        <TableCell>{isTour ? "Tour Date" : "Check-in Date"}</TableCell>
+                        <TableCell>Booked For</TableCell>
                         <TableCell>Booking Date</TableCell>
                         <TableCell>Amount</TableCell>
                         <TableCell>Payment Status</TableCell>
@@ -227,18 +269,28 @@ const BookingTable = ({ userId, tourId, hotelId }) => {
                 </TableHead>
                 <TableBody>
                     {loading ? (
-                        <TableRow><TableCell colSpan={9} align="center">Loading...</TableCell></TableRow>
+                        <TableRow>
+                            <TableCell colSpan={9} align="center">
+                                Loading...
+                            </TableCell>
+                        </TableRow>
                     ) : bookings.length === 0 ? (
-                        <TableRow><TableCell colSpan={9} align="center">No bookings available</TableCell></TableRow>
+                        <TableRow>
+                            <TableCell colSpan={9} align="center">
+                                No bookings available
+                            </TableCell>
+                        </TableRow>
                     ) : (
                         bookings
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((booking, index) => (
                                 <TableRow key={booking._id}>
                                     <TableCell>{page * rowsPerPage + index + 1}</TableCell>
-                                    <TableCell>{isTour ? booking.tourName : booking.hotelName}</TableCell>
+                                    <TableCell>
+                                        {booking.tourName || booking.hotelName || booking.flightId?.flightNumber || "N/A"}
+                                    </TableCell>
                                     <TableCell>{booking.fullName}</TableCell>
-                                    <TableCell>{isTour ? booking.guestSize : booking.nights}</TableCell>
+                                    <TableCell>{booking.guestSize}</TableCell>
                                     <TableCell>{booking.phone}</TableCell>
                                     <TableCell>{new Date(booking.bookAt).toLocaleDateString()}</TableCell>
                                     <TableCell>{new Date(booking.createdAt).toLocaleDateString()}</TableCell>
@@ -265,35 +317,25 @@ const BookingTable = ({ userId, tourId, hotelId }) => {
         </TableContainer>
     );
 
-    // return (
-    //     <>
-    //         {userId ? (
-    //             <>
-    //                 {renderTable(tourBookings, true)}
-    //                 {renderTable(hotelBookings, false)}
-    //             </>
-    //         ) : (
-    //             type === "tour"
-    //                 ? renderTable(tourBookings, true)
-    //                 : renderTable(hotelBookings, false)
-    //         )}
-    //     </>
-    // );
     return (
         <>
             {userId ? (
                 <>
-                    {renderTable(tourBookings, true)}
-                    {renderTable(hotelBookings, false)}
+                    {renderTable(tourBookings, "Tour Bookings")}
+                    {renderTable(hotelBookings, "Hotel Bookings")}
+                    {renderTable(flightBookings, "Flight Bookings")}
                 </>
             ) : tourId ? (
-                renderTable(tourBookings, true)
+                renderTable(tourBookings, "Tour Bookings")
             ) : hotelId ? (
-                renderTable(hotelBookings, false)
+                renderTable(hotelBookings, "Hotel Bookings")
+            ) : flightId ? (
+                renderTable(flightBookings, "Flight Bookings")
             ) : (
                 <>
-                    {renderTable(tourBookings, true)}
-                    {renderTable(hotelBookings, false)}
+                    {renderTable(tourBookings, "Tour Bookings")}
+                    {renderTable(hotelBookings, "Hotel Bookings")}
+                    {renderTable(flightBookings, "Flight Bookings")}
                 </>
             )}
         </>
@@ -301,3 +343,4 @@ const BookingTable = ({ userId, tourId, hotelId }) => {
 };
 
 export default BookingTable;
+

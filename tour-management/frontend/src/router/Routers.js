@@ -29,10 +29,11 @@ import Single from '../pages/admin/single/Single'
 import SingleTour from '../pages/admin/single-tour/SingleTour'
 import SingleHotel from '../pages/admin/single-hotel/SingleHotel'
 import SinglePost from '../pages/admin/single-post/SinglePost'
+import SingleFlight from '../pages/admin/single-flight/SingleFlight'
 
 import Edit from '../pages/admin/edit/Edit'
-import { userInputs, tourInputs, postInputs, hotelInputs } from '../resource/formSource'
-import { userColumns, tourColumns, hotelColumns, postColumns } from '../resource/datatableSource'
+import { userInputs, tourInputs, postInputs, hotelInputs, flightInputs } from '../resource/formSource'
+import { userColumns, tourColumns, hotelColumns, postColumns, flightColumns } from '../resource/datatableSource'
 
 import PostDetail from '../pages/PostDetail'
 import Profile from '../pages/Profile'
@@ -40,6 +41,7 @@ import Profile from '../pages/Profile'
 import GenericBookingDetail from '../pages/GenericBookingDetail'
 import HotelBookingHistory from "../pages/HotelBookingHistory";
 import TourBookingHistory from "../pages/TourBookingHistory";
+import FlightBookingHistory from '../pages/FlightBookingHistory'
 
 
 const Routers = () => {
@@ -79,8 +81,10 @@ const Routers = () => {
 
       <Route path="/booking/tour/:bookingId" element={<GenericBookingDetail type="tour" />} />
       <Route path="/booking/hotel/:bookingId" element={<GenericBookingDetail type="hotel" />} />
+      <Route path="/booking/flight/:bookingId" element={<GenericBookingDetail type="flight" />} />
       <Route path="/booking/hotel" element={<HotelBookingHistory />} />
       <Route path="/booking/tour" element={<TourBookingHistory />} />
+      <Route path="/booking/flight" element={<FlightBookingHistory />} />
 
 
 
@@ -110,6 +114,13 @@ const Routers = () => {
         <Route path=':id' element={<SingleHotel />} />
         <Route path='new' element={<New inputs={hotelInputs} title="Add New Hotel" />} />
         <Route path=':id/edit' element={<Edit inputs={hotelInputs} title="Edit Hotel" />} />
+      </Route>
+
+      <Route path='/admin/flights'>
+        <Route index element={<List columns={flightColumns} />} />
+        <Route path=':id' element={<SingleFlight />} />
+        <Route path='new' element={<New inputs={flightInputs} title="Add New Flight" />} />
+        <Route path=':id/edit' element={<Edit inputs={flightInputs} title="Edit Flight" />} />
       </Route>
 
       <Route path='/admin/posts'>

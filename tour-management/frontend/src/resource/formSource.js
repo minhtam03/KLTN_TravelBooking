@@ -184,3 +184,90 @@ export const hotelInputs = [
         name: "amenities",
     },
 ];
+
+export const flightInputs = [
+    {
+        id: "flightNumber",
+        label: "Flight Number",
+        type: "text",
+        placeholder: "VN123",
+        name: "flightNumber",
+    },
+    {
+        id: "airline",
+        label: "Airline",
+        type: "text",
+        placeholder: "Vietnam Airlines",
+        name: "airline",
+    },
+    {
+        id: "departureCity",
+        label: "Departure City",
+        type: "select",
+        name: "departureCity",
+        options: [
+            'Ha Noi', 'Ho Chi Minh', 'Da Nang', 'Hai Phong', 'Can Tho', 'Hue', 'Vinh', 'Nha Trang', 'Quy Nhon', 'Phu Quoc'
+        ],
+    },
+    {
+        id: "arrivalCity",
+        label: "Arrival City",
+        type: "select",
+        name: "arrivalCity",
+        options: [
+            'Ha Noi', 'Ho Chi Minh', 'Da Nang', 'Hai Phong', 'Can Tho', 'Hue', 'Vinh', 'Nha Trang', 'Quy Nhon', 'Phu Quoc'
+        ],
+    },
+    {
+        id: "tripType",
+        label: "Trip Type",
+        type: "select",
+        name: "tripType",
+        options: ["one-way", "round-trip"],
+    },
+    {
+        id: "departureDate",
+        label: "Departure Date",
+        type: "date",
+        name: "departureDate",
+    },
+    {
+        id: "departureTime",
+        label: "Departure Time",
+        type: "time",
+        name: "departureTime",
+    },
+    {
+        id: "returnDate",
+        label: "Return Date",
+        type: "date",
+        name: "returnDate",
+    },
+    {
+        id: "returnTime",
+        label: "Return Time",
+        type: "time",
+        name: "returnTime",
+    },
+    {
+        id: "price",
+        label: "Price ($)",
+        type: "number",
+        placeholder: "100",
+        name: "price",
+    },
+    {
+        id: "airplaneType",
+        label: "Airplane Type",
+        type: "text",
+        placeholder: "Airbus A321",
+        name: "airplaneType",
+    },
+    {
+        id: "class",
+        label: "Class",
+        type: "select",
+        name: "class",
+        options: ["economy", "business", "first"],
+    },
+];

@@ -110,9 +110,28 @@ const Widget = ({ type }) => {
             widgetData = {
                 title: "HOTELS",
                 isMoney: false,
-                amount: data.tour,
+                amount: data.hotel,
                 link: "See all hotels",
                 url: "/admin/hotels",
+                icon: (
+                    <AccountBalanceWalletOutlinedIcon
+                        className="icon"
+                        style={{
+                            backgroundColor: "rgba(128, 0, 128, 0.2)",
+                            color: "purple",
+                        }}
+                    />
+                ),
+            };
+            break;
+
+        case "flight":
+            widgetData = {
+                title: "FLIGHTS",
+                isMoney: false,
+                amount: data.flight,
+                link: "See all flights",
+                url: "/admin/flights",
                 icon: (
                     <AccountBalanceWalletOutlinedIcon
                         className="icon"

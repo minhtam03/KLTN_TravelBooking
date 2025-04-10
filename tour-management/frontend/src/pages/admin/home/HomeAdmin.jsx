@@ -16,7 +16,7 @@ const HomeAdmin = () => {
     useEffect(() => {
         const fetchBookings = async () => {
             try {
-                const [resTour, resHotel] = await Promise.all([
+                const [resTour, resHotel, resFlight] = await Promise.all([
                     fetch(`${BASE_URL}/booking/tour/bookings-with-amount`, {
                         method: 'GET',
                         credentials: 'include',
@@ -25,16 +25,22 @@ const HomeAdmin = () => {
                         method: 'GET',
                         credentials: 'include',
                     }),
+                    fetch(`${BASE_URL}/booking/flight/bookings-with-amount`, {
+                        method: 'GET',
+                        credentials: 'include',
+                    }),
                 ]);
 
-                const [tourData, hotelData] = await Promise.all([
+                const [tourData, hotelData, flightData] = await Promise.all([
                     resTour.json(),
                     resHotel.json(),
+                    resFlight.json(),
                 ]);
 
                 const allBookings = [
                     ...(tourData?.data || []),
                     ...(hotelData?.data || []),
+                    ...(flightData?.data || []),
                 ];
 
                 const monthlyRevenue = {};
@@ -69,6 +75,7 @@ const HomeAdmin = () => {
         fetchBookings();
     }, []);
 
+
     return (
         <div className="home">
             <Sidebar />
@@ -78,6 +85,7 @@ const HomeAdmin = () => {
                     <Widget type="user" />
                     <Widget type="tour" />
                     <Widget type="hotel" />
+                    <Widget type="flight" />
                     {/* <Widget type="earning" /> */}
                 </div>
                 <div className="charts">
