@@ -41,6 +41,7 @@ import { Container, Row, Col } from 'reactstrap';
 import { useLocation } from 'react-router-dom';
 import TourCard from '../shared/TourCard';
 import { BASE_URL } from '../utils/config';
+import SearchBar from '../shared/SearchBar';
 
 const SearchResultList = () => {
   const location = useLocation();
@@ -87,6 +88,14 @@ const SearchResultList = () => {
       <CommonSection title={"Tour Search Result"} />
       <section>
         <Container>
+          <Row>
+            <SearchBar />
+          </Row>
+        </Container>
+      </section>
+      <section>
+        <Container>
+
           <Row>
             {loading ? (
               <h4 className='text-center pt-5'>Loading...</h4>

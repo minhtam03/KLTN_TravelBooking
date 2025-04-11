@@ -14,10 +14,21 @@ const TourCard = ({ tour }) => {
 
     return <div className='tour__card'>
         <Card>
-            <div className='tour__img'>
+            {/* <div className='tour__img'>
                 <img src={photo} alt="tour-img" />
                 {featured && <span>Featured</span>}
 
+            </div> */}
+            <div className='tour__img'>
+                <img
+                    src={photo || "https://transviet.com.vn/images/Khuyen-Mai/Pictures/cam_nang_du_lich/LUU-Y-KHI-DI-DU-LICH/dulichtheotour-transviet00.jpg"}
+                    alt="tour-img"
+                    onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "https://transviet.com.vn/images/Khuyen-Mai/Pictures/cam_nang_du_lich/LUU-Y-KHI-DI-DU-LICH/dulichtheotour-transviet00.jpg";
+                    }}
+                />
+                {featured && <span>Featured</span>}
             </div>
             <CardBody>
                 <div className="card__top d-flex align-items-center
