@@ -3,6 +3,7 @@ import { Grid, Typography, MenuItem, FormControl, InputLabel, Select, Box, Toolt
 import TourCard from "../../shared/TourCard";
 import CustomTooltip from "../Tooltip/Tooltip";
 import { Fade } from '@mui/material';
+import ItemCardTooltip from '../Tooltip/ItemCardToolTip';
 
 const SuggestionResult = ({
     results,
@@ -78,11 +79,13 @@ const SuggestionResult = ({
                                     sx={{ position: 'relative' }}
                                 >
                                     <Tooltip
-                                        title={
-                                            <Box sx={{ width: '250px' }}>
-                                                <TourCard tour={tour} />
-                                            </Box>
-                                        }
+                                        // title={
+                                        //     <Box sx={{ width: '250px' }}>
+                                        //         <TourCard tour={tour} />
+                                        //     </Box>
+                                        // }
+                                        title={<ItemCardTooltip item={tour} type="tour" />}
+
                                         {...tooltipProps}
                                     >
                                         <Box sx={{ width: '100%' }}>
@@ -114,15 +117,16 @@ const SuggestionResult = ({
                                     sx={{ position: 'relative' }}
                                 >
                                     <Tooltip
-                                        title={
-                                            <Box>
-                                                <Typography variant="subtitle1"><strong>Flight:</strong> {flight.flightNumber}</Typography>
-                                                <Typography variant="body2">Airline: {flight.airline}</Typography>
-                                                <Typography variant="body2">Departure: {new Date(flight.departureDate).toLocaleDateString()}</Typography>
-                                                <Typography variant="body2">Class: {flight.class}</Typography>
-                                                <Typography variant="body2">Price: ${flight.price}</Typography>
-                                            </Box>
-                                        }
+                                        // title={
+                                        //     <Box>
+                                        //         <Typography variant="subtitle1"><strong>Flight:</strong> {flight.flightNumber}</Typography>
+                                        //         <Typography variant="body2">Airline: {flight.airline}</Typography>
+                                        //         <Typography variant="body2">Departure: {new Date(flight.departureDate).toLocaleDateString()}</Typography>
+                                        //         <Typography variant="body2">Class: {flight.class}</Typography>
+                                        //         <Typography variant="body2">Price: ${flight.price}</Typography>
+                                        //     </Box>
+                                        // }
+                                        title={<ItemCardTooltip item={flight} type="flight" />}
                                         {...tooltipProps}
                                     >
                                         <Box sx={{ width: '100%' }}>
@@ -154,15 +158,16 @@ const SuggestionResult = ({
                                     sx={{ position: 'relative' }}
                                 >
                                     <Tooltip
-                                        title={
-                                            <Box>
-                                                <Typography variant="subtitle1"><strong>Hotel:</strong> {hotel.hotelName}</Typography>
-                                                <Typography variant="body2">Stars: {hotel.stars} ⭐</Typography>
-                                                <Typography variant="body2">Rooms Available: {hotel.roomsAvailable}</Typography>
-                                                <Typography variant="body2">Price per Night: ${hotel.pricePerNight}</Typography>
-                                                <Typography variant="body2">Total for {duration} nights: ${hotel.pricePerNight * duration}</Typography>
-                                            </Box>
-                                        }
+                                        // title={
+                                        //     <Box>
+                                        //         <Typography variant="subtitle1"><strong>Hotel:</strong> {hotel.hotelName}</Typography>
+                                        //         <Typography variant="body2">Stars: {hotel.stars} ⭐</Typography>
+                                        //         <Typography variant="body2">Rooms Available: {hotel.roomsAvailable}</Typography>
+                                        //         <Typography variant="body2">Price per Night: ${hotel.pricePerNight}</Typography>
+                                        //         <Typography variant="body2">Total for {duration} nights: ${hotel.pricePerNight * duration}</Typography>
+                                        //     </Box>
+                                        // }
+                                        title={<ItemCardTooltip item={hotel} type="hotel" />}
                                         {...tooltipProps}
                                     >
                                         <Box sx={{ width: '100%' }}>
@@ -184,4 +189,3 @@ const SuggestionResult = ({
 };
 
 export default SuggestionResult;
-

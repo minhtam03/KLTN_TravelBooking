@@ -54,18 +54,11 @@ export default function Post({ post }) {
 
 
   return (
-    <Card sx={{ height: '100%' }}>
+    <Card sx={{ height: '100%', borderRadius: '12px' }}>
 
-      <CardHeader
-      // avatar={<Avatar>{post.author.charAt(0)}</Avatar>}
-      // title={<Link to={`/post/${post._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>{post.author}</Link>}
-      // subheader={moment(post.createdAt).format('HH:mm MMM DD, YYYY')} // Định dạng ngày giờ
-      // action={
-      //   <IconButton>
-      //     <MoreVertIcon />
-      //   </IconButton>
-      // }
-      />
+      {/* <CardHeader
+
+      /> */}
 
       <Link to={`/post/${post._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
         {post.photo && (
@@ -73,7 +66,7 @@ export default function Post({ post }) {
             component="img"
             image={post.photo}
             alt={post.title}
-            sx={{ height: '150px', objectFit: 'cover' }}
+            sx={{ height: '200px', objectFit: 'cover' }}
           />
         )}
       </Link>

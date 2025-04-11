@@ -1,33 +1,44 @@
 /* booking-card.css */
 .booking__card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: transform 0.3s;
-  }
-  .booking__card:hover {
-    transform: scale(1.05);
-  }
-  .booking__img img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-  }
-  .booking__title {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-  }
-  .booking__details p {
-    margin: 0.3rem 0;
-    font-size: 0.9rem;
-    color: #555;
-  }
-  .card__bottom {
-    font-size: 0.9rem;
-    color: #28a745;
-  }
-  .booking__rating i {
-    color: #ffc107;
-  }
-  
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+
+.booking__card:hover {
+  transform: scale(1.05);
+}
+
+.booking__img img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.booking__title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  height: 50px;
+  /* Chiều cao cố định cho title */
+  overflow: hidden;
+  /* Cắt bớt văn bản nếu nó dài quá */
+  text-overflow: ellipsis;
+  /* Hiển thị "..." nếu văn bản bị cắt */
+}
+
+.booking__details p {
+  margin: 0.3rem 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.card__bottom {
+  font-size: 0.9rem;
+  color: #28a745;
+}
+
+.booking__rating i {
+  color: #ffc107;
+}

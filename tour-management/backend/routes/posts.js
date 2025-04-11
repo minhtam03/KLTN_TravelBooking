@@ -7,7 +7,7 @@ import {
     updatePost,
     deletePost,
     likePost,
-    getPostsPaginated,
+    // getPostsPaginated,
     searchPosts
 } from "../controllers/postController.js";
 
@@ -23,7 +23,7 @@ router.get("/:id", getSinglePost)
 router.put("/:id", updatePost)
 router.delete("/:id", deletePost)
 router.get("/search", searchPosts);
-router.get("/pagination", getPostsPaginated);
+// router.get("/pagination", getPostsPaginated);
 
 
 export default router

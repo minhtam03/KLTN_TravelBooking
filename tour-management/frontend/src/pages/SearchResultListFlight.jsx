@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { BASE_URL } from '../utils/config';
 import FlightCard from '../shared/FlightCard'; // component hiển thị thông tin chuyến bay
-import { Container, Row, Col } from 'reactstrap';
+
 import CommonSection from '../shared/CommonSection';
+import { Container, Typography, Grid, Box } from '@mui/material';
 
 const SearchResultListFlight = () => {
     const location = useLocation();
@@ -56,20 +57,23 @@ const SearchResultListFlight = () => {
         <>
             <CommonSection title={"Flight Search Result"} />
             <Container className="pt-5">
-
-                <Row>
-                    {loading ? (
-                        <p>Loading...</p>
-                    ) : flights.length > 0 ? (
-                        flights.map((flight) => (
-                            <Col lg="4" md="6" sm="12" key={flight._id}>
-                                <FlightCard flight={flight} />
-                            </Col>
-                        ))
-                    ) : (
-                        <p>No flights found.</p>
-                    )}
-                </Row>
+                {loading ? (
+                    <p>Loading...</p>
+                ) : flights.length > 0 ? (
+                    <Grid container spacing={3}>
+                        {flights.map((flight) => (
+                            <Grid item xs={12} key={flight._id}>
+                                <Box display="flex" justifyContent="center">
+                                    <Box width="70%">
+                                        <FlightCard flight={flight} />
+                                    </Box>
+                                </Box>
+                            </Grid>
+                        ))}
+                    </Grid>
+                ) : (
+                    <p>No flights found.</p>
+                )}
             </Container>
         </>
 

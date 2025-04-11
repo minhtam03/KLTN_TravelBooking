@@ -322,7 +322,7 @@ const GenericBookingDetail = ({ type }) => {
         detailLink = `/stays/${item?._id}`;
     } else if (type === "flight") {
         item = booking.flightId;
-        image = item?.photo || defaultImg;
+        image = item?.photo || "https://www.libertytravel.com/sites/default/files/styles/full_size/public/flight-hero.jpg?itok=LKyRwKDq";
         name = `${item?.airline} - ${item?.flightNumber}`;
         quantity = booking.guestSize;
         unitPrice = item?.price || 0;

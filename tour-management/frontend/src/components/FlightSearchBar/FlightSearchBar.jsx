@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
 import {
-    Box,
-    TextField,
-    MenuItem,
-    Button,
-    Chip,
-    Grid,
-    RadioGroup, FormControlLabel, Radio
+    Box, TextField, MenuItem, Button, Grid,
+    RadioGroup, FormControlLabel, Radio, Typography, IconButton, Paper
 } from '@mui/material';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import { useNavigate } from 'react-router-dom';
@@ -51,36 +46,29 @@ const FlightSearchBar = () => {
         setArrivalCity(temp);
     };
 
+    // Đếm số lượng cột (Return có hay không)
+    const totalColumns = tripType === 'round-trip' ? 8 : 7;
+
     return (
-        <Box p={3} bgcolor="white" borderRadius={2} boxShadow={3}>
+        <Paper elevation={4} sx={{ padding: 3, borderRadius: 3, backgroundColor: '#f3f8ff' }}>
+            {/* <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', color: '#1976d2' }}>
+                Book your flight
+            </Typography> */}
 
-            <Grid container spacing={2} alignItems="center" mb={2}>
-                <Grid item>
-                    <RadioGroup
-                        row
-                        value={tripType}
-                        onChange={(e) => setTripType(e.target.value)}
-                    >
-                        <FormControlLabel
-                            value="one-way"
-                            control={<Radio />}
-                            label="One-Way"
-                        />
-                        <FormControlLabel
-                            value="round-trip"
-                            control={<Radio />}
-                            label="Round-Trip"
-                        />
-                    </RadioGroup>
-                </Grid>
-            </Grid>
+            <RadioGroup
+                row
+                value={tripType}
+                onChange={(e) => setTripType(e.target.value)}
+                sx={{ mb: 2 }}
+            >
+                <FormControlLabel value="one-way" control={<Radio />} label="One-Way" />
+                <FormControlLabel value="round-trip" control={<Radio />} label="Round-Trip" />
+            </RadioGroup>
 
-            <Grid container spacing={2} alignItems="center">
-                <Grid item xs={12} sm={2}>
+            <Grid container spacing={2} alignItems="center" sx={{ width: '100%', flexWrap: 'nowrap' }}>
+                <Grid item sx={{ flexGrow: 1 }}>
                     <TextField
-                        select
-                        fullWidth
-                        label="From"
+                        select fullWidth label="From"
                         value={departureCity}
                         onChange={(e) => setDepartureCity(e.target.value)}
                     >
@@ -91,14 +79,14 @@ const FlightSearchBar = () => {
                 </Grid>
 
                 <Grid item>
-                    <SwapHorizIcon onClick={handleSwapCities} sx={{ cursor: 'pointer' }} />
+                    <IconButton onClick={handleSwapCities} color="primary">
+                        <SwapHorizIcon />
+                    </IconButton>
                 </Grid>
 
-                <Grid item xs={12} sm={2}>
+                <Grid item sx={{ flexGrow: 1 }}>
                     <TextField
-                        select
-                        fullWidth
-                        label="To"
+                        select fullWidth label="To"
                         value={arrivalCity}
                         onChange={(e) => setArrivalCity(e.target.value)}
                     >
@@ -108,11 +96,9 @@ const FlightSearchBar = () => {
                     </TextField>
                 </Grid>
 
-                <Grid item xs={12} sm={2}>
+                <Grid item sx={{ flexGrow: 1 }}>
                     <TextField
-                        fullWidth
-                        type="date"
-                        label="Depart"
+                        fullWidth type="date" label="Depart"
                         value={departureDate}
                         onChange={(e) => setDepartureDate(e.target.value)}
                         InputLabelProps={{ shrink: true }}
@@ -120,11 +106,9 @@ const FlightSearchBar = () => {
                 </Grid>
 
                 {tripType === 'round-trip' && (
-                    <Grid item xs={12} sm={2}>
+                    <Grid item sx={{ flexGrow: 1 }}>
                         <TextField
-                            fullWidth
-                            type="date"
-                            label="Return"
+                            fullWidth type="date" label="Return"
                             value={returnDate}
                             onChange={(e) => setReturnDate(e.target.value)}
                             InputLabelProps={{ shrink: true }}
@@ -132,19 +116,13 @@ const FlightSearchBar = () => {
                     </Grid>
                 )}
 
-
-                <Grid item xs={12} sm={2}>
+                <Grid item sx={{ flexGrow: 1 }}>
                     <TextField
-                        select
-                        fullWidth
-                        label="Class"
+                        select fullWidth label="Class"
                         value={flightClass}
                         onChange={(e) => setFlightClass(e.target.value)}
                     >
-                        {/* MenuItem trống ban đầu */}
-                        <MenuItem value="">
-                            <em>Select class</em> {/* hoặc ghi "Select class" */}
-                        </MenuItem>
+                        <MenuItem value=""><em>Select class</em></MenuItem>
                         <MenuItem value="economy">Economy</MenuItem>
                         <MenuItem value="business">Business</MenuItem>
                         <MenuItem value="first">First</MenuItem>
@@ -152,14 +130,17 @@ const FlightSearchBar = () => {
                 </Grid>
 
                 <Grid item>
-                    <Button variant="contained" color="primary" onClick={handleSearch}>
-                        Search
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleSearch}
+                        sx={{ height: '100%' }}
+                    >
+                        SEARCH
                     </Button>
                 </Grid>
             </Grid>
-        </Box>
-
-
+        </Paper>
     );
 };
 

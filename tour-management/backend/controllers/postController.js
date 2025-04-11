@@ -21,24 +21,51 @@ export const createPost = async (req, res) => {
 }
 
 
-// get all post
+// // get all post
+// export const getAllPosts = async (req, res) => {
+
+//     try {
+//         const posts = await Post.find();
+
+//         res.status(200).json({
+//             success: true,
+//             message: "Successfully fetched posts",
+//             data: posts,
+//         })
+//     } catch (error) {
+//         res.status(500).json({
+//             success: false,
+//             message: "Failed to fetch posts. Try again"
+//         })
+//     }
+// }
+
+// Get all posts with pagination
 export const getAllPosts = async (req, res) => {
+    const page = req.query.page ? parseInt(req.query.page) : 0;  // Get the current page, default to 0 if not provided
+    const limit = 6;  // Number of posts per page
 
     try {
-        const posts = await Post.find();
+        const posts = await Post.find()
+            .skip(page * limit)  // Skip the number of posts based on the page number
+            .limit(limit);  // Limit the number of posts per page
+
+        const postCount = await Post.countDocuments();  // Get the total number of posts
+        const pageCount = Math.ceil(postCount / limit);  // Calculate total pages
 
         res.status(200).json({
             success: true,
-            message: "Successfully fetched posts",
             data: posts,
-        })
+            pageCount: pageCount,  // Return the total number of pages
+        });
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: "Failed to fetch posts. Try again"
-        })
+            message: "Failed to fetch posts. Try again.",
+        });
     }
-}
+};
+
 
 
 // get single post
@@ -124,37 +151,6 @@ export const deletePost = async (req, res) => {
 };
 
 
-// Like post
-
-// export const likePost = async (req, res) => {
-//     const { id } = req.params;
-
-//     try {
-//         const updatedPost = await Post.findByIdAndUpdate(
-//             id,
-//             { $inc: { likeCount: 1 } }, // Tăng likeCount lên 1
-//             { new: true }
-//         );
-
-//         if (!updatedPost) {
-//             return res.status(404).json({
-//                 success: false,
-//                 message: "Post not found",
-//             });
-//         }
-
-//         res.status(200).json({
-//             success: true,
-//             message: "Post liked successfully",
-//             data: updatedPost
-//         });
-//     } catch (error) {
-//         res.status(500).json({
-//             success: false,
-//             message: "Failed to like post. Try again.",
-//         });
-//     }
-// };
 
 export const likePost = async (req, res) => {
     const { id } = req.params;
@@ -194,32 +190,6 @@ export const likePost = async (req, res) => {
 };
 
 
-
-// Get posts with pagination
-export const getPostsPaginated = async (req, res) => {
-    const page = parseInt(req.query.page) || 1; // Mặc định trang 1
-    const limit = parseInt(req.query.limit) || 10; // Mặc định 10 bài/trang
-    const skip = (page - 1) * limit;
-
-    try {
-        const posts = await Post.find().skip(skip).limit(limit);
-        const totalPosts = await Post.countDocuments();
-
-        res.status(200).json({
-            success: true,
-            message: "Successfully fetched posts with pagination",
-            data: posts,
-            totalPosts,
-            totalPages: Math.ceil(totalPosts / limit),
-            currentPage: page
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Failed to fetch posts. Try again.",
-        });
-    }
-};
 
 // Search posts
 export const searchPosts = async (req, res) => {
