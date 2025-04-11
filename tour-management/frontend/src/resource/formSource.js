@@ -264,10 +264,10 @@ export const flightInputs = [
         name: "airplaneType",
     },
     {
-        id: "class",
+        id: "flightClass",
         label: "Class",
         type: "select",
-        name: "class",
+        name: "flightClass",
         options: ["economy", "business", "first"],
     },
 ];

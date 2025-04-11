@@ -136,7 +136,7 @@ export const searchFlights = async (req, res) => {
         arrivalCity,
         departureDate,
         returnDate,
-        class: flightClass,
+        flightClass,
         minPrice,
         maxPrice,
     } = req.query;
@@ -183,7 +183,7 @@ export const searchFlights = async (req, res) => {
         }
 
         // Optional: hạng vé
-        if (flightClass) query.class = flightClass;
+        if (flightClass) query.flightClass = flightClass;
 
         // Optional: khoảng giá
         if (minPrice || maxPrice) {

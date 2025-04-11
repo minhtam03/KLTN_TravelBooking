@@ -94,7 +94,7 @@ const FlightCard = ({ flight }) => {
                         )}
 
                         <Typography variant="body2" sx={{ mt: 1 }}>
-                            Class: <strong>{flight.class}</strong>
+                            Class: <strong>{flight.flightClass}</strong>
                         </Typography>
 
                         <Typography variant="body2" sx={{ mt: 1 }}>

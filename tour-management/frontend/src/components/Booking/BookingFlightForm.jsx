@@ -109,7 +109,7 @@ const BookingFlightForm = ({ flight }) => {
                             {flight.tripType === 'round-trip' && (
                                 <Typography><strong>Return:</strong> {new Date(flight.returnDate).toLocaleDateString()} at {flight.returnTime}</Typography>
                             )}
-                            <Typography><strong>Class:</strong> {flight.class}</Typography>
+                            <Typography><strong>Class:</strong> {flight.flightClass}</Typography>
                             <Typography><strong>Airplane:</strong> {flight.airplaneType}</Typography>
                             <Typography><strong>Price:</strong> ${flight.price} /person</Typography>
                         </Box>

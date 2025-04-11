@@ -101,7 +101,7 @@ const flightSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  class: {
+  flightClass: {
     type: String,
     enum: ["economy", "business", "first"],
     required: true,

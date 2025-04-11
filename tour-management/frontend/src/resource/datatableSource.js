@@ -141,7 +141,7 @@ export const flightColumns = [
     //         params?.value ? new Date(params.value).toLocaleDateString() : "-"
     // },
     // { field: 'returnTime', headerName: 'Return Time', width: 110 },
-    { field: 'class', headerName: 'Class', width: 110 },
+    { field: 'flightClass', headerName: 'Class', width: 110 },
     // { field: 'airplaneType', headerName: 'Aircraft', width: 130 },
     { field: 'price', headerName: 'Price ($)', width: 120 }
 ];
