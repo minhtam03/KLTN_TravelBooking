@@ -123,9 +123,13 @@ const BookingForm = ({ item, type, avgRating }) => {
             <div className="booking__top d-flex align-items-center justify-content-between">
                 <h3>${price} <span>{type === 'tour' ? '/per person' : '/per night'}</span></h3>
                 <span className="tour__rating d-flex align-items-center">
-                    <i className="ri-star-fill"></i>
-                    {avgRating === 0 ? null : avgRating}
+                    {type === 'tour' && avgRating > 0 && (
+                        <span className="tour__rating d-flex align-items-center">
+                            <i className="ri-star-fill"></i> {avgRating}
+                        </span>
+                    )}
                 </span>
+
             </div>
 
             <div className="booking__form">

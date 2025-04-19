@@ -57,6 +57,21 @@ const cosineSimilarity = (a, b) => {
     return dot / (normA * normB);
 };
 
+export const getUserEmbedding = async (userId) => {
+    const bookings = await Booking.find({ userId }).select("tourId");
+    const bookedTourIds = bookings
+        .map(b => b.tourId)
+        .filter(Boolean)
+        .map(id => id.toString());
+
+    if (!bookedTourIds.length) return null;
+
+    const bookedTours = await Tour.find({ _id: { $in: bookedTourIds } });
+    const userDesc = bookedTours.map(t => t.desc).join("\n");
+    const userEmbedding = await getEmbedding(userDesc);
+    return { userEmbedding, bookedTours };
+};
+
 export const getSuggestedTours = async (userId, topK = 5) => {
     try {
         // Bước 1: Lấy danh sách tourId đã đặt

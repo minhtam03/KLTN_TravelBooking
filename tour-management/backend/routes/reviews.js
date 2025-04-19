@@ -3,9 +3,13 @@ import { createReview, getReviewSummary } from "../controllers/reviewController.
 import { verifyUser } from "../utils/verifyToken.js"
 const router = express.Router()
 
-router.post('/:tourId', verifyUser, createReview)
+// router.post('/:tourId', verifyUser, createReview)
+// router.get('/summary/:tourId', getReviewSummary);
 
-// Route để lấy tổng hợp review (không cần đăng nhập)
-router.get('/summary/:tourId', getReviewSummary);
+
+router.post('/', verifyUser, createReview)
+
+router.get('/summary/:targetId/:reviewTargetType', getReviewSummary);
+
 
 export default router

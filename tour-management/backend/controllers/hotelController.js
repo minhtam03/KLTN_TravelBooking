@@ -70,6 +70,13 @@ export const getSingleHotel = async (req, res) => {
 
     try {
         const hotel = await Hotel.findById(id)
+            .populate({
+                path: "reviews",
+                populate: {
+                    path: "userId",
+                    select: "username photo" // Chỉ lấy thông tin cần thiết
+                }
+            });
         res.status(200).json({
             success: true,
             message: "Successful get single hotel",

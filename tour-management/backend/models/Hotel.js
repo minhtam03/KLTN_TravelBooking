@@ -28,6 +28,12 @@ const hotelSchema = new mongoose.Schema({
   photo: {
     type: String,
   },
+  reviews: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "Review"
+    }
+  ]
 }, {
   timestamps: true,  // Thêm timestamp cho thời gian tạo và cập nhật
 });

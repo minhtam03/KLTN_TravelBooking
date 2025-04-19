@@ -6,7 +6,8 @@ import {
     getHotelBookingHistory,
     getHotelBooking,
     getHotelBookingCount,
-    getAllHotelBookingsWithAmount
+    getAllHotelBookingsWithAmount,
+    getAllHotelBooking
 } from "../controllers/hotelBookingController.js";
 
 const router = express.Router();
@@ -18,6 +19,6 @@ router.post("/", createHotelBooking);
 router.get("/all", verifyUser, getHotelBookingHistory);
 router.get("/count", verifyUser, getHotelBookingCount);
 router.get("/:id", getHotelBooking);
-
+router.get("/", getAllHotelBooking);
 
 export default router;

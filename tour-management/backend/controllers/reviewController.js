@@ -1,4 +1,6 @@
 import Tour from "../models/Tour.js"
+import Hotel from "../models/Hotel.js"
+import Flight from "../models/Flight.js"
 import Review from "../models/Review.js"
 import dotenv from 'dotenv';
 import { ChatGroq } from "@langchain/groq";
@@ -6,63 +8,103 @@ import { HumanMessage } from "@langchain/core/messages";
 dotenv.config()
 
 // create review
+// export const createReview = async (req, res) => {
+//     const tourId = req.params.tourId
+//     const newReview = new Review({ ...req.body })
+//     try {
+
+//         const savedReview = await newReview.save()
+
+//         // after creating a new review now update the reviews array of the tour
+
+//         await Tour.findByIdAndUpdate(tourId, {
+//             $push: { reviews: savedReview._id }
+//         })
+
+//         res.status(200).json({
+//             success: true,
+//             message: "Review submitted",
+//             data: savedReview
+//         })
+
+//     } catch (error) {
+//         res.status(500).json({
+//             success: false,
+//             message: "Failed to submit",
+//         })
+//     }
+// }
+
 export const createReview = async (req, res) => {
-    const tourId = req.params.tourId
-    const newReview = new Review({ ...req.body })
+    const { targetId, reviewTargetType, reviewText, rating } = req.body;
+    const userId = req.user?.id || req.body.userId;
+
     try {
+        if (!targetId || !reviewText || typeof rating !== 'number' || !userId) {
+            return res.status(400).json({ success: false, message: "Thiếu dữ liệu" });
+        }
 
-        const savedReview = await newReview.save()
+        const newReview = new Review({
+            targetId,
+            reviewTargetType,
+            reviewText,
+            rating,
+            userId
+        });
 
-        // after creating a new review now update the reviews array of the tour
+        const savedReview = await newReview.save();
 
-        await Tour.findByIdAndUpdate(tourId, {
-            $push: { reviews: savedReview._id }
-        })
+        let model;
+        if (reviewTargetType === "Tour") model = Tour;
+        else if (reviewTargetType === "Hotel") model = Hotel;
+        else if (reviewTargetType === "Flight") model = Flight;
+
+        if (model) {
+            await model.findByIdAndUpdate(targetId, {
+                $push: { reviews: savedReview._id }
+            });
+        }
+
+        const populatedReview = await savedReview.populate('userId', 'username photo');
 
         res.status(200).json({
             success: true,
             message: "Review submitted",
-            data: savedReview
-        })
-
+            data: populatedReview
+        });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Failed to submit",
-        })
+        console.error("CREATE REVIEW ERROR:", error);
+        res.status(500).json({ success: false, message: "Failed to submit" });
     }
-}
+};
 
 // summary review
 export const getReviewSummary = async (req, res) => {
     try {
-        const { tourId } = req.params;
+        const { targetId, reviewTargetType } = req.params;
 
-        // Lấy danh sách review từ tourId
-        const tour = await Tour.findById(tourId).populate("reviews");
+        let modelTarget;
+        if (reviewTargetType === "Tour") modelTarget = Tour;
+        else if (reviewTargetType === "Hotel") modelTarget = Hotel;
+        else if (reviewTargetType === "Flight") modelTarget = Flight;
 
-        if (!tour || !tour.reviews || tour.reviews.length === 0) {
+        if (!modelTarget) return res.status(400).json({ success: false, message: "Invalid type" });
+        const item = await modelTarget.findById(targetId).populate("reviews");
+
+        if (!item || !item.reviews?.length) {
             return res.status(400).json({ success: false, message: "Không có đánh giá nào để tổng hợp" });
         }
 
         // Lấy nội dung review
-        const reviewsText = tour.reviews.map(review => review.reviewText).join("\n");
+        const reviewsText = item.reviews.map(review => review.reviewText).join("\n");
 
         const model = new ChatGroq({
             apiKey: process.env.CHATGROQ_API_KEY,
-            model: "qwen-2.5-32b"
+            model: "llama-3.1-8b-instant"
         });
 
-        // const message = new HumanMessage(`
-        //     Summarize the following reviews:
-        //     ${reviewsText}
-
-        //     Summarize the following reviews briefly and usefully. 
-        //     Structure the summary into three separate paragraphs: one for the positive aspects, one for the negative aspects, and one for general user impressions. 
-        //     Each paragraph should be short and to the point, include two sentences.
-        // `);
         const message = new HumanMessage(`
-            You will receive multiple reviews. Your job is to summarize them clearly.
+            You will receive multiple reviews. Your job is to summarize them clearly and concisely.
             Please return the result in the following strict format:
             
             Positive Aspects:
@@ -73,11 +115,10 @@ export const getReviewSummary = async (req, res) => {
             
             General User Impressions:
             <Two sentences giving general overall impressions>
-            
-            Reviews:
+        
+            Analyze the following reviews:
             ${reviewsText}
-            `);
-
+        `);
         const response = await model.invoke([message]);
 
         if (response && response.content) {

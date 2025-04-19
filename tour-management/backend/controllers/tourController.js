@@ -98,7 +98,14 @@ export const getSingleTour = async (req, res) => {
     const id = req.params.id
 
     try {
-        const tour = await Tour.findById(id).populate('reviews')
+        const tour = await Tour.findById(id)
+            .populate({
+                path: "reviews",
+                populate: {
+                    path: "userId",
+                    select: "username photo"
+                }
+            });
         res.status(200).json({
             success: true,
             message: "Successful get single",

@@ -6,7 +6,8 @@ import {
     getFlightBookingHistory,
     getFlightBooking,
     getFlightBookingCount,
-    getAllFlightBookingsWithAmount
+    getAllFlightBookingsWithAmount,
+    getAllFlightBooking
 } from "../controllers/flightBookingController.js";
 
 const router = express.Router();
@@ -18,5 +19,5 @@ router.post("/", createFlightBooking);                               // đặt c
 router.get("/all", verifyUser, getFlightBookingHistory);             // lịch sử người dùng
 router.get("/count", verifyUser, getFlightBookingCount);             // số lượng booking của user
 router.get("/:id", getFlightBooking);                                // chi tiết booking
-
+router.get("/", getAllFlightBooking);
 export default router;

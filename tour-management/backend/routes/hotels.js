@@ -10,7 +10,7 @@ import { verifyAdmin } from "../utils/verifyToken.js";
 const router = express.Router();
 
 // create new hotel
-router.post("/", verifyAdmin, createHotel)
+router.post("/", createHotel)
 
 // update hotel
 router.put("/:id", updateHotel)

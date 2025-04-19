@@ -184,11 +184,12 @@
 import Tour from '../models/Tour.js';
 import Flight from '../models/Flight.js';
 import Hotel from '../models/Hotel.js';
+import Booking from '../models/Booking.js';
 import { getAvailableTours } from '../services/tourService.js';
 import { getAvailableFlights } from '../services/flightService.js';
 import { getAvailableHotels } from '../services/hotelService.js';
-import { getSuggestedTours } from '../utils/tourRecommendationHelper.js';
-
+import { getSuggestedTours, getUserEmbedding } from '../utils/tourRecommendationHelper.js';
+import { getEmbedding } from '../utils/embeddingHelper.js';
 
 export const getSuggestions = async (req, res) => {
     try {
@@ -199,7 +200,7 @@ export const getSuggestions = async (req, res) => {
         }
 
         let options = [];
-        let reason = null;
+        let reason = "Suggestions based on your booking history.";
         const flightCache = {};
         const hotelCache = {};
 
@@ -244,16 +245,58 @@ export const getSuggestions = async (req, res) => {
             }
 
             // Lấy các từ khóa đặc trưng từ các tour đã từng đặt để tạo lý do gợi ý
-            const keywordSet = new Set();
-            recommendedTours.forEach(tour => {
+            // const keywordSet = new Set();
+            // recommendedTours.forEach(tour => {
+            //     const words = tour.desc.toLowerCase().split(/\W+/);
+            //     words.forEach(word => {
+            //         if (word.length > 4) keywordSet.add(word);
+            //     });
+            // });
+
+            // const keywords = Array.from(keywordSet).slice(0, 5).join(", ");
+            // reason = `Suggestions based on the tours you have previously booked, related to: ${keywords}.`;
+
+            const embeddingData = await getUserEmbedding(userId);
+            if (!embeddingData || !embeddingData.userEmbedding) {
+                return res.status(404).json({ message: "User has no bookings yet" });
+            }
+            const { userEmbedding, bookedTours } = embeddingData;
+            const keywordFrequency = {};
+            bookedTours.forEach(tour => {
                 const words = tour.desc.toLowerCase().split(/\W+/);
                 words.forEach(word => {
-                    if (word.length > 4) keywordSet.add(word);
+                    if (word.length > 4) {
+                        keywordFrequency[word] = (keywordFrequency[word] || 0) + 1;
+                    }
                 });
             });
+            const sortedKeywords = Object.entries(keywordFrequency)
+                .sort((a, b) => b[1] - a[1])
+                .map(([word]) => word);
 
-            const keywords = Array.from(keywordSet).slice(0, 5).join(", ");
-            reason = `Suggestions based on the tours you have previously booked, related to: ${keywords}.`;
+            // Lấy embedding của top 20 từ khóa
+            const keywordCandidates = sortedKeywords.slice(0, 20);
+            const keywordEmbeddings = await getEmbedding(keywordCandidates);
+
+            if (Array.isArray(keywordEmbeddings) && keywordEmbeddings.length === keywordCandidates.length) {
+                const topKeywords = [];
+
+                for (let i = 0; i < keywordCandidates.length; i++) {
+                    const keyword = keywordCandidates[i];
+                    const embedding = keywordEmbeddings[i];
+
+                    const dot = userEmbedding.reduce((sum, val, j) => sum + val * embedding[j], 0);
+                    const normU = Math.sqrt(userEmbedding.reduce((sum, val) => sum + val * val, 0));
+                    const normK = Math.sqrt(embedding.reduce((sum, val) => sum + val * val, 0));
+                    const similarity = dot / (normU * normK);
+                    topKeywords.push({ keyword, similarity });
+                }
+
+                topKeywords.sort((a, b) => b.similarity - a.similarity);
+                const finalKeywords = topKeywords.slice(0, 5).map(k => k.keyword);
+                reason = `Suggestions based on your interests: ${finalKeywords.join(", ")}.`;
+            }
+
 
             for (let tour of recommendedTours) {
                 const city = tour.city;

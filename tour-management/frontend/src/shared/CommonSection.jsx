@@ -1,18 +1,17 @@
 import React from 'react'
 import './common-section.css'
+import { Container, Row, Col } from 'reactstrap'
 
-import { Container, Row, Col} from 'reactstrap'
-
-const CommonSection = ({title}) => {
+const CommonSection = ({ title }) => {
   return (
     <section>
-        <Container className="common__section">
-            <Row>
-                <Col lg='12'>
-                    <h1>{title}</h1>
-                </Col>
-            </Row>
-        </Container>
+      <Container className="common__section">
+        <Row>
+          <Col lg='12'>
+            <h1>{title}</h1>
+          </Col>
+        </Row>
+      </Container>
     </section>
   )
 }

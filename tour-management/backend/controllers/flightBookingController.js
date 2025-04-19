@@ -163,3 +163,21 @@ export const getAllFlightBookingsWithAmount = async (req, res) => {
         });
     }
 };
+
+export const getAllFlightBooking = async (req, res) => {
+
+    try {
+        const books = await FlightBooking.find()
+        res.status(200).json({
+            success: true,
+            message: "Successful",
+            data: books
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        })
+    }
+
+}
