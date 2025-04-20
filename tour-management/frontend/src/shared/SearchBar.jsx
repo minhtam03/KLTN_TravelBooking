@@ -1,166 +1,18 @@
-// // import React, {useRef} from 'react'
-// // import './search-bar.css'
-// // import {Col, Form, FormGroup } from 'reactstrap'
-// // import { useNavigate } from 'react-router-dom'
-// // import { BASE_URL } from '../utils/config'
-
-// // const SearchBar = () => {
-// //     const locationRef = useRef('')
-// //     const distanceRef = useRef(0)
-// //     const maxGroupSizeRef = useRef(0)
-// //     const navigate = useNavigate()
-
-// //     const searchHandler = async() => {
-// //         const location = locationRef.current.value
-// //         const distance = distanceRef.current.value
-// //         const maxGroupSize = maxGroupSizeRef.current.value
-
-// //         if (location === '' || distance === '' || maxGroupSize === '') {
-// //             return alert("All fields are required!")
-// //         }
-
-// //         const res = await fetch(`${BASE_URL}/tours/search/getTourBySearch?city=${location}&distance=${distance}&maxGroupSize=${maxGroupSize}`)
-
-// //             if (!res.ok) alert ('Something went wrong')
-
-// //             const result = await res.json()
-
-// //             navigate(`/tours/search?city=${location}&distance=${distance}&maxGroupSize=${maxGroupSize}`,
-// //                 {state: result.data})
-// //         }
-
-// //   return (
-// //     <Col lg='12'>
-// //         <div className='search__bar'>
-// //             <Form className='d-flex align-items-center gap-4'>
-// //                 <FormGroup className='d-flex gap-3 form__group form__group-fast'>
-// //                     <span>
-// //                         <i class='ri-map-pin-line'></i>
-// //                     </span>
-// //                     <div>
-// //                         <h6>Location</h6>
-// //                         <input type="text" placeholder='Where are you going' ref={locationRef}/>
-// //                     </div>
-// //                 </FormGroup>
-
-// //                 <FormGroup className='d-flex gap-3 form__group form__group-fast'>
-// //                     <span>
-// //                         <i class="ri-map-pin-range-line"></i>
-// //                     </span>
-// //                     <div>
-// //                         <h6>Distance</h6>
-// //                         <input type="number" placeholder='Distance k/m' ref={distanceRef}/>
-// //                     </div>
-// //                 </FormGroup>
-
-// //                 <FormGroup className='d-flex gap-3 form__group'>
-// //                     <span>
-// //                         <i class="ri-group-line"></i>
-// //                     </span>
-// //                     <div>
-// //                         <h6>Max People</h6>
-// //                         <input type="number" placeholder='0' ref={maxGroupSizeRef}/>
-// //                     </div>
-// //                 </FormGroup>
-
-// //                 <span className="search__icon" type='submit' onClick={searchHandler}>
-// //                     <i class="ri-search-line"></i>
-// //                 </span>
-// //             </Form>
-
-// //         </div>
-// //     </Col>
-// //   )
-// // }
-
-// // export default SearchBar
-
-// import React, { useRef } from 'react'
-// import './search-bar.css'
-// import { Col, Form, FormGroup } from 'reactstrap'
-// import { useNavigate } from 'react-router-dom'
-// import { BASE_URL } from '../utils/config'
-
-// const SearchBar = () => {
-//     const locationRef = useRef('')
-//     const durationRef = useRef(0)
-//     const maxGroupSizeRef = useRef(0)
-//     const navigate = useNavigate()
-
-//     const searchHandler = async () => {
-//         const location = locationRef.current.value
-//         const duration = durationRef.current.value
-//         const maxGroupSize = maxGroupSizeRef.current.value
-
-//         // if (location === '' || duration === '' || maxGroupSize === '') {
-//         //     return alert("All fields are required!")
-//         // }
-
-//         if (!location && !duration && !maxGroupSize) {
-//             return alert("Please enter at least one field to search!");
-//         }
-
-//         const res = await fetch(`${BASE_URL}/tours/search/getTourBySearch?city=${location}&duration=${duration}&maxGroupSize=${maxGroupSize}`)
-
-//         if (!res.ok) alert('Something went wrong')
-
-//         const result = await res.json()
-
-//         navigate(`/tours/search?city=${location}&duration=${duration}&maxGroupSize=${maxGroupSize}`,
-//             { state: result.data })
-//     }
-
-//     return (
-//         <Col lg='12'>
-//             <div className='search__bar'>
-//                 <Form className='d-flex align-items-center gap-4'>
-//                     <FormGroup className='d-flex gap-3 form__group form__group-fast'>
-//                         <span>
-//                             <i class='ri-map-pin-line'></i>
-//                         </span>
-//                         <div>
-//                             <h6>Location</h6>
-//                             <input type="text" placeholder='Where are you going' ref={locationRef} />
-//                         </div>
-//                     </FormGroup>
-
-//                     <FormGroup className='d-flex gap-3 form__group form__group-fast'>
-//                         <span>
-//                             <i class="ri-map-pin-range-line"></i>
-//                         </span>
-//                         <div>
-//                             <h6>Duration</h6>
-//                             <input type="number" placeholder="Duration" ref={durationRef} />
-//                         </div>
-//                     </FormGroup>
-
-//                     <FormGroup className='d-flex gap-3 form__group'>
-//                         <span>
-//                             <i class="ri-group-line"></i>
-//                         </span>
-//                         <div>
-//                             <h6>Max People</h6>
-//                             <input type="number" placeholder="Max people" ref={maxGroupSizeRef} />
-//                         </div>
-//                     </FormGroup>
-
-//                     <span className="search__icon" type='submit' onClick={searchHandler}>
-//                         <i class="ri-search-line"></i>
-//                     </span>
-//                 </Form>
-
-//             </div>
-//         </Col>
-//     )
-// }
-
-// export default SearchBar
-
-
 import React, { useState, useEffect } from 'react';
-import './search-bar.css';
-import { Col, Form, FormGroup } from 'reactstrap';
+import {
+    Box,
+    TextField,
+    IconButton,
+    Typography,
+    Grid
+} from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
+import RoomIcon from '@mui/icons-material/Room';
+import TimelineIcon from '@mui/icons-material/Timeline';
+import GroupIcon from '@mui/icons-material/Group';
+import SearchIcon from '@mui/icons-material/Search';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+
 import { BASE_URL } from '../utils/config';
 
 const SearchBar = () => {
@@ -191,47 +43,136 @@ const SearchBar = () => {
             { state: result.data });
     };
 
+    // Reusable style for text fields
+    const inputFieldStyle = {
+        fontFamily: 'Mulish',
+        fontSize: '0.85rem',
+        ml: 3,
+        '& input': {
+            fontFamily: 'Mulish',
+            fontSize: '0.85rem',
+        },
+        '& input::placeholder': {
+            fontFamily: 'Mulish',
+            fontSize: '0.85rem',
+        },
+        '& .MuiInput-underline:after': {
+            borderBottomColor: '#ccc'
+        },
+        '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
+            borderBottomColor: '#999',
+        },
+        '& .MuiInput-underline:before': {
+            borderBottomColor: '#ccc',
+        },
+    };
+
+
+
     return (
-        <Col lg='12'>
-            <div className='search__bar'>
-                <Form className='d-flex align-items-center gap-4'>
-                    <FormGroup className='d-flex gap-3 form__group form__group-fast'>
-                        <span><i className='ri-map-pin-line'></i></span>
-                        <div>
-                            <h6>Location</h6>
-                            <input type="text" placeholder='Where are you going'
-                                value={locationInput}
-                                onChange={e => setLocationInput(e.target.value)} />
-                        </div>
-                    </FormGroup>
+        <Box
+            sx={{
+                p: 2,
+                px: 3,
+                borderRadius: '10px',
+                boxShadow: '0 12px 30px rgba(0, 128, 255, 0.2)',
+                width: '100%',
+                maxWidth: '1000px',
+                mt: 5,
+                mb: 5,
+                mx: 'auto',
+                fontFamily: 'Mulish, sans-serif',
+                bgcolor: 'white',
+            }}
+        >
+            <Grid container spacing={2} alignItems="center">
+                {/* Location */}
+                <Grid item xs={12} sm={6} md={3}>
+                    <Box display="flex" alignItems="center" gap={1} mb={1}>
+                        <RoomIcon sx={{ color: '#ee6e6e', fontSize: 20 }} />
+                        <Typography variant="body1" fontWeight={700} fontFamily="Mulish">
+                            Location
+                        </Typography>
+                    </Box>
+                    <TextField
+                        fullWidth
+                        placeholder="Where are you going"
+                        value={locationInput}
+                        onChange={e => setLocationInput(e.target.value)}
+                        variant="standard"
+                        sx={inputFieldStyle}
+                    />
+                </Grid>
 
-                    <FormGroup className='d-flex gap-3 form__group form__group-fast'>
-                        <span><i className="ri-map-pin-range-line"></i></span>
-                        <div>
-                            <h6>Duration</h6>
-                            <input type="number" placeholder="Duration"
-                                value={duration}
-                                onChange={e => setDuration(e.target.value)} />
-                        </div>
-                    </FormGroup>
+                {/* Duration */}
+                <Grid item xs={12} sm={6} md={3}>
+                    <Box display="flex" alignItems="center" gap={1} mb={1}>
+                        <AccessTimeIcon sx={{ color: '#ee6e6e', fontSize: 20 }} />
+                        <Typography variant="body1" fontWeight={700} fontFamily="Mulish">
+                            Duration
+                        </Typography>
+                    </Box>
+                    <TextField
+                        fullWidth
+                        type="number"
+                        placeholder="How long"
+                        value={duration}
+                        onChange={e => setDuration(e.target.value)}
+                        variant="standard"
+                        sx={inputFieldStyle}
+                    />
+                </Grid>
 
-                    <FormGroup className='d-flex gap-3 form__group'>
-                        <span><i className="ri-group-line"></i></span>
-                        <div>
-                            <h6>Max People</h6>
-                            <input type="number" placeholder="Max people"
-                                value={maxGroupSize}
-                                onChange={e => setMaxGroupSize(e.target.value)} />
-                        </div>
-                    </FormGroup>
+                {/* Max Group Size */}
+                <Grid item xs={12} sm={6} md={3}>
+                    <Box display="flex" alignItems="center" gap={1} mb={1}>
+                        <GroupIcon sx={{ color: '#ee6e6e', fontSize: 20 }} />
+                        <Typography variant="body1" fontWeight={700} fontFamily="Mulish">
+                            Guests
+                        </Typography>
+                    </Box>
+                    <TextField
+                        fullWidth
+                        type="number"
+                        placeholder="How many guests"
+                        value={maxGroupSize}
+                        onChange={e => setMaxGroupSize(e.target.value)}
+                        variant="standard"
+                        sx={inputFieldStyle}
+                    />
+                </Grid>
 
-                    <span className="search__icon" onClick={searchHandler}>
-                        <i className="ri-search-line"></i>
-                    </span>
-                </Form>
-            </div>
-        </Col>
+                {/* Search Icon */}
+                <Grid item xs={12} sm={6} md={3} textAlign="center">
+
+                    <IconButton
+                        onClick={searchHandler}
+                        sx={{
+                            backgroundColor: 'var(--secondary-color)',
+                            color: '#fff',
+
+                            borderRadius: '10px 5px 10px 5px',
+                            '&:hover': {
+                                backgroundColor: 'var(--secondary-color)',
+                            },
+
+                        }}
+                    >
+
+                        {/* <Typography
+                            variant="body2"
+                            fontWeight={600}
+                            sx={{ fontFamily: 'Mulish', fontSize: '1rem' }}
+                        >
+                            Search
+                        </Typography> */}
+                        <SearchIcon sx={{ fontSize: 24 }} />
+                    </IconButton>
+                </Grid>
+            </Grid>
+        </Box>
     );
 };
 
 export default SearchBar;
+

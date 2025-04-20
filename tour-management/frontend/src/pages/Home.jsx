@@ -1,63 +1,112 @@
 import React from 'react'
-import '../styles/home.css'
 import { Container, Row, Col } from 'reactstrap'
 
-import heroImg from '../assets/images/hero-img01.jpg'
-import heroImg02 from '../assets/images/hero-img02.jpg'
-import heroVideo from '../assets/images/hero-video.mp4'
-import worldImg from '../assets/images/world.png'
+import home1 from '../assets/images/home/home1.jpg'
+import home2 from '../assets/images/home/home2.jpg'
+import home3 from '../assets/images/home/home3.jpg'
 
 import Subtitle from '../shared/Subtitle'
 import SearchBar from './../shared/SearchBar'
 import FeaturedTourList from '../components/Featured-tours/FeaturedTourList'
 import MasonryImagesGallery from '../components/Image-gallery/MasonryImagesGallery'
 import Testimonials from '../components/Testimonial/Testimonials'
+import { Grid, Box, Typography } from '@mui/material'
 const Home = () => {
   return (
     <>
 
       {/* banner */}
       <section>
-        <Container>
-          <Row>
-            <Col lg='6'>
-              <div className='hero__content'>
-                <div className="hero__subtitle d-flex align-items-center">
-                  <Subtitle subtitle={'Know Before You Go'} />
-                  <img src={worldImg} alt="" />
-                </div>
-                <h1>Traveling opens the door to creating
-                  <span className='highlight'> memories</span>
-                </h1>
-                <p>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                  Adipisci consequuntur vitae, quia vero, soluta laudantium
-                  commodi a quod ex reiciendis voluptas debitis ullam.
-                  Quam cum deserunt explicabo architecto inventore laborum.
-                </p>
-              </div>
-            </Col>
+        <Container sx={{ mt: 5 }}>
+          <Grid container spacing={4} alignItems="center">
+            <Grid item xs={12} lg={6}>
+              <Box>
+                <Box display="flex" alignItems="center" mb={2} sx={{ fontFamily: 'Mulish' }}>
+                </Box>
+                <Typography variant="h3" fontWeight={700} sx={{ fontFamily: 'Volkhov' }}>
+                  Explore the World. Connect the
+                  <Box component="span" sx={{ color: 'var(--secondary-color)' }}> Journey!</Box>
+                </Typography>
+                <Typography variant="body1" mt={2} sx={{ fontSize: '1.1rem', fontFamily: 'Mulish', color: '#555' }}>
+                  From hidden gems to iconic destinations, we help you plan seamless adventures with personalized tours,
+                  trusted reviews, and expert travel tips. Your dream trip starts here!
+                </Typography>
+              </Box>
+            </Grid>
 
-            <Col lg='2'>
-              <div className='hero__img-box'>
-                <img src={heroImg} alt="" />
-              </div>
-            </Col>
+            <Grid item xs={12} lg={6}>
+              <Grid container spacing={2} sx={{ height: 400 }}>
+                <Grid item xs={6}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 2,
+                      height: '100%',
+                    }}
+                  >
+                    <Box sx={{ flex: 1, overflow: 'hidden' }}>
+                      <Box
+                        component="img"
+                        src={home2}
+                        alt="Hero"
+                        sx={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          borderRadius: 2,
+                        }}
+                      />
+                    </Box>
+                    <Box sx={{ flex: 1, overflow: 'hidden' }}>
+                      <Box
+                        component="img"
+                        src={home1}
+                        alt="Herosss"
+                        sx={{
+                          width: '100%',
+                          height: '70%',
+                          objectFit: 'cover',
+                          borderRadius: 2,
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                </Grid>
 
-            <Col lg='2'>
-              <div className='hero__img-box mt-4'>
-                <video src={heroVideo} alt="" controls />
-              </div>
-            </Col>
+                <Grid item xs={6}>
+                  <Box
+                    sx={{
+                      height: '70%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      mt: 5, // padding toàn bộ, hoặc dùng ml / mr nếu muốn lệch về 1 bên
+                    }}
+                  >
+                    <Box
+                      component="img"
+                      src={home3}
+                      alt="Hero Right"
+                      sx={{
+                        width: '100%',
+                        height: '80%',
+                        objectFit: 'cover',
+                        borderRadius: 2,
+                        maxWidth: '95%', // ảnh nhỏ hơn 1 chút
+                        boxShadow: 3
+                      }}
+                    />
+                  </Box>
+                </Grid>
+              </Grid>
+            </Grid>
 
-            <Col lg='2'>
-              <div className='hero__img-box mt-5'>
-                <img src={heroImg02} alt="" />
-              </div>
-            </Col>
-
-            <SearchBar />
-          </Row>
+            {/* Search Bar */}
+            <Grid item xs={12} mt={4}>
+              <SearchBar />
+            </Grid>
+          </Grid>
         </Container>
       </section>
 
@@ -111,8 +160,6 @@ const Home = () => {
           </Row>
         </Container>
       </section>
-
-
     </>
   )
 }

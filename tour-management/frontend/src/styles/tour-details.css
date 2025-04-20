@@ -1,7 +1,6 @@
-.tour__content img {
+/* .tour__content img {
     width: 100%;
     border-radius: 0.5rem;
-    margin-bottom: 2.5rem;
 }
 
 .tour__info,
@@ -47,13 +46,6 @@
     color: var(--text-color);
 }
 
-.rating__group span {
-    font-size: 1.1rem;
-    display: flex;
-    align-items: center;
-    color: var(--secondary-color);
-    cursor: pointer;
-}
 
 .tour__reviews h4 {
     margin-bottom: 3rem;
@@ -122,15 +114,23 @@
 
 .review__item span {
     font-weight: 500;
-}
+} 
 
 
 .rating__group i {
     color: #ccc;
-    /* Màu mặc định cho sao chưa được chọn */
+
 }
 
 .rating__group i.filled {
     color: var(--secondary-color);
-    /* Màu khi sao được chọn */
+
 }
+
+.rating__group span {
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    color: var(--secondary-color);
+    cursor: pointer;
+} */

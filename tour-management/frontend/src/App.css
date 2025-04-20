@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Island+Moments&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Lexend:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Lexend:wght@100..900&family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap');
 
 :root {
   --primary-color: #7bbcb0;
@@ -8,7 +9,7 @@
   --heading-color: #0b2727;
   --text-color: #6e7074;
   --font-name: "Montserrat", sans-serif;
-  --subtitle-font-name: "Island Moments", cursive;
+  --subtitle-font-name: "Mulish";
 }
 
 * {
@@ -78,13 +79,13 @@ ul {
   background: var(--secondary-color);
   font-family: var(--subtitle-font-name);
   width: max-content;
-  padding: 0px 0.5rem;
+  padding: 0.5rem 1rem;
   padding-right: 1rem;
 
   border-radius: 50px;
   font-weight: 500;
-  font-size: 1.7rem;
-  color: var(--heading-color);
+  font-size: 1.2rem;
+  color: #fff;
 }
 
 

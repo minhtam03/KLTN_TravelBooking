@@ -60,15 +60,10 @@ const Flights = () => {
   return (
     <>
       <CommonSection title={"All Flights"} />
+      <section>
+        <FlightSearchBar />
+      </section>
       <Container>
-
-        <section>
-          <FlightSearchBar />
-        </section>
-
-        {/* <Box display="flex" justifyContent="center" mt={4}>
-          <FlightSearchBar />
-        </Box> */}
 
         {loading ? (
           <Typography>Loading...</Typography>

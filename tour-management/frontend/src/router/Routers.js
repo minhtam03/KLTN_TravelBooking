@@ -59,7 +59,7 @@ const Routers = () => {
 
 
       <Route path='/blog' element={<Blog />} />
-      <Route path='/post/:id' element={<PostDetail />} />
+      <Route path='/blog/:id' element={<PostDetail />} />
       <Route path='/thank-you' element={<ThankYou />} />
       <Route path='/history' element={<BookingHistory />} />
       <Route path='/suggestion' element={<Suggestion />} />

@@ -6,7 +6,8 @@ import {
     TextField,
     Button,
     Paper,
-    Divider
+    Divider, List,
+    ListItem,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
@@ -24,7 +25,7 @@ const BookingFlightForm = ({ flight }) => {
         guestSize: 1,
     });
 
-    const serviceFee = 10;
+    const serviceFee = 0;
     const totalAmount = flight.price * form.guestSize + serviceFee;
 
     const handleChange = e => {
@@ -96,62 +97,187 @@ const BookingFlightForm = ({ flight }) => {
         <Box sx={{ padding: 4 }}>
             <Grid container spacing={4}>
                 {/* Cột trái: Thông tin chuyến bay */}
-                <Grid item xs={12} md={6}>
-                    <Paper elevation={3} sx={{ padding: 3, borderRadius: 3 }}>
-                        <Typography variant="h5" gutterBottom>
+                <Grid item xs={12} md={7}>
+                    <Paper elevation={3} sx={{ padding: 3, borderRadius: 2, fontFamily: 'Mulish' }}>
+                        {/* Ảnh chuyến bay */}
+                        <Box sx={{ mb: 2 }}>
+                            <img
+                                src={flight.photo || 'https://www.libertytravel.com/sites/default/files/styles/full_size/public/flight-hero.jpg?itok=LKyRwKDq'} // dùng ảnh mặc định nếu không có
+                                alt="Flight"
+                                style={{
+                                    width: '100%',
+                                    height: 200,
+                                    objectFit: 'cover',
+                                    borderRadius: 12,
+                                }}
+                            />
+                        </Box>
+
+                        {/* Tiêu đề */}
+                        <Typography variant="h6" fontWeight={700} gutterBottom sx={{ fontFamily: 'Mulish' }}>
                             Flight Information
                         </Typography>
-                        <Box mt={2}>
-                            <Typography><strong>Flight:</strong> {flight.airline} - {flight.flightNumber}</Typography>
-                            <Typography><strong>From:</strong> {flight.departureCity}</Typography>
-                            <Typography><strong>To:</strong> {flight.arrivalCity}</Typography>
-                            <Typography><strong>Departure:</strong> {new Date(flight.departureDate).toLocaleDateString()} at {flight.departureTime}</Typography>
+
+                        {/* Thông tin 2 cột */}
+                        <Box component={Grid} container spacing={1} mt={2}>
+                            <Grid item xs={5}>
+                                <Typography fontWeight={600} sx={{ fontFamily: 'Mulish' }}>Flight Airline:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <Typography sx={{ fontFamily: 'Mulish' }}>{flight.airline}</Typography>
+                            </Grid>
+                            <Grid item xs={5}>
+                                <Typography fontWeight={600} sx={{ fontFamily: 'Mulish' }}>Flight Number:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <Typography sx={{ fontFamily: 'Mulish' }}>{flight.flightNumber}</Typography>
+                            </Grid>
+                            <Grid item xs={5}>
+                                <Typography fontWeight={600} sx={{ fontFamily: 'Mulish' }}>From:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <Typography sx={{ fontFamily: 'Mulish' }}>{flight.departureCity}</Typography>
+                            </Grid>
+
+                            <Grid item xs={5}>
+                                <Typography fontWeight={600} sx={{ fontFamily: 'Mulish' }}>To:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <Typography sx={{ fontFamily: 'Mulish' }}>{flight.arrivalCity}</Typography>
+                            </Grid>
+
+                            <Grid item xs={5}>
+                                <Typography fontWeight={600} sx={{ fontFamily: 'Mulish' }}>Departure:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <Typography sx={{ fontFamily: 'Mulish' }}>
+                                    {new Date(flight.departureDate).toLocaleDateString()} at {flight.departureTime}
+                                </Typography>
+                            </Grid>
+
                             {flight.tripType === 'round-trip' && (
-                                <Typography><strong>Return:</strong> {new Date(flight.returnDate).toLocaleDateString()} at {flight.returnTime}</Typography>
+                                <>
+                                    <Grid item xs={5}>
+                                        <Typography fontWeight={600} sx={{ fontFamily: 'Mulish' }}>Return:</Typography>
+                                    </Grid>
+                                    <Grid item xs={7}>
+                                        <Typography sx={{ fontFamily: 'Mulish' }}>
+                                            {new Date(flight.returnDate).toLocaleDateString()} at {flight.returnTime}
+                                        </Typography>
+                                    </Grid>
+                                </>
                             )}
-                            <Typography><strong>Class:</strong> {flight.flightClass}</Typography>
-                            <Typography><strong>Airplane:</strong> {flight.airplaneType}</Typography>
-                            <Typography><strong>Price:</strong> ${flight.price} /person</Typography>
+
+                            <Grid item xs={5}>
+                                <Typography fontWeight={600} sx={{ fontFamily: 'Mulish' }}>Class:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <Typography sx={{ fontFamily: 'Mulish' }}>{flight.flightClass}</Typography>
+                            </Grid>
+
+                            <Grid item xs={5}>
+                                <Typography fontWeight={600} sx={{ fontFamily: 'Mulish' }}>Airplane:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <Typography sx={{ fontFamily: 'Mulish' }}>{flight.airplaneType}</Typography>
+                            </Grid>
+
+                            <Grid item xs={5}>
+                                <Typography fontWeight={600} sx={{ fontFamily: 'Mulish' }}>Price:</Typography>
+                            </Grid>
+                            <Grid item xs={7}>
+                                <Typography sx={{ fontFamily: 'Mulish' }}>${flight.price} / person</Typography>
+                            </Grid>
                         </Box>
                     </Paper>
                 </Grid>
 
                 {/* Cột phải: Form hành khách */}
-                <Grid item xs={12} md={6}>
-                    <Paper elevation={3} sx={{ padding: 3, borderRadius: 3 }}>
-                        <Typography variant="h5" gutterBottom>
+                <Grid item xs={12} md={5}>
+                    <Paper elevation={3} sx={{ padding: 3, borderRadius: 2, fontFamily: 'Mulish' }}>
+                        <Typography variant="h6" fontWeight={700} sx={{ fontFamily: 'Mulish', mb: 2 }}>
                             Passenger Information
                         </Typography>
 
                         <Box
                             component="form"
                             onSubmit={handleSubmit}
-                            sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}
+                            sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}
                         >
-                            <TextField name="fullName" label="Full Name" required fullWidth onChange={handleChange} />
-                            <TextField name="dateOfBirth" label="Date of Birth" type="date" InputLabelProps={{ shrink: true }} required fullWidth onChange={handleChange} />
-                            <TextField name="passportId" label="Passport/ID Number" required fullWidth onChange={handleChange} />
-                            <TextField name="phone" label="Phone Number" required fullWidth onChange={handleChange} />
-                            <TextField name="guestSize" label="Number of Passengers" type="number" inputProps={{ min: 1 }} required fullWidth onChange={handleChange} />
+                            <TextField
+                                variant="standard"
+                                name="fullName"
+                                label="Full Name"
+                                fullWidth
+                                required
+                                onChange={handleChange}
+                                InputProps={{ style: { fontFamily: 'Mulish' } }}
+                            />
+                            <TextField
+                                variant="standard"
+                                name="dateOfBirth"
+                                label="Date of Birth"
+                                type="date"
+                                fullWidth
+                                required
+                                InputLabelProps={{ shrink: true }}
+                                onChange={handleChange}
+                                InputProps={{ style: { fontFamily: 'Mulish' } }}
+                            />
+                            <TextField
+                                variant="standard"
+                                name="passportId"
+                                label="Passport/ID Number"
+                                fullWidth
+                                required
+                                onChange={handleChange}
+                                InputProps={{ style: { fontFamily: 'Mulish' } }}
+                            />
+                            <TextField
+                                variant="standard"
+                                name="phone"
+                                label="Phone Number"
+                                fullWidth
+                                required
+                                onChange={handleChange}
+                                InputProps={{ style: { fontFamily: 'Mulish' } }}
+                            />
+                            <TextField
+                                variant="standard"
+                                name="guestSize"
+                                label="Number of Passengers"
+                                type="number"
+                                fullWidth
+                                required
+                                inputProps={{ min: 1 }}
+                                onChange={handleChange}
+                                InputProps={{ style: { fontFamily: 'Mulish' } }}
+                            />
 
-                            <Divider sx={{ my: 2 }} />
-
-                            <Box>
-                                <Typography><strong>Price x {form.guestSize}:</strong> ${flight.price * form.guestSize}</Typography>
-                                <Typography><strong>Service Fee:</strong> ${serviceFee}</Typography>
-                                <Typography variant="h6" sx={{ mt: 1 }}>
-                                    <strong>Total:</strong> ${totalAmount}
-                                </Typography>
-                            </Box>
+                            <List disablePadding>
+                                <ListItem sx={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'Mulish' }}>
+                                    <Typography sx={{ fontFamily: 'Mulish' }}>
+                                        ${flight.price} x {form.guestSize} person(s)
+                                    </Typography>
+                                    <Typography sx={{ fontFamily: 'Mulish' }}>
+                                        ${flight.price * form.guestSize}
+                                    </Typography>
+                                </ListItem>
+                                <ListItem sx={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', fontFamily: 'Mulish' }}>
+                                    <Typography sx={{ fontFamily: 'Mulish', fontWeight: 'bold' }}>Total</Typography>
+                                    <Typography sx={{ fontFamily: 'Mulish', fontWeight: 'bold' }}>${totalAmount}</Typography>
+                                </ListItem>
+                            </List>
 
                             <Button
                                 type="submit"
                                 variant="contained"
-                                size="large"
+                                fullWidth
                                 sx={{
                                     mt: 3,
-                                    backgroundColor: '#7bbcb0',
-                                    '&:hover': { backgroundColor: '#5daea1' }
+                                    fontFamily: 'Mulish',
+                                    backgroundColor: 'var(--secondary-color)',
+                                    '&:hover': { backgroundColor: '#71aea3' }
                                 }}
                             >
                                 Book Now

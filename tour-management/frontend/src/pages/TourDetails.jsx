@@ -1,14 +1,19 @@
 import React, { useContext, useEffect, useRef, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { Col, Container, Form, ListGroup, Row } from 'reactstrap';
+import { Col, Row } from 'reactstrap';
+import {
+  Grid, Typography, Box, List,
+  ListItem, ListItemText,
+  ListItemAvatar, TextField, Button, Avatar, Container, Pagination
+} from '@mui/material';
 import axios from 'axios';
-import avatar from '../assets/images/avatar.jpg';
 import { AuthContext } from '../context/AuthContext';
 import useFetch from '../hooks/useFetch';
-import '../styles/tour-details.css';
 import calculateAvgRating from '../utils/avgRating';
 import { BASE_URL } from '../utils/config';
 import BookingForm from '../components/Booking/BookingForm';
+import FmdGoodRoundedIcon from '@mui/icons-material/FmdGoodRounded';
+import StarIcon from '@mui/icons-material/Star';
 
 const extractSummarySections = (raw) => {
   const cleaned = raw.replace(/\*/g, "").trim();
@@ -19,13 +24,34 @@ const extractSummarySections = (raw) => {
 };
 
 const RatingStars = ({ current, onRate }) => (
-  <div className="d-flex align-items-center gap-3 mb-4 rating__group">
-    {[1, 2, 3, 4, 5].map(star => (
-      <span key={star} onClick={() => onRate(star)}>
-        {star} <i className={`ri-star-fill ${current >= star ? 'filled' : ''}`}></i>
-      </span>
+  <Box
+    display="flex"
+    alignItems="center"
+    gap={2}
+    mb={3}
+  >
+    {[1, 2, 3, 4, 5].map((star) => (
+      <Box
+        key={star}
+        onClick={() => onRate(star)}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          fontSize: '1.1rem',
+          color: 'var(--secondary-color)',
+          cursor: 'pointer',
+        }}
+      >
+        <Typography sx={{ mr: 0.5 }}>{star}</Typography>
+        <StarIcon
+          sx={{
+            fontSize: '1.2rem',
+            color: current >= star ? 'var(--secondary-color)' : '#ccc',
+          }}
+        />
+      </Box>
     ))}
-  </div>
+  </Box>
 );
 
 const TourDetails = ({ type = "Tour" }) => {
@@ -41,6 +67,11 @@ const TourDetails = ({ type = "Tour" }) => {
   const { data: tour, loading, error } = useFetch(`${BASE_URL}/tours/${id}`);
   const { photo, title, desc, price, address, reviews = [], city, distance, maxGroupSize } = tour || {};
   const { totalRating, avgRating } = calculateAvgRating(reviewList);
+
+
+  const [page, setPage] = useState(1);
+  const reviewsPerPage = 8;
+
 
   const updateSummary = async () => {
     try {
@@ -62,17 +93,45 @@ const TourDetails = ({ type = "Tour" }) => {
 
   const reversedReviews = useMemo(() => reviewList.slice().reverse(), [reviewList]);
 
+  // Tính tổng số trang
+  const pageCount = Math.ceil(reversedReviews.length / reviewsPerPage);
+
+  // Cắt ra danh sách review theo trang
+  const displayedReviews = reversedReviews.slice(
+    (page - 1) * reviewsPerPage,
+    page * reviewsPerPage
+  );
+
+  // const renderSummary = () => {
+  //   if (!summary) return <p>Loading summary...</p>;
+  //   const { positive, negative, impression } = extractSummarySections(summary);
+  //   return (
+  //     <Box mb={3}>
+  //       <div><h6>Positive Reviews:</h6><p>{positive || 'No positive reviews yet.'}</p></div>
+  //       <div><h6>Negative Reviews:</h6><p>{negative || 'No negative reviews yet.'}</p></div>
+  //       <div><h6>Overall Impression:</h6><p>{impression || 'No overall impression yet.'}</p></div>
+  //     </Box>
+  //   );
+  // };
   const renderSummary = () => {
+    if (reviewList.length === 0) {
+      return <Typography variant="h6"
+        fontSize="1rem"
+        sx={{ fontFamily: 'Mulish', pr: 5 }}>No reviews yet. Be the first to leave a comment!</Typography>;
+    }
+
     if (!summary) return <p>Loading summary...</p>;
+
     const { positive, negative, impression } = extractSummarySections(summary);
     return (
-      <div className="review__summary">
+      <Box mb={3}>
         <div><h6>Positive Reviews:</h6><p>{positive || 'No positive reviews yet.'}</p></div>
         <div><h6>Negative Reviews:</h6><p>{negative || 'No negative reviews yet.'}</p></div>
         <div><h6>Overall Impression:</h6><p>{impression || 'No overall impression yet.'}</p></div>
-      </div>
+      </Box>
     );
   };
+
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -125,71 +184,231 @@ const TourDetails = ({ type = "Tour" }) => {
 
   return (
     <section>
-      <Container>
+      <Container >
         {loading && <h4 className="text-center pt-5">Loading ......</h4>}
         {error && <h4 className="text-center pt-5">{error}</h4>}
         {!loading && !error && (
+
           <Row>
+            <Typography
+              variant="h6"
+              gutterBottom
+              sx={{
+                fontSize: 36,
+                fontFamily: 'Volkhov, Georgia, serif',
+                fontWeight: 700,
+                color: '#1C2B38'
+              }}
+            >
+              {title}
+            </Typography>
+            <Box display="flex" alignItems="center" gap={2} mb={4}>
+              <Box display="flex" alignItems="center" gap={1}>
+                <FmdGoodRoundedIcon fontSize="small" color="action" />
+                <Typography variant="body1" color="text.secondary" sx={{ fontFamily: 'Mulish' }}>
+                  {city}
+                </Typography>
+              </Box>
+
+              <Box sx={{ width: '1px', height: 20, backgroundColor: '#ccc' }} />
+
+              <StarIcon sx={{ color: '#FFC107' }} />
+              <Typography variant="body1" color="text.secondary" sx={{ fontFamily: 'Mulish' }}>{Number(avgRating).toFixed(1)}</Typography>
+              <Typography variant="body1" color="text.secondary" sx={{ fontFamily: 'Mulish' }}>({reviewList.length} reviews)</Typography>
+              <Box sx={{ width: '1px', height: 20, backgroundColor: '#ccc' }} />
+              <Typography variant="body1" color="text.secondary" sx={{ fontFamily: 'Mulish' }}>Max {maxGroupSize} people</Typography>
+            </Box>
+
             <Col lg="8">
-              <div className="tour__content">
-                <img src={photo} alt="" />
-                <div className="tour__info">
-                  <h2>{title}</h2>
-                  <div className="d-flex align-items-center gap-5">
-                    <span className="tour__rating d-flex align-items-center gap-1">
-                      <i className="ri-star-fill" style={{ color: 'var(--secondary-color)' }}></i>
-                      {avgRating === 0 ? null : avgRating}
-                      {reviewList.length === 0 ? 'Not rated' : <span>({reviewList.length})</span>}
-                    </span>
-                    <span><i className="ri-map-pin-fill"></i> {address}</span>
-                  </div>
-                  <div className="tour__extra-details">
-                    <span><i className="ri-map-pin-2-line"></i> {city}</span>
-                    <span><i className="ri-money-dollar-circle-line"></i> ${price} / per person</span>
-                    <span><i className="ri-pin-distance-line"></i> {distance} km</span>
-                    <span><i className="ri-group-line"></i> {maxGroupSize} people</span>
-                  </div>
-                  <h5>Description</h5>
-                  <p>{desc}</p>
-                </div>
 
-                <div className="tour__reviews mt-4">
-                  <h4>Reviews ({reviewList.length} reviews)</h4>
-                  {renderSummary()}
+              <Box>
+                <Box component="img" src={photo} alt="" sx={{ width: '100%', borderRadius: 2 }} />
+                <Box
+                  mt={2}
+                  ml={2}
+                  sx={{
+                    borderBottom: '1px solid #ccc', // hoặc '#e0e0e0' tùy độ sáng mong muốn
+                    pb: 2 // padding bottom để nội dung không sát viền
+                  }}
+                >
+                  <Typography variant="h6" fontWeight={700} mb={2} sx={{ fontFamily: 'Mulish' }}>
+                    Description
+                  </Typography>
+                  <Typography variant="body1" mb={2} sx={{ fontFamily: 'Mulish' }}>
+                    {desc}
+                  </Typography>
+                </Box>
 
-                  <Form onSubmit={submitHandler}>
-                    <RatingStars current={tourRating} onRate={setTourRating} />
-                    <div className="review__input">
-                      <input type="text" ref={reviewMsgRef} placeholder="share your thoughts" required />
-                      <button className="btn primary__btn text-white" type="submit">Submit</button>
-                    </div>
-                  </Form>
-
-                  <ListGroup className="user__reviews">
-                    {reversedReviews.map((review, index) => (
-                      <div className="review__item" key={index}>
-                        <img
-                          src={review.userId?.photo || "https://t4.ftcdn.net/jpg/08/75/45/97/360_F_875459719_8i7J3atGbsDoRPT0ZW0DjBpgAFVTrKAe.jpg"}
-                          alt="avatar"
-                          className="review__avatar"
-                        />
-                        <div className="w-100">
-                          <div className="d-flex align-items-center justify-content-between">
-                            <div>
-                              <h5>{review.userId?.username || 'Anonymous'}</h5>
-                              <p>{new Date(review.createdAt).toLocaleDateString('en-US', dateFormat)}</p>
-                            </div>
-                            <span className="d-flex align-items-center">
-                              {review.rating} <i className="ri-star-s-fill"></i>
-                            </span>
-                          </div>
-                          <h6>{review.reviewText}</h6>
-                        </div>
-                      </div>
+                <Box mt={4} ml={2} sx={{
+                  borderBottom: '1px solid #ccc', // hoặc '#e0e0e0' tùy độ sáng mong muốn
+                  pb: 2 // padding bottom để nội dung không sát viền
+                }}>
+                  <Typography variant="h6" fontWeight={700} mb={2} sx={{ fontFamily: 'Mulish' }}>
+                    Highlights
+                  </Typography>
+                  <ul style={{ paddingLeft: '1.5rem', listStyleType: 'disc' }}>
+                    {tour?.highlights?.map((point, index) => (
+                      <li key={index}>
+                        <Typography
+                          variant="body1"
+                          sx={{ fontFamily: 'Mulish', color: '#334155' }} // giống style hình bạn gửi
+                        >
+                          {point}
+                        </Typography>
+                      </li>
                     ))}
-                  </ListGroup>
-                </div>
-              </div>
+                  </ul>
+                </Box>
+
+                <Box mt={4} ml={2}>
+                  <Typography variant="h6" fontWeight={700} mb={2} sx={{ fontFamily: 'Mulish' }}>
+                    Reviews ({reviewList.length} reviews)
+                  </Typography>
+
+                  {renderSummary()}
+                  <Box
+                    component="form"
+                    onSubmit={submitHandler}
+                    sx={{
+
+                      p: 1,
+                      mt: 2,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 2,
+                    }}
+                  >
+                    {/* Rating sao */}
+                    <RatingStars current={tourRating} onRate={setTourRating} sx={{ p: 1 }} />
+
+                    {/* Input và button trên cùng 1 hàng */}
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 2,
+                        borderRadius: '2rem',
+                        border: '1px solid',
+                        borderColor: '#ccc',
+                        pr: 2,
+                        pt: 1, pb: 1,
+                      }}
+                    >
+                      <TextField
+                        inputRef={reviewMsgRef}
+                        placeholder="Share your thoughts"
+                        required
+                        variant="standard"
+                        fullWidth
+                        InputProps={{
+                          disableUnderline: true,
+                          sx: {
+                            px: 1,
+                            fontSize: '1rem',
+                            color: 'var(--text-color)',
+                          }
+                        }}
+                        sx={{
+                          flex: 1,
+                          '& .MuiInputBase-root': {
+                            paddingY: '0.5rem',
+                          }
+                        }}
+                      />
+                      <Button
+                        type="submit"
+                        variant="contained"
+
+                        sx={{
+                          borderRadius: '2rem',
+                          textTransform: 'none',
+                          px: 3,
+                          py: 1,
+                          backgroundColor: 'var(--secondary-color)',
+                        }}
+                      >
+                        Submit
+                      </Button>
+                    </Box>
+                  </Box>
+                  <List sx={{ mt: 5 }}>
+                    {displayedReviews.map((review, index) => (
+                      <ListItem
+
+                        key={index}
+                        alignItems="flex-start"
+                        sx={{
+                          width: '95%',
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          gap: 2,
+                          mb: 3,
+                          px: 0,
+                          p: 1,
+                        }}
+                      >
+                        {/* Avatar */}
+                        <ListItemAvatar>
+                          <Avatar
+                            alt="avatar"
+                            src={
+                              review.userId?.photo ||
+                              "https://t4.ftcdn.net/jpg/08/75/45/97/360_F_875459719_8i7J3atGbsDoRPT0ZW0DjBpgAFVTrKAe.jpg"
+                            }
+                            sx={{ width: 40, height: 40 }}
+                          />
+                        </ListItemAvatar>
+
+                        {/* Review content */}
+                        <Box sx={{ flex: 1 }}>
+                          {/* Username + Date + Rating */}
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                              mb: 1,
+                            }}
+                          >
+                            <Box>
+                              <Typography variant="body1" fontSize="1rem" mb={0} sx={{ fontFamily: 'Mulish', fontWeight: 600 }}>
+                                {review.userId?.username || 'Anonymous'}
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                fontSize="0.8rem"
+
+                              >
+                                {new Date(review.createdAt).toLocaleDateString('en-US', dateFormat)}
+                              </Typography>
+                            </Box>
+                            <Box display="flex" alignItems="center" fontWeight={500}>
+                              <Typography sx={{ mr: 0.5 }}>{review.rating}</Typography>
+                              <StarIcon sx={{ fontSize: 20, color: 'var(--secondary-color)' }} />
+                            </Box>
+                          </Box>
+
+                          {/* Review Text */}
+                          <Typography
+                            variant="h6"
+                            fontSize="1rem"
+                            sx={{ fontFamily: 'Mulish', pr: 5 }}
+                          >
+                            {review.reviewText}
+                          </Typography>
+                        </Box>
+                      </ListItem>
+                    ))}
+                  </List>
+                  <Pagination
+                    count={pageCount}
+                    page={page}
+                    onChange={(event, value) => setPage(value)}
+
+                    sx={{ display: 'flex', justifyContent: 'center', mt: 2, color: 'var(--secondary-color)' }}
+                  />
+                </Box>
+              </Box>
             </Col>
 
             <Col lg="4">

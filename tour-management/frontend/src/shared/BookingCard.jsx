@@ -1,16 +1,24 @@
-
-
 import React from 'react';
-import { Card, CardBody } from 'reactstrap';
-import './booking-card.css';
-import defaultImg from "../assets/images/tour-img04.jpg";
+import {
+  Card,
+  CardMedia,
+  CardContent,
+  Typography,
+  Box,
+  Icon,
+  Divider
+} from '@mui/material';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import PersonIcon from '@mui/icons-material/Person';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useNavigate } from 'react-router-dom';
+import defaultImg from "../assets/images/tour-img04.jpg";
 
 const BookingCard = ({ booking, type }) => {
   const navigate = useNavigate();
-
   const { _id, createdAt, paymentStatus } = booking;
-  const serviceFee = 10;
+  const serviceFee = 0;
 
   let itemId, itemName, photo, unitPrice, quantity, date, dateLabel, qtyLabel;
 
@@ -38,7 +46,7 @@ const BookingCard = ({ booking, type }) => {
     photo = "https://www.libertytravel.com/sites/default/files/styles/full_size/public/flight-hero.jpg?itok=LKyRwKDq";
     unitPrice = itemId?.price || 0;
     quantity = booking.guestSize;
-    date = itemId?.departureDate; // ✅ lấy từ flight
+    date = itemId?.departureDate;
     dateLabel = "Departure";
     qtyLabel = "Passengers";
   }
@@ -50,28 +58,59 @@ const BookingCard = ({ booking, type }) => {
   };
 
   return (
-    <div className="booking__card" onClick={handleClick} style={{ cursor: "pointer" }}>
-      <Card>
-        <div className="booking__img">
-          <img
-            src={photo}
-            alt={`${itemName}`}
-            onError={(e) => e.target.src = defaultImg}  // Fallback to default image if load fails
-          />
-        </div>
-        <CardBody>
-          <h5 className="booking__title">{itemName || "Unknown"}</h5>
-          <div className="booking__details">
-            <p><i className="ri-calendar-line"></i> {dateLabel}: {date ? new Date(date).toLocaleDateString() : "Unknown Date"}</p>
-            <p><i className="ri-user-line"></i> {qtyLabel}: {quantity}</p>
-            <p><i className="ri-money-dollar-circle-line"></i> Total: ${totalPrice}</p>
-            <p><i className="ri-information-line"></i> Status: {paymentStatus}</p>
-          </div>
-        </CardBody>
-      </Card>
-    </div>
+    <Card
+      onClick={handleClick}
+      sx={{
+        border: '1px solid #ddd',
+        borderRadius: 2,
+        transition: 'transform 0.3s',
+        cursor: 'pointer',
+        '&:hover': {
+          transform: 'scale(1.05)'
+        }
+      }}
+    >
+      <CardMedia
+        component="img"
+        height="180"
+        image={photo}
+        alt={itemName}
+        onError={(e) => { e.target.src = defaultImg }}
+        sx={{ objectFit: 'cover' }}
+      />
+      <CardContent>
+        <Typography
+          variant="h6"
+          noWrap
+          sx={{ mb: 1, fontWeight: 'bold', height: 50 }}
+        >
+          {itemName || "Unknown"}
+        </Typography>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+          <CalendarMonthIcon fontSize="small" sx={{ color: 'grey.600' }} />
+          <Typography variant="body2">{dateLabel}: {date ? new Date(date).toLocaleDateString() : "Unknown Date"}</Typography>
+        </Box>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+          <PersonIcon fontSize="small" sx={{ color: 'grey.600' }} />
+          <Typography variant="body2">{qtyLabel}: {quantity}</Typography>
+        </Box>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+          <AttachMoneyIcon fontSize="small" sx={{ color: 'grey.600' }} />
+          <Typography variant="body2">Total: ${totalPrice}</Typography>
+        </Box>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <InfoOutlinedIcon fontSize="small" sx={{ color: 'grey.600' }} />
+          <Typography variant="body2">Status: {paymentStatus}</Typography>
+        </Box>
+      </CardContent>
+    </Card>
   );
 };
 
 export default BookingCard;
+
 

@@ -1,7 +1,5 @@
 import React from 'react';
 import { Grid, Typography, MenuItem, FormControl, InputLabel, Select, Box, Tooltip } from '@mui/material';
-import TourCard from "../../shared/TourCard";
-import CustomTooltip from "../Tooltip/Tooltip";
 import { Fade } from '@mui/material';
 import ItemCardTooltip from '../Tooltip/ItemCardToolTip';
 
@@ -15,7 +13,8 @@ const SuggestionResult = ({
     isOptionDisabled,
     totalCost,
     reason,
-    destination
+    destination,
+    variant = "outlined"
 }) => {
     const filteredFlights = selectedTour
         ? results.flights.filter(f => f.arrivalCity === selectedTour.city)
@@ -48,9 +47,10 @@ const SuggestionResult = ({
 
 
     return (
-        <Box sx={{ marginTop: 3 }}>
-            <Typography variant="h5" gutterBottom sx={{ color: '#444', fontWeight: 'medium' }}>
-                Results:
+        <Box sx={{ marginTop: 3, marginLeft: 5 }}>
+            <Typography variant="h5" gutterBottom
+                sx={{ color: '#444', fontWeight: 'bold', textAlign: 'center', mb: 3 }}>
+                Results
             </Typography>
 
             {reason && !destination && (
@@ -59,12 +59,13 @@ const SuggestionResult = ({
                 </Typography>
             )}
 
+
             <Grid container spacing={4}>
                 {/* TOUR */}
-                <Grid item xs={12} sm={6}>
-                    <FormControl fullWidth>
+                <Grid item xs={12}>
+                    <FormControl fullWidth variant={variant}>
                         <InputLabel id="select-tour">Tour</InputLabel>
-                        <Select
+                        <Select variant={variant}
                             labelId="select-tour"
                             label="Tour"
                             value={selectedTour || ''}
@@ -79,11 +80,7 @@ const SuggestionResult = ({
                                     sx={{ position: 'relative' }}
                                 >
                                     <Tooltip
-                                        // title={
-                                        //     <Box sx={{ width: '250px' }}>
-                                        //         <TourCard tour={tour} />
-                                        //     </Box>
-                                        // }
+
                                         title={<ItemCardTooltip item={tour} type="tour" />}
 
                                         {...tooltipProps}
@@ -99,10 +96,10 @@ const SuggestionResult = ({
                 </Grid>
 
                 {/* FLIGHT */}
-                <Grid item xs={12} sm={6}>
-                    <FormControl fullWidth>
+                <Grid item xs={12}>
+                    <FormControl fullWidth variant={variant}>
                         <InputLabel id="select-flight">Flight</InputLabel>
-                        <Select
+                        <Select variant={variant}
                             labelId="select-flight"
                             label="Flight"
                             value={selectedFlight || ''}
@@ -117,15 +114,7 @@ const SuggestionResult = ({
                                     sx={{ position: 'relative' }}
                                 >
                                     <Tooltip
-                                        // title={
-                                        //     <Box>
-                                        //         <Typography variant="subtitle1"><strong>Flight:</strong> {flight.flightNumber}</Typography>
-                                        //         <Typography variant="body2">Airline: {flight.airline}</Typography>
-                                        //         <Typography variant="body2">Departure: {new Date(flight.departureDate).toLocaleDateString()}</Typography>
-                                        //         <Typography variant="body2">Class: {flight.class}</Typography>
-                                        //         <Typography variant="body2">Price: ${flight.price}</Typography>
-                                        //     </Box>
-                                        // }
+
                                         title={<ItemCardTooltip item={flight} type="flight" />}
                                         {...tooltipProps}
                                     >
@@ -140,10 +129,10 @@ const SuggestionResult = ({
                 </Grid>
 
                 {/* HOTEL */}
-                <Grid item xs={12} sm={6}>
-                    <FormControl fullWidth>
+                <Grid item xs={12} >
+                    <FormControl fullWidth variant={variant}>
                         <InputLabel id="select-hotel">Hotel</InputLabel>
-                        <Select
+                        <Select variant={variant}
                             labelId="select-hotel"
                             label="Hotel"
                             value={selectedHotel || ''}
@@ -158,15 +147,7 @@ const SuggestionResult = ({
                                     sx={{ position: 'relative' }}
                                 >
                                     <Tooltip
-                                        // title={
-                                        //     <Box>
-                                        //         <Typography variant="subtitle1"><strong>Hotel:</strong> {hotel.hotelName}</Typography>
-                                        //         <Typography variant="body2">Stars: {hotel.stars} ⭐</Typography>
-                                        //         <Typography variant="body2">Rooms Available: {hotel.roomsAvailable}</Typography>
-                                        //         <Typography variant="body2">Price per Night: ${hotel.pricePerNight}</Typography>
-                                        //         <Typography variant="body2">Total for {duration} nights: ${hotel.pricePerNight * duration}</Typography>
-                                        //     </Box>
-                                        // }
+
                                         title={<ItemCardTooltip item={hotel} type="hotel" />}
                                         {...tooltipProps}
                                     >
@@ -181,7 +162,7 @@ const SuggestionResult = ({
                 </Grid>
             </Grid>
 
-            <Typography variant="h6" sx={{ marginTop: 3, color: '#555' }}>
+            <Typography variant="h6" sx={{ marginTop: 10, color: '#555', textAlign: 'center' }}>
                 Total Cost: <strong>${totalCost}</strong>
             </Typography>
         </Box>

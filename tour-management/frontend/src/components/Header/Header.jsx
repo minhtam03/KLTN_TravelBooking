@@ -198,16 +198,16 @@ const nav__links = [
   //   display: 'About'
   // },
   {
-    path: '/flights',
-    display: 'Flights'
+    path: '/tours',
+    display: 'Tours'
   },
   {
     path: '/stays',
     display: 'Stays'
   },
   {
-    path: '/tours',
-    display: 'Tours'
+    path: '/flights',
+    display: 'Flights'
   },
   {
     path: '/blog',

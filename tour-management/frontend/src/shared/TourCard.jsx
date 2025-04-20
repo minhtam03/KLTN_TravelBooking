@@ -1,68 +1,154 @@
-import React from 'react'
-import { Card, CardBody } from 'reactstrap'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import {
+    Card,
+    CardContent,
+    CardMedia,
+    Typography,
+    Box
+} from '@mui/material';
+import StarIcon from '@mui/icons-material/Star';
+import RoomIcon from '@mui/icons-material/Room';
+import FmdGoodIcon from '@mui/icons-material/FmdGood';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
-import calculateAvgRating from '../utils/avgRating'
-
-import "./tour-card.css"
+import calculateAvgRating from '../utils/avgRating';
+import home1 from "../assets/images/home/home1.jpg";
 
 const TourCard = ({ tour }) => {
+    const { _id, title, city, photo, price, featured, reviews, duration } = tour;
+    const { totalRating, avgRating } = calculateAvgRating(reviews);
 
-    const { _id, title, city, photo, price, featured, reviews } = tour
-
-    const { totalRating, avgRating } = calculateAvgRating(reviews)
-
-    return <div className='tour__card'>
-        <Card>
-            {/* <div className='tour__img'>
-                <img src={photo} alt="tour-img" />
-                {featured && <span>Featured</span>}
-
-            </div> */}
-            <div className='tour__img'>
-                <img
-                    src={photo || "https://transviet.com.vn/images/Khuyen-Mai/Pictures/cam_nang_du_lich/LUU-Y-KHI-DI-DU-LICH/dulichtheotour-transviet00.jpg"}
+    return (
+        <Card
+            elevation={4}
+            sx={{
+                borderRadius: '10px',
+                overflow: 'hidden',
+                boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 12px',
+                fontFamily: 'Mulish, sans-serif'
+            }}
+        >
+            {/* Ảnh tour */}
+            <Box sx={{ height: 180, position: 'relative' }}>
+                <CardMedia
+                    component="img"
+                    height="180"
+                    image={photo || home1}
                     alt="tour-img"
-                    onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = "https://transviet.com.vn/images/Khuyen-Mai/Pictures/cam_nang_du_lich/LUU-Y-KHI-DI-DU-LICH/dulichtheotour-transviet00.jpg";
-                    }}
+                    sx={{ objectFit: 'cover' }}
                 />
-                {featured && <span>Featured</span>}
-            </div>
-            <CardBody>
-                <div className="card__top d-flex align-items-center
-                justify-content-between">
-                    <span className='tour__location d-flex align-items-center gap-1'>
-                        <i class='ri-map-pin-line'></i> {city}
-                    </span>
-                    <span className='tour__rating d-flex align-items-center gap-1'>
-                        <i class="ri-star-fill"></i>
-                        {avgRating === 0 ? null : avgRating}
-                        {totalRating === 0 ? "Not rated" : (<span>({reviews?.length || 0})</span>)}
+                {featured && (
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            bottom: 0,
+                            right: 0,
+                            background: 'var(--primary-color)',
+                            color: '#fff',
+                            px: 1,
+                            py: 0.5,
+                            borderRadius: '3px 0 0 0',
+                            fontSize: '0.8rem',
+                            zIndex: 10,
+                            fontFamily: 'Mulish, sans-serif'
+                        }}
+                    >
+                        Featured
+                    </Box>
+                )}
+            </Box>
 
-                    </span>
-                </div>
-
-                <h5 className='tour__title'>
+            {/* Nội dung tour */}
+            <CardContent sx={{ fontFamily: 'Mulish, sans-serif' }}>
+                {/* Tên tour */}
+                <Typography
+                    variant="subtitle1"
+                    fontWeight={700}
+                    sx={{
+                        fontSize: '1.2rem',
+                        mb: 1,
+                        fontFamily: 'Mulish, sans-serif',
+                        '& a': {
+                            textDecoration: 'none',
+                            color: 'inherit',
+                            '&:hover': { color: 'var(--secondary-color)' },
+                        },
+                    }}
+                >
                     <Link to={`/tours/${_id}`}>{title}</Link>
-                </h5>
+                </Typography>
 
-                <div className='card__bottom d-flex align-items-center
-                justify-content-between mt-3'>
-                    <h5>
-                        ${price} <span> /per person</span>
-                    </h5>
+                {/* Location */}
+                <Box display="flex" alignItems="center" gap={1} mb={1.5}>
+                    <FmdGoodIcon sx={{ fontSize: 22, fill: 'rgb(125,125,125)' }} />
+                    <Typography variant="body2" fontFamily="Mulish, sans-serif" fontWeight={500}>
+                        {city}
+                    </Typography>
+                </Box>
 
-                    <button className='btn booking__btn'>
-                        <Link to={`/tours/${_id}`}>Book now</Link>
+                {/* Duration */}
+                <Box display="flex" alignItems="center" gap={1} mb={1.5}
+                    sx={{
+                        borderBottom: '1px solid #ccc', // ✅ Thêm border dưới
+                        pb: 2 // ✅ padding-bottom để tạo khoảng cách giữa chữ và viền
+                    }}>
+                    <AccessTimeIcon sx={{ fontSize: 22, color: 'text.secondary' }} />
+                    <Typography variant="body2" fontFamily="Mulish, sans-serif">
+                        {duration || 'Duration unknown'} day(s)
+                    </Typography>
+                </Box>
+                <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mt={2}
 
-                    </button>
+                >
+                    {/* Cột bên trái */}
+                    <Box>
+                        <Box display="flex" alignItems="center" gap={0.5} mb={0.5}>
+                            <StarIcon sx={{ fontSize: 18, color: 'var(--secondary-color)' }} />
+                            <Typography variant="body2" fontFamily="Mulish, sans-serif">
+                                {avgRating || '0.0'}
+                            </Typography>
+                        </Box>
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            fontFamily="Mulish, sans-serif"
+                        >
+                            ({reviews?.length || 0} reviews)
+                        </Typography>
+                    </Box>
 
-                </div>
-            </CardBody>
+                    {/* Cột bên phải */}
+                    <Box textAlign="right">
+                        <Typography
+                            variant="h6"
+                            sx={{
+                                fontWeight: 700,
+                                fontSize: '1.1rem',
+                                color: 'var(--secondary-color)',
+                                fontFamily: 'Mulish, sans-serif',
+                            }}
+                        >
+                            ${price.toFixed(2)}
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            fontFamily="Mulish, sans-serif"
+                        >
+                            per person
+                        </Typography>
+                    </Box>
+                </Box>
+
+
+            </CardContent>
         </Card>
-    </div>
-}
+    );
+};
 
-export default TourCard
+export default TourCard;

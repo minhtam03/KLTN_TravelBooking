@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Button, Box, CircularProgress, Container } from '@mui/material';
+import { Button, Box, CircularProgress, Container, Grid } from '@mui/material';
 import { BASE_URL } from '../utils/config';
 import CommonSection from '../shared/CommonSection';
 import { AuthContext } from '../context/AuthContext';
@@ -14,7 +14,11 @@ const Suggestion = () => {
   const [departure, setDeparture] = useState('');
   const [destination, setDestination] = useState('');
   const [startDate, setStartDate] = useState('');
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState({
+    tours: [],
+    flights: [],
+    hotels: []
+  });
   const [loading, setLoading] = useState(false);
   const [selectedTour, setSelectedTour] = useState(null);
   const [selectedFlight, setSelectedFlight] = useState(null);
@@ -22,27 +26,6 @@ const Suggestion = () => {
   const [totalCost, setTotalCost] = useState(0);
   const [reason, setReason] = useState('');
 
-
-  // useEffect(() => {
-  //   if (destination && results.tours?.length > 0) setSelectedTour(results.tours[0]);
-  //   if (destination && results.flights?.length > 0) setSelectedFlight(results.flights[0]);
-  //   if (destination && results.hotels?.length > 0) setSelectedHotel(results.hotels[0]);
-  //   console.log("eee")
-  //   // Chỉ tính tổng nếu có ít nhất 1 tour, flight và hotel
-  //   if (results.tours?.length > 0 && results.flights?.length > 0 && results.hotels?.length > 0) {
-  //     const initialTotal =
-  //       (results.tours[0].price || 0) +
-  //       (results.flights[0].price || 0) +
-  //       (results.hotels[0].pricePerNight || 0) * duration;
-
-  //     setTotalCost(!isNaN(initialTotal) ? initialTotal : 0);
-  //     console.log("Aaa")
-  //   } else {
-  //     // Không có dữ liệu => reset cost
-  //     setTotalCost(0);
-  //     console.log("aaa")
-  //   }
-  // }, [results, duration, destination]);
 
   useEffect(() => {
     // Giữ logic tự chọn nếu có destination
@@ -156,39 +139,7 @@ const Suggestion = () => {
     let newFlight = selectedFlight;
     let newHotel = selectedHotel;
 
-    // if (type === 'tour') {
-    //   newTour = value;
-    //   const city = newTour.city;
-    //   const currentTotal =
-    //     newTour.price +
-    //     (selectedFlight?.price || 0) +
-    //     (selectedHotel?.pricePerNight || 0) * duration;
 
-    //   if (currentTotal <= budget) {
-    //     // Vẫn trong ngân sách → giữ nguyên flight + hotel
-    //   } else {
-    //     // Vượt ngân sách → tìm combo flight + hotel tốt nhất cho tour này
-    //     const validFlights = flights.filter(f => f.arrivalCity === city);
-    //     const validHotels = hotels.filter(h => h.location === city);
-    //     let best = { total: Infinity, flight: null, hotel: null };
-
-    //     for (let f of validFlights) {
-    //       for (let h of validHotels) {
-    //         const total = newTour.price + f.price + h.pricePerNight * duration;
-    //         if (total <= budget && total < best.total) {
-    //           best = { total, flight: f, hotel: h };
-    //         }
-    //       }
-    //     }
-
-    //     newFlight = best.flight;
-    //     newHotel = best.hotel;
-    //   }
-
-    //   setSelectedTour(newTour);
-    //   setSelectedFlight(newFlight);
-    //   setSelectedHotel(newHotel);
-    // }
 
     if (type === 'tour') {
       newTour = value;
@@ -298,30 +249,49 @@ const Suggestion = () => {
   return (
     <>
       <CommonSection title={'Suggestion'} />
-      <Box sx={{ padding: 4, backgroundColor: '#f9f9f9', borderRadius: 2, width: "75%", mx: "auto" }}>
-        <SuggestionForm
-          budget={budget} setBudget={setBudget}
-          duration={duration} setDuration={setDuration}
-          departure={departure} setDeparture={setDeparture}
-          destination={destination} setDestination={setDestination}
-          startDate={startDate} setStartDate={setStartDate}
-          loading={loading}
-          reason={reason}
-        />
 
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ marginTop: 2, fontWeight: 'bold', fontSize: '1rem', padding: '0.75rem' }}
-          fullWidth
-          onClick={handleSubmit}
-          disabled={loading}
-        >
-          {loading ? <CircularProgress size={24} color="inherit" /> : 'Suggest'}
-        </Button>
+      <Box sx={{ px: 4, py: 5 }}>
 
-        {results.tours?.length > 0 && (
-          <Box sx={{ marginTop: 3 }}>
+
+        <Grid container spacing={0}>
+          {/* Cột 1: Form nhập liệu */}
+          <Grid item xs={12} md={6}>
+            <Box sx={{ borderRadius: 2, p: 3 }}>
+              <SuggestionForm
+                budget={budget} setBudget={setBudget}
+                duration={duration} setDuration={setDuration}
+                departure={departure} setDeparture={setDeparture}
+                destination={destination} setDestination={setDestination}
+                startDate={startDate} setStartDate={setStartDate}
+                loading={loading}
+                reason={reason}
+                variant="standard"  // truyền xuống để dùng dạng variant trong SuggestionForm
+              />
+
+              <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{
+                    backgroundColor: 'var(--secondary-color)',
+                    fontWeight: 'bold',
+                    textTransform: 'none',
+                    px: 2,
+                    '&:hover': {
+                      backgroundColor: '#71aea3'  // bạn có thể điều chỉnh theo tone màu bạn thích
+                    }
+                  }}
+                  onClick={handleSubmit}
+                  disabled={loading}
+                >
+                  {loading ? <CircularProgress size={20} color="inherit" /> : 'Suggest'}
+                </Button>
+              </Box>
+            </Box>
+          </Grid>
+
+          {/* Cột 2: Kết quả */}
+          <Grid item xs={12} md={4}>
             <SuggestionResult
               results={results}
               selectedTour={selectedTour}
@@ -334,8 +304,8 @@ const Suggestion = () => {
               reason={reason}
               destination={destination}
             />
-          </Box>
-        )}
+          </Grid>
+        </Grid>
       </Box>
     </>
   );

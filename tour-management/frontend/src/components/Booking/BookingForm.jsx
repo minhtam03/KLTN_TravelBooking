@@ -1,9 +1,20 @@
 import React, { useState, useContext } from 'react';
-import './booking.scss';
-import { Form, FormGroup, ListGroup, ListGroupItem, Button } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { BASE_URL } from '../../utils/config';
+import {
+    Box,
+    Typography,
+    TextField,
+    InputAdornment,
+    Divider,
+    List,
+    ListItem,
+    Button,
+    Stack,
+    Paper,
+} from '@mui/material';
+import StarIcon from '@mui/icons-material/Star';
 
 const BookingForm = ({ item, type, avgRating }) => {
     const navigate = useNavigate();
@@ -15,20 +26,18 @@ const BookingForm = ({ item, type, avgRating }) => {
         fullName: '',
         phone: '',
         bookAt: '',
-        guestSize: 1, // tour
-        nights: 1,     // hotel
+        guestSize: 1,
+        nights: 1,
     });
 
-    const handleChange = e => {
-        setBooking(prev => ({ ...prev, [e.target.id]: e.target.value }));
+    const handleChange = (e) => {
+        setBooking((prev) => ({ ...prev, [e.target.id]: e.target.value }));
     };
 
     const price = type === 'tour' ? item?.price : item?.pricePerNight;
     const name = type === 'tour' ? item?.title : item?.hotelName;
-    const reviews = item?.reviews || [];
     const photo = item?.photo;
-
-    const serviceFee = 10;
+    const serviceFee = 0;
     const totalAmount = type === 'tour'
         ? price * Number(booking.guestSize) + serviceFee
         : price * Number(booking.nights) + serviceFee;
@@ -38,14 +47,10 @@ const BookingForm = ({ item, type, avgRating }) => {
 
         const currentDate = new Date().setHours(0, 0, 0, 0);
         const bookingDate = new Date(booking.bookAt).setHours(0, 0, 0, 0);
-        if (bookingDate < currentDate) {
-            return alert("Booking date must be today or later.");
-        }
+        if (bookingDate < currentDate) return alert("Booking date must be today or later.");
+        if (!user) return alert("Please sign in");
 
         try {
-            if (!user) return alert("Please sign in");
-
-            // 1. Gửi thông tin booking
             const bookingData = {
                 userId: booking.userId,
                 userEmail: booking.userEmail,
@@ -61,7 +66,7 @@ const BookingForm = ({ item, type, avgRating }) => {
                     tourName: name,
                     guestSize: booking.guestSize,
                     tourPhoto: photo,
-                    tourPrice: price
+                    tourPrice: price,
                 });
                 url = `${BASE_URL}/booking/tour`;
             } else {
@@ -70,7 +75,7 @@ const BookingForm = ({ item, type, avgRating }) => {
                     hotelName: name,
                     nights: booking.nights,
                     hotelPhoto: photo,
-                    hotelPrice: price
+                    hotelPrice: price,
                 });
                 url = `${BASE_URL}/booking/hotel`;
             }
@@ -79,39 +84,25 @@ const BookingForm = ({ item, type, avgRating }) => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-                body: JSON.stringify(bookingData)
+                body: JSON.stringify(bookingData),
             });
 
             const result = await res.json();
             if (!res.ok) return alert(result.message);
-
             const bookingId = result?.data?._id;
             if (!bookingId) return alert("Booking failed.");
-
-            // 2. Gửi request tạo session thanh toán
-            const paymentPayload = {
-                bookingId,
-                userId: booking.userId,
-                price: totalAmount,
-                type,
-                name,
-            };
 
             const resPayment = await fetch(`${BASE_URL}/payments`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-                body: JSON.stringify(paymentPayload),
+                body: JSON.stringify({ bookingId, userId: booking.userId, price: totalAmount, type, name }),
             });
 
             const paymentResult = await resPayment.json();
-
-            if (!resPayment.ok || !paymentResult.session?.url) {
-                return alert("Payment failed. Please try again.");
-            }
+            if (!resPayment.ok || !paymentResult.session?.url) return alert("Payment failed. Please try again.");
 
             window.location.href = paymentResult.session.url;
-
         } catch (err) {
             console.error("Booking Error:", err);
             alert("Something went wrong.");
@@ -119,63 +110,54 @@ const BookingForm = ({ item, type, avgRating }) => {
     };
 
     return (
-        <div className="booking">
-            <div className="booking__top d-flex align-items-center justify-content-between">
-                <h3>${price} <span>{type === 'tour' ? '/per person' : '/per night'}</span></h3>
-                <span className="tour__rating d-flex align-items-center">
-                    {type === 'tour' && avgRating > 0 && (
-                        <span className="tour__rating d-flex align-items-center">
-                            <i className="ri-star-fill"></i> {avgRating}
-                        </span>
-                    )}
-                </span>
+        <Paper elevation={3} sx={{ p: 3, borderRadius: 2, position: 'sticky', top: 80, fontFamily: 'Mulish' }}>
+            <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
+                <Typography variant="h5" fontWeight={700} sx={{ fontFamily: 'Mulish' }}>
+                    ${price} <Typography variant="body1" component="span" sx={{ fontFamily: 'Mulish' }}>{type === 'tour' ? '/per person' : '/per night'}</Typography>
+                </Typography>
+                {(type === 'tour' || type === 'hotel') && avgRating > 0 && (
+                    <Stack direction="row" alignItems="center" spacing={0.5}>
+                        <StarIcon sx={{ color: 'gold' }} />
+                        <Typography variant="body2" sx={{ fontFamily: 'Mulish' }}>{avgRating}</Typography>
+                    </Stack>
+                )}
+            </Stack>
 
-            </div>
-
-            <div className="booking__form">
-                <h5>Information</h5>
-                <Form className="booking__info-form">
-                    <FormGroup>
-                        <input type="text" placeholder="Full Name" id="fullName" required onChange={handleChange} />
-                    </FormGroup>
-                    <FormGroup>
-                        <input type="text" placeholder="Phone" id="phone" required onChange={handleChange} />
-                    </FormGroup>
-                    <FormGroup className="d-flex align-items-center gap-3">
-                        <input type="date" id="bookAt" required onChange={handleChange} />
+            <Box mb={4}>
+                <Typography variant="h6" mt={5} mb={2} fontWeight={700} sx={{ fontFamily: 'Mulish' }}>Information</Typography>
+                <Stack spacing={5}>
+                    <TextField variant="standard" id="fullName" label="Full Name" fullWidth onChange={handleChange} sx={{ fontFamily: 'Mulish' }} InputProps={{ style: { fontFamily: 'Mulish' } }} />
+                    <TextField variant="standard" id="phone" label="Phone" fullWidth onChange={handleChange} sx={{ fontFamily: 'Mulish' }} InputProps={{ style: { fontFamily: 'Mulish' } }} />
+                    <Stack direction="row" spacing={5}>
+                        <TextField variant="standard" id="bookAt" label="Date" type="date" InputLabelProps={{ shrink: true }} fullWidth onChange={handleChange} sx={{ fontFamily: 'Mulish' }} InputProps={{ style: { fontFamily: 'Mulish' } }} />
                         {type === 'tour' ? (
-                            <input type="number" id="guestSize" min={1} placeholder="Guest" required onChange={handleChange} />
+                            <TextField variant="standard" id="guestSize" label="Guest" type="number" fullWidth onChange={handleChange} sx={{ fontFamily: 'Mulish' }} InputProps={{ style: { fontFamily: 'Mulish' } }} />
                         ) : (
-                            <input type="number" id="nights" min={1} placeholder="Nights" required onChange={handleChange} />
+                            <TextField variant="standard" id="nights" label="Nights" type="number" fullWidth onChange={handleChange} sx={{ fontFamily: 'Mulish' }} InputProps={{ style: { fontFamily: 'Mulish' } }} />
                         )}
-                    </FormGroup>
-                </Form>
-            </div>
+                    </Stack>
+                </Stack>
+            </Box>
 
-            <div className="booking__bottom">
-                <ListGroup>
-                    <ListGroupItem className="border-0 px-0">
-                        <h5 className="d-flex align-items-center gap-1">
-                            ${price} <i className="ri-close-line"></i> 1 {type === 'tour' ? 'person' : 'night'}
-                        </h5>
-                        <span>${price}</span>
-                    </ListGroupItem>
-                    <ListGroupItem className="border-0 px-0">
-                        <h5>Service charge</h5>
-                        <span>${serviceFee}</span>
-                    </ListGroupItem>
-                    <ListGroupItem className="border-0 px-0 total">
-                        <h5>Total</h5>
-                        <span>${totalAmount}</span>
-                    </ListGroupItem>
-                </ListGroup>
 
-                <Button className="btn primary__btn w-100 mt-4" onClick={handleClick}>
-                    Book Now
-                </Button>
-            </div>
-        </div>
+
+            <List disablePadding>
+                <ListItem sx={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'Mulish' }}>
+                    <Typography sx={{ fontFamily: 'Mulish' }}>${price} x {type === 'tour' ? booking.guestSize : booking.nights} {type === 'tour' ? 'person' : 'night'} (s)</Typography>
+                    <Typography sx={{ fontFamily: 'Mulish' }}>${type === 'tour' ? price * Number(booking.guestSize) : price * Number(booking.nights)}</Typography>
+                </ListItem>
+                <ListItem sx={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', fontFamily: 'Mulish' }}>
+                    <Typography sx={{ fontFamily: 'Mulish', fontWeight: 'bold' }}>Total</Typography>
+                    <Typography sx={{ fontFamily: 'Mulish', fontWeight: 'bold' }}>${totalAmount}</Typography>
+                </ListItem>
+            </List>
+
+            <Button variant="contained" fullWidth sx={{ mt: 3, fontFamily: 'Mulish', backgroundColor: 'var(--secondary-color)', '&:hover': { backgroundColor: '#71aea3' } }} onClick={handleClick}>
+                Book Now
+            </Button>
+        </Paper>
     );
 };
 
 export default BookingForm;
+

@@ -1,11 +1,19 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
-import { Box, Typography, CircularProgress, Card, CardMedia, Chip, IconButton, Tooltip } from "@mui/material";
+import {
+    Box,
+    Typography,
+    CircularProgress,
+    Card,
+    CardMedia,
+    Chip,
+    IconButton,
+    Tooltip
+} from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { AuthContext } from "../context/AuthContext";
 import { BASE_URL } from "../utils/config";
 import moment from "moment";
-import "../styles/post-detail.css";
 
 export default function PostDetail() {
     const { id } = useParams();
@@ -21,9 +29,7 @@ export default function PostDetail() {
         const fetchPost = async () => {
             try {
                 const response = await fetch(`${BASE_URL}/posts/${id}`);
-                if (!response.ok) {
-                    throw new Error("Failed to fetch post");
-                }
+                if (!response.ok) throw new Error("Failed to fetch post");
                 const data = await response.json();
                 setPost(data.data);
                 setLikeCount(data.data.likeCount);
@@ -39,11 +45,7 @@ export default function PostDetail() {
     }, [id]);
 
     useEffect(() => {
-        if (currentUser && likedUsers.includes(currentUser._id)) {
-            setIsLiked(true);
-        } else {
-            setIsLiked(false);
-        }
+        setIsLiked(currentUser && likedUsers.includes(currentUser._id));
     }, [currentUser, likedUsers]);
 
     const onLikeBtnClick = async () => {
@@ -60,10 +62,7 @@ export default function PostDetail() {
                 body: JSON.stringify({ userId: currentUser._id })
             });
 
-            if (!response.ok) {
-                throw new Error("Failed to like/unlike post");
-            }
-
+            if (!response.ok) throw new Error("Failed to like/unlike post");
             const updatedPost = await response.json();
             setLikeCount(updatedPost.data.likeCount);
             setLikedUsers(updatedPost.data.likedUsers);
@@ -73,24 +72,54 @@ export default function PostDetail() {
     };
 
     if (loading) return <CircularProgress />;
-    if (error) return <Typography color="error">{error}</Typography>;
-    if (!post) return <Typography>Không tìm thấy bài viết</Typography>;
+    if (error) return <Typography color="error" sx={{ fontFamily: 'Mulish' }}>{error}</Typography>;
+    if (!post) return <Typography sx={{ fontFamily: 'Mulish' }}>Không tìm thấy bài viết</Typography>;
 
     return (
-        <Box className="post-container">
-            <Typography variant="h4" sx={{ fontWeight: "bold" }} className="post-title">{post.title}</Typography>
+        <Box
+            sx={{
+                width: '70%',
+                margin: 'auto',
+                padding: 3,
+                backgroundColor: '#fff',
+                fontFamily: 'Mulish'
+            }}
+        >
+            <Typography
+                variant="h4"
+                sx={{
+                    fontWeight: 'bold',
+                    fontSize: 40,
+                    color: '#222',
+                    mb: 1
+                }}
+            >
+                {post.title}
+            </Typography>
 
-            {/* Hàng chứa ngày đăng và số lượt like */}
-            <Box className="post-info">
-                <Chip className="post-date"
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    mt: 1
+                }}
+            >
+                <Chip
                     label={moment(post.createdAt).format("DD/MM/YYYY")}
-                    sx={{ backgroundColor: "#F1F3F4", fontSize: "0.9rem", fontWeight: 500 }}
+                    sx={{
+                        backgroundColor: "#F1F3F4",
+                        fontSize: "0.9rem",
+                        fontWeight: 500,
+                        padding: '6px 12px',
+                        borderRadius: '16px'
+                    }}
                 />
-                <Box className="post-likes">
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Tooltip title={isLiked ? "Unlike" : "Like"}>
                         <IconButton onClick={onLikeBtnClick} color={isLiked ? "error" : "default"}>
                             <FavoriteIcon />
-                            <Typography component="span" sx={{ marginLeft: 0.5 }}>
+                            <Typography component="span" sx={{ ml: 0.5 }}>
                                 {likeCount}
                             </Typography>
                         </IconButton>
@@ -99,12 +128,35 @@ export default function PostDetail() {
             </Box>
 
             {post.photo && (
-                <Card className="post-image">
-                    <CardMedia component="img" image={post.photo} alt={post.title} />
+                <Card
+                    sx={{
+                        width: '100%',
+                        maxHeight: 450,
+                        objectFit: 'cover',
+                        borderRadius: 2,
+                        mt: 4,
+                        mb: 4
+                    }}
+                >
+                    <CardMedia
+                        component="img"
+                        image={post.photo}
+                        alt={post.title}
+                        sx={{ height: '100%', objectFit: 'cover' }}
+                    />
                 </Card>
             )}
 
-            <Typography className="post-content">{post.content}</Typography>
+            <Typography
+                sx={{
+                    mt: 2,
+                    fontSize: 18,
+                    lineHeight: 1.6,
+                    color: '#444'
+                }}
+            >
+                {post.content}
+            </Typography>
         </Box>
     );
 }

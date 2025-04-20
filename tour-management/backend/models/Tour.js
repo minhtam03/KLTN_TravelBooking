@@ -72,6 +72,11 @@ const tourSchema = new mongoose.Schema(
       type: [Number],
       default: [],
     },
+    highlights: {
+      type: [String],
+      required: false,
+      default: []
+    },
   },
   { timestamps: true }
 );

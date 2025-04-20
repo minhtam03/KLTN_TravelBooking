@@ -12,7 +12,7 @@ const BookingDetail = () => {
     const [booking, setBooking] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const serviceFee = 10
+    const serviceFee = 0
 
     useEffect(() => {
         const fetchBookingDetail = async () => {
