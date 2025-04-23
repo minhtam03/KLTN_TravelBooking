@@ -74,6 +74,13 @@ export const tourInputs = [
         name: "desc",
     },
     {
+        id: "highlights",
+        label: "Highlights",
+        type: "textarea",
+        placeholder: "A beautiful tour with amazing experiences...",
+        name: "highlights",
+    },
+    {
         id: "duration",
         label: "Duration (days)",
         type: "number",
@@ -178,7 +185,7 @@ export const hotelInputs = [
     },
     {
         id: "amenities",
-        label: "Amenities (comma separated)",
+        label: "Amenities",
         type: "text",
         placeholder: "Wifi, Pool, Spa, Gym",
         name: "amenities",

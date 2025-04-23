@@ -67,6 +67,7 @@ const TourCard = ({ tour }) => {
                     fontWeight={700}
                     sx={{
                         fontSize: '1.2rem',
+                        height: '3.6em',
                         mb: 1,
                         fontFamily: 'Mulish, sans-serif',
                         '& a': {

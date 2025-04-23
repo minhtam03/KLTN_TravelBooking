@@ -5,7 +5,16 @@ import "../single/single.scss";
 import { useParams } from 'react-router-dom';
 import { BASE_URL } from '../../../utils/config';
 import BookingTable from '../../../components/admin/table/BookingTable';
-
+import {
+    Grid,
+    Box,
+    Typography,
+    TextField,
+    Button,
+    Paper,
+    Divider, List,
+    ListItem,
+} from '@mui/material';
 const SingleFlight = () => {
     const { id } = useParams();
     const [flight, setFlight] = useState(null);
@@ -65,31 +74,126 @@ const SingleFlight = () => {
                         ) : error ? (
                             <p>Error: {error}</p>
                         ) : (
-                            <div className="item">
+                            // <div className="item">
 
-                                <div className="details">
-                                    <h1 className="itemTitle">{flight?.flightNumber || "Unknown"}</h1>
+                            //     <div className="details">
+                            //         <h1 className="itemTitle">{flight?.flightNumber || "Unknown"}</h1>
 
-                                    <div className="detailItem"><span className="itemKey">Airline:</span><span className="itemValue">{flight?.airline}</span></div>
-                                    <div className="detailItem"><span className="itemKey">Flight Number:</span><span className="itemValue">{flight?.flightNumber}</span></div>
-                                    <div className="detailItem"><span className="itemKey">From:</span><span className="itemValue">{flight?.departureCity}</span></div>
-                                    <div className="detailItem"><span className="itemKey">To:</span><span className="itemValue">{flight?.arrivalCity}</span></div>
-                                    <div className="detailItem"><span className="itemKey">Trip Type:</span><span className="itemValue">{flight?.tripType}</span></div>
-                                    <div className="detailItem"><span className="itemKey">Departure Date:</span><span className="itemValue">{flight?.departureDate?.slice(0, 10)}</span></div>
-                                    <div className="detailItem"><span className="itemKey">Departure Time:</span><span className="itemValue">{flight?.departureTime}</span></div>
+                            //         <div className="detailItem"><span className="itemKey">Airline:</span><span className="itemValue">{flight?.airline}</span></div>
+                            //         <div className="detailItem"><span className="itemKey">Flight Number:</span><span className="itemValue">{flight?.flightNumber}</span></div>
+                            //         <div className="detailItem"><span className="itemKey">From:</span><span className="itemValue">{flight?.departureCity}</span></div>
+                            //         <div className="detailItem"><span className="itemKey">To:</span><span className="itemValue">{flight?.arrivalCity}</span></div>
+                            //         <div className="detailItem"><span className="itemKey">Trip Type:</span><span className="itemValue">{flight?.tripType}</span></div>
+                            //         <div className="detailItem"><span className="itemKey">Departure Date:</span><span className="itemValue">{flight?.departureDate?.slice(0, 10)}</span></div>
+                            //         <div className="detailItem"><span className="itemKey">Departure Time:</span><span className="itemValue">{flight?.departureTime}</span></div>
 
-                                    {flight?.tripType === "round-trip" && (
-                                        <>
-                                            <div className="detailItem"><span className="itemKey">Return Date:</span><span className="itemValue">{flight?.returnDate?.slice(0, 10) || "-"}</span></div>
-                                            <div className="detailItem"><span className="itemKey">Return Time:</span><span className="itemValue">{flight?.returnTime || "-"}</span></div>
-                                        </>
-                                    )}
+                            //         {flight?.tripType === "round-trip" && (
+                            //             <>
+                            //                 <div className="detailItem"><span className="itemKey">Return Date:</span><span className="itemValue">{flight?.returnDate?.slice(0, 10) || "-"}</span></div>
+                            //                 <div className="detailItem"><span className="itemKey">Return Time:</span><span className="itemValue">{flight?.returnTime || "-"}</span></div>
+                            //             </>
+                            //         )}
 
-                                    <div className="detailItem"><span className="itemKey">Class:</span><span className="itemValue">{flight?.class}</span></div>
-                                    <div className="detailItem"><span className="itemKey">Aircraft:</span><span className="itemValue">{flight?.airplaneType}</span></div>
-                                    <div className="detailItem"><span className="itemKey">Price:</span><span className="itemValue">{flight?.price} $</span></div>
-                                </div>
-                            </div>
+                            //         <div className="detailItem"><span className="itemKey">Class:</span><span className="itemValue">{flight?.class}</span></div>
+                            //         <div className="detailItem"><span className="itemKey">Aircraft:</span><span className="itemValue">{flight?.airplaneType}</span></div>
+                            //         <div className="detailItem"><span className="itemKey">Price:</span><span className="itemValue">{flight?.price} $</span></div>
+                            //     </div>
+                            // </div>
+                            <Grid item xs={12} md={7}>
+                                <Paper elevation={3} sx={{ padding: 3, borderRadius: 2, fontFamily: 'Mulish' }}>
+                                    {/* Ảnh chuyến bay */}
+                                    <Box sx={{ mb: 2 }}>
+                                        <img
+                                            src={flight.photo || 'https://www.libertytravel.com/sites/default/files/styles/full_size/public/flight-hero.jpg?itok=LKyRwKDq'} // dùng ảnh mặc định nếu không có
+                                            alt="Flight"
+                                            style={{
+                                                width: '100%',
+                                                height: 200,
+                                                objectFit: 'cover',
+                                                borderRadius: 12,
+                                            }}
+                                        />
+                                    </Box>
+
+                                    {/* Tiêu đề */}
+                                    {/* <Typography variant="h6" fontWeight={700} gutterBottom sx={{ fontFamily: 'Mulish' }}>
+                                        Flight Information
+                                    </Typography> */}
+
+                                    {/* Thông tin 2 cột */}
+                                    <Box component={Grid} container spacing={1} mt={2}>
+                                        <Grid item xs={5}>
+                                            <Typography fontWeight={600} sx={{ fontFamily: 'Mulish' }}>Flight Airline:</Typography>
+                                        </Grid>
+                                        <Grid item xs={7}>
+                                            <Typography sx={{ fontFamily: 'Mulish' }}>{flight.airline}</Typography>
+                                        </Grid>
+                                        <Grid item xs={5}>
+                                            <Typography fontWeight={600} sx={{ fontFamily: 'Mulish' }}>Flight Number:</Typography>
+                                        </Grid>
+                                        <Grid item xs={7}>
+                                            <Typography sx={{ fontFamily: 'Mulish' }}>{flight.flightNumber}</Typography>
+                                        </Grid>
+                                        <Grid item xs={5}>
+                                            <Typography fontWeight={600} sx={{ fontFamily: 'Mulish' }}>From:</Typography>
+                                        </Grid>
+                                        <Grid item xs={7}>
+                                            <Typography sx={{ fontFamily: 'Mulish' }}>{flight.departureCity}</Typography>
+                                        </Grid>
+
+                                        <Grid item xs={5}>
+                                            <Typography fontWeight={600} sx={{ fontFamily: 'Mulish' }}>To:</Typography>
+                                        </Grid>
+                                        <Grid item xs={7}>
+                                            <Typography sx={{ fontFamily: 'Mulish' }}>{flight.arrivalCity}</Typography>
+                                        </Grid>
+
+                                        <Grid item xs={5}>
+                                            <Typography fontWeight={600} sx={{ fontFamily: 'Mulish' }}>Departure:</Typography>
+                                        </Grid>
+                                        <Grid item xs={7}>
+                                            <Typography sx={{ fontFamily: 'Mulish' }}>
+                                                {new Date(flight.departureDate).toLocaleDateString()} at {flight.departureTime}
+                                            </Typography>
+                                        </Grid>
+
+                                        {flight.tripType === 'round-trip' && (
+                                            <>
+                                                <Grid item xs={5}>
+                                                    <Typography fontWeight={600} sx={{ fontFamily: 'Mulish' }}>Return:</Typography>
+                                                </Grid>
+                                                <Grid item xs={7}>
+                                                    <Typography sx={{ fontFamily: 'Mulish' }}>
+                                                        {new Date(flight.returnDate).toLocaleDateString()} at {flight.returnTime}
+                                                    </Typography>
+                                                </Grid>
+                                            </>
+                                        )}
+
+                                        <Grid item xs={5}>
+                                            <Typography fontWeight={600} sx={{ fontFamily: 'Mulish' }}>Class:</Typography>
+                                        </Grid>
+                                        <Grid item xs={7}>
+                                            <Typography sx={{ fontFamily: 'Mulish' }}>{flight.flightClass}</Typography>
+                                        </Grid>
+
+                                        <Grid item xs={5}>
+                                            <Typography fontWeight={600} sx={{ fontFamily: 'Mulish' }}>Airplane:</Typography>
+                                        </Grid>
+                                        <Grid item xs={7}>
+                                            <Typography sx={{ fontFamily: 'Mulish' }}>{flight.airplaneType}</Typography>
+                                        </Grid>
+
+                                        <Grid item xs={5}>
+                                            <Typography fontWeight={600} sx={{ fontFamily: 'Mulish' }}>Price:</Typography>
+                                        </Grid>
+                                        <Grid item xs={7}>
+                                            <Typography sx={{ fontFamily: 'Mulish' }}>${flight.price} / person</Typography>
+                                        </Grid>
+                                    </Box>
+                                </Paper>
+                            </Grid>
+
                         )}
                     </div>
                 </div>

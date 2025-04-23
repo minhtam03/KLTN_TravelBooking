@@ -31,7 +31,7 @@ const tourSchema = new mongoose.Schema(
     },
     distance: {
       type: Number,
-      required: true,
+      required: false,
     },
     photo: {
       type: String,

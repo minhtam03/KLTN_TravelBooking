@@ -137,10 +137,10 @@ const SingleTour = () => {
                                         <span className="itemValue">{tour?.address || "N/A"}</span>
                                     </div>
 
-                                    <div className="detailItem">
+                                    {/* <div className="detailItem">
                                         <span className="itemKey">Description:</span>
                                         <span className="itemValue">{tour?.desc || "N/A"}</span>
-                                    </div>
+                                    </div> */}
 
                                     <div className="detailItem">
                                         <span className="itemKey">Price:</span>
