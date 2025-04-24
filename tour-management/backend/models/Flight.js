@@ -1,22 +1,45 @@
 // import mongoose from "mongoose";
+// import { cityList } from "../utils/cities.js"; // Import danh sách tỉnh thành
 
-// // Define the flight schema
 // const flightSchema = new mongoose.Schema({
 //   departureCity: {
 //     type: String,
+//     // enum: cityList,
+//     required: true,
+//   },
+//   arrivalCity: {
+//     type: String,
+//     // enum: cityList,
 //     required: true,
 //   },
 //   flightNumber: {
 //     type: String,
 //     required: true,
 //   },
-//   arrivalCity: {
+//   tripType: {
 //     type: String,
+//     // enum: ["one-way", "round-trip"],
 //     required: true,
 //   },
 //   departureDate: {
 //     type: Date,
 //     required: true,
+//   },
+//   departureTime: {
+//     type: String,
+//     required: true,
+//   },
+//   returnDate: {
+//     type: Date,
+//     required: function () {
+//       return this.tripType === "round-trip";
+//     },
+//   },
+//   returnTime: {
+//     type: String,
+//     required: function () {
+//       return this.tripType === "round-trip";
+//     },
 //   },
 //   price: {
 //     type: Number,
@@ -26,25 +49,19 @@
 //     type: String,
 //     required: true,
 //   },
-//   flightTime: {
-//     type: String,
-//     required: true,
-//   },
-//   duration: {
-//     type: String,
-//     required: true,
-//   },
 //   airplaneType: {
 //     type: String,
 //     required: true,
 //   },
-//   class: {
+//   flightClass: {
 //     type: String,
+//     // enum: ["economy", "business", "first"],
 //     required: true,
 //   },
 // });
 
 // export default mongoose.model("Flight", flightSchema);
+
 
 import mongoose from "mongoose";
 import { cityList } from "../utils/cities.js"; // Import danh sách tỉnh thành
@@ -52,12 +69,10 @@ import { cityList } from "../utils/cities.js"; // Import danh sách tỉnh thàn
 const flightSchema = new mongoose.Schema({
   departureCity: {
     type: String,
-    enum: cityList,
     required: true,
   },
   arrivalCity: {
     type: String,
-    enum: cityList,
     required: true,
   },
   flightNumber: {
@@ -93,19 +108,19 @@ const flightSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  airline: {
+  airline: {   // hãng máy bay
     type: String,
     required: true,
   },
-  airplaneType: {
+  airplaneType: {   // loại máy bay
     type: String,
     required: true,
   },
   flightClass: {
     type: String,
-    enum: ["economy", "business", "first"],
     required: true,
   },
 });
 
 export default mongoose.model("Flight", flightSchema);
+

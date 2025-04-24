@@ -122,7 +122,7 @@ const Edit = ({ inputs, title }) => {
     return (
         <Box display="flex">
             <Sidebar />
-            <Box flex={6} p={2}>
+            <Box flex={6} p={2} sx={{ ml: "240px", flexGrow: 1 }}>
                 <Navbar />
                 <Typography
                     variant="h6"

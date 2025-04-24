@@ -1,19 +1,217 @@
-import "./widget.scss";
+// import "./widget.scss";
+// import { useState, useEffect } from "react";
+// import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+// import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+// import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
+// import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
+// import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+// import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
+// import { BASE_URL } from "../../../utils/config";
+// import { useNavigate, Link } from "react-router-dom";
+// import { faL } from "@fortawesome/free-solid-svg-icons";
+
+// const Widget = ({ type }) => {
+//     const navigate = useNavigate()
+//     const [data, setData] = useState(null);
+//     const [growth, setGrowth] = useState(null);
+
+//     useEffect(() => {
+//         const fetchData = async () => {
+//             try {
+//                 const res = await fetch(`${BASE_URL}/stats/widget-data`);
+//                 if (!res.ok) throw new Error("Failed to fetch widget data");
+//                 const result = await res.json();
+//                 setData(result.data);
+//             } catch (error) {
+//                 console.error("Error fetching widget data:", error);
+//             }
+//         };
+//         fetchData();
+//     }, []);
+
+//     // useEffect(() => {
+//     //     const fetchGrowth = async () => {
+//     //         try {
+//     //             const res = await fetch(`${BASE_URL}/stats/growth`);
+//     //             if (!res.ok) throw new Error("Failed to fetch growth");
+//     //             const result = await res.json();
+//     //             setGrowth(result.data[type]);
+//     //         } catch (error) {
+//     //             console.error("Error fetching user growth:", error);
+//     //         }
+//     //     };
+//     //     fetchGrowth();
+//     // }, [type]);
+
+//     let widgetData;
+
+//     if (!data) {
+//         return <div>Loading...</div>;
+//     }
+
+//     switch (type) {
+//         case "user":
+//             widgetData = {
+//                 title: "USERS",
+//                 isMoney: false,
+//                 amount: data.user,
+//                 link: "See all users",
+//                 url: "/admin/users",
+//                 icon: (
+//                     <PersonOutlinedIcon
+//                         className="icon"
+//                         style={{
+//                             color: "crimson",
+//                             backgroundColor: "rgba(255, 0, 0, 0.2)",
+//                         }}
+//                     />
+//                 ),
+//             };
+//             break;
+//         // case "booking":
+//         //     widgetData = {
+//         //         title: "BOOKINGS",
+//         //         isMoney: false,
+//         //         amount: data.booking,
+//         //         link: "View all bookings",
+//         //         url: "/admin/bookings",
+//         //         icon: (
+//         //             <ShoppingCartOutlinedIcon
+//         //                 className="icon"
+//         //                 style={{
+//         //                     backgroundColor: "rgba(218, 165, 32, 0.2)",
+//         //                     color: "goldenrod",
+//         //                 }}
+//         //             />
+//         //         ),
+//         //     };
+//         //     break;
+
+//         case "tour":
+//             widgetData = {
+//                 title: "TOURS",
+//                 isMoney: false,
+//                 amount: data.tour,
+//                 link: "See all tours",
+//                 url: "/admin/tours",
+//                 icon: (
+//                     <AccountBalanceWalletOutlinedIcon
+//                         className="icon"
+//                         style={{
+//                             backgroundColor: "rgba(128, 0, 128, 0.2)",
+//                             color: "purple",
+//                         }}
+//                     />
+//                 ),
+//             };
+//             break;
+
+//         case "hotel":
+//             widgetData = {
+//                 title: "HOTELS",
+//                 isMoney: false,
+//                 amount: data.hotel,
+//                 link: "See all hotels",
+//                 url: "/admin/hotels",
+//                 icon: (
+//                     <AccountBalanceWalletOutlinedIcon
+//                         className="icon"
+//                         style={{
+//                             backgroundColor: "rgba(128, 0, 128, 0.2)",
+//                             color: "purple",
+//                         }}
+//                     />
+//                 ),
+//             };
+//             break;
+
+//         case "flight":
+//             widgetData = {
+//                 title: "FLIGHTS",
+//                 isMoney: false,
+//                 amount: data.flight,
+//                 link: "See all flights",
+//                 url: "/admin/flights",
+//                 icon: (
+//                     <AccountBalanceWalletOutlinedIcon
+//                         className="icon"
+//                         style={{
+//                             backgroundColor: "rgba(128, 0, 128, 0.2)",
+//                             color: "purple",
+//                         }}
+//                     />
+//                 ),
+//             };
+//             break;
+//         case "earning":
+//             widgetData = {
+//                 title: "Revenue",
+//                 isMoney: true,
+//                 amount: data.earning,
+//                 link: "View Revenue",
+//                 icon: (
+//                     <MonetizationOnOutlinedIcon
+//                         className="icon"
+//                         style={{ backgroundColor: "rgba(0, 128, 0, 0.2)", color: "green" }}
+//                     />
+//                 ),
+//             };
+//             break;
+//         default:
+//             break;
+//     }
+//     // const growthClass = growth !== null && growth < 0 ? "negative" : "positive";
+//     // const displayGrowth = growth !== null ? Math.abs(growth) : "Loading...";
+//     // const GrowthIcon = growth < 0 ? KeyboardArrowDownIcon : KeyboardArrowUpIcon;
+
+//     return (
+//         <div className="widget">
+//             <div className="left">
+//                 <span className="title">{widgetData.title}</span>
+//                 <span className="counter">
+//                     {widgetData.isMoney && "$"} {widgetData.amount}
+//                 </span>
+//                 <span>
+//                     <Link to={widgetData.url} className="link">
+//                         {widgetData.link}
+//                     </Link>
+//                 </span>
+//             </div>
+//             {/* <div className="right">
+//                 <div className={`percentage ${growthClass}`}>
+//                     <GrowthIcon />
+//                     {displayGrowth}%
+//                 </div>
+//                 {widgetData.icon}
+//             </div> */}
+
+//             <div className="right">
+
+//                 {widgetData.icon}
+//             </div>
+//         </div>
+//     );
+// };
+
+// export default Widget;
+
 import { useState, useEffect } from "react";
+import { Box, Typography, Card, CardContent, Link as MuiLink } from "@mui/material";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
-import { BASE_URL } from "../../../utils/config";
 import { useNavigate, Link } from "react-router-dom";
-import { faL } from "@fortawesome/free-solid-svg-icons";
+import { BASE_URL } from "../../../utils/config";
+import TourIcon from '@mui/icons-material/Tour';
+import HotelIcon from '@mui/icons-material/Hotel';
+import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 
 const Widget = ({ type }) => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const [data, setData] = useState(null);
-    const [growth, setGrowth] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -29,26 +227,9 @@ const Widget = ({ type }) => {
         fetchData();
     }, []);
 
-    // useEffect(() => {
-    //     const fetchGrowth = async () => {
-    //         try {
-    //             const res = await fetch(`${BASE_URL}/stats/growth`);
-    //             if (!res.ok) throw new Error("Failed to fetch growth");
-    //             const result = await res.json();
-    //             setGrowth(result.data[type]);
-    //         } catch (error) {
-    //             console.error("Error fetching user growth:", error);
-    //         }
-    //     };
-    //     fetchGrowth();
-    // }, [type]);
+    if (!data) return <div>Loading...</div>;
 
     let widgetData;
-
-    if (!data) {
-        return <div>Loading...</div>;
-    }
-
     switch (type) {
         case "user":
             widgetData = {
@@ -57,36 +238,9 @@ const Widget = ({ type }) => {
                 amount: data.user,
                 link: "See all users",
                 url: "/admin/users",
-                icon: (
-                    <PersonOutlinedIcon
-                        className="icon"
-                        style={{
-                            color: "crimson",
-                            backgroundColor: "rgba(255, 0, 0, 0.2)",
-                        }}
-                    />
-                ),
+                icon: <PersonOutlinedIcon sx={{ bgcolor: "rgba(255, 0, 0, 0.2)", color: "crimson", borderRadius: 2, p: 1 }} />
             };
             break;
-        // case "booking":
-        //     widgetData = {
-        //         title: "BOOKINGS",
-        //         isMoney: false,
-        //         amount: data.booking,
-        //         link: "View all bookings",
-        //         url: "/admin/bookings",
-        //         icon: (
-        //             <ShoppingCartOutlinedIcon
-        //                 className="icon"
-        //                 style={{
-        //                     backgroundColor: "rgba(218, 165, 32, 0.2)",
-        //                     color: "goldenrod",
-        //                 }}
-        //             />
-        //         ),
-        //     };
-        //     break;
-
         case "tour":
             widgetData = {
                 title: "TOURS",
@@ -94,18 +248,9 @@ const Widget = ({ type }) => {
                 amount: data.tour,
                 link: "See all tours",
                 url: "/admin/tours",
-                icon: (
-                    <AccountBalanceWalletOutlinedIcon
-                        className="icon"
-                        style={{
-                            backgroundColor: "rgba(128, 0, 128, 0.2)",
-                            color: "purple",
-                        }}
-                    />
-                ),
+                icon: <TourIcon sx={{ bgcolor: "rgba(128, 0, 128, 0.2)", color: "purple", borderRadius: 2, p: 1 }} />
             };
             break;
-
         case "hotel":
             widgetData = {
                 title: "HOTELS",
@@ -113,18 +258,9 @@ const Widget = ({ type }) => {
                 amount: data.hotel,
                 link: "See all hotels",
                 url: "/admin/hotels",
-                icon: (
-                    <AccountBalanceWalletOutlinedIcon
-                        className="icon"
-                        style={{
-                            backgroundColor: "rgba(128, 0, 128, 0.2)",
-                            color: "purple",
-                        }}
-                    />
-                ),
+                icon: <HotelIcon sx={{ bgcolor: "rgba(255, 0, 0, 0.2)", color: "purple", borderRadius: 2, p: 1 }} />
             };
             break;
-
         case "flight":
             widgetData = {
                 title: "FLIGHTS",
@@ -132,15 +268,7 @@ const Widget = ({ type }) => {
                 amount: data.flight,
                 link: "See all flights",
                 url: "/admin/flights",
-                icon: (
-                    <AccountBalanceWalletOutlinedIcon
-                        className="icon"
-                        style={{
-                            backgroundColor: "rgba(128, 0, 128, 0.2)",
-                            color: "purple",
-                        }}
-                    />
-                ),
+                icon: <FlightTakeoffIcon sx={{ bgcolor: "rgba(128, 0, 128, 0.2)", color: "purple", borderRadius: 2, p: 1 }} />
             };
             break;
         case "earning":
@@ -149,49 +277,51 @@ const Widget = ({ type }) => {
                 isMoney: true,
                 amount: data.earning,
                 link: "View Revenue",
-                icon: (
-                    <MonetizationOnOutlinedIcon
-                        className="icon"
-                        style={{ backgroundColor: "rgba(0, 128, 0, 0.2)", color: "green" }}
-                    />
-                ),
+                icon: <MonetizationOnOutlinedIcon sx={{ bgcolor: "rgba(0, 128, 0, 0.2)", color: "green", borderRadius: 2, p: 1 }} />
             };
             break;
         default:
             break;
     }
-    // const growthClass = growth !== null && growth < 0 ? "negative" : "positive";
-    // const displayGrowth = growth !== null ? Math.abs(growth) : "Loading...";
-    // const GrowthIcon = growth < 0 ? KeyboardArrowDownIcon : KeyboardArrowUpIcon;
 
     return (
-        <div className="widget">
-            <div className="left">
-                <span className="title">{widgetData.title}</span>
-                <span className="counter">
+        <Card sx={{
+            minWidth: 250,
+            borderRadius: 3, p: 2, boxShadow: 3,
+            display: "flex", justifyContent: "space-between",
+            alignItems: "center",
+            // bgcolor: "rgb(236, 245, 244)",
+        }}>
+            <Box>
+                <Typography variant="subtitle2" fontWeight={800} color="text.secondary">
+                    {widgetData.title}
+                </Typography>
+                <Typography variant="h5" fontWeight={700} mt={1}>
                     {widgetData.isMoney && "$"} {widgetData.amount}
-                </span>
-                <span>
-                    <Link to={widgetData.url} className="link">
-                        {widgetData.link}
-                    </Link>
-                </span>
-            </div>
-            {/* <div className="right">
-                <div className={`percentage ${growthClass}`}>
-                    <GrowthIcon />
-                    {displayGrowth}%
-                </div>
+                </Typography>
+                <MuiLink
+                    component={Link}
+                    to={widgetData.url}
+                    underline="none"
+                    sx={{
+                        fontSize: 14,
+                        color: "text.secondary",
+                        mt: 1,
+                        display: "inline-block",
+                        "&:hover": {
+                            color: "black",
+                        },
+                        fontFamily: "Mulish"
+                    }}
+                >
+                    {widgetData.link}
+                </MuiLink>
+            </Box>
+            <Box>
                 {widgetData.icon}
-            </div> */}
-
-            <div className="right">
-
-                {widgetData.icon}
-            </div>
-        </div>
+            </Box>
+        </Card>
     );
 };
 
 export default Widget;
-

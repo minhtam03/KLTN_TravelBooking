@@ -1,123 +1,163 @@
-import "./sidebar.scss";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import CreditCardIcon from "@mui/icons-material/CreditCard";
-import StoreIcon from "@mui/icons-material/Store";
-import InsertChartIcon from "@mui/icons-material/InsertChart";
-import ArticleIcon from '@mui/icons-material/Article';
-import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import SettingsSystemDaydreamOutlinedIcon from "@mui/icons-material/SettingsSystemDaydreamOutlined";
-import PsychologyOutlinedIcon from "@mui/icons-material/PsychologyOutlined";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import React, { useContext } from "react";
+import {
+    Box,
+    Typography,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Divider,
+} from "@mui/material";
+import {
+    Dashboard as DashboardIcon,
+    PersonOutline as PersonOutlineIcon,
+    LocalShipping as LocalShippingIcon,
+    CreditCard as CreditCardIcon,
+    Store as StoreIcon,
+    Article as ArticleIcon,
+    ExitToApp as ExitToAppIcon,
+} from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
-// import { DarkModeContext } from "../../context/darkModeContext";
-import React, { useRef, useEffect, useContext } from "react";
 import { AuthContext } from "../../../context/AuthContext";
-import { Button } from "@mui/material";
 
 const Sidebar = () => {
-    // const { dispatch } = useContext();
-    const navigate = useNavigate()
-    const { user, dispatch } = useContext(AuthContext)
+    const navigate = useNavigate();
+    const { dispatch } = useContext(AuthContext);
 
     const logout = () => {
-        dispatch({ type: 'LOGOUT' })
-        navigate('/')
-    }
+        dispatch({ type: "LOGOUT" });
+        navigate("/", { replace: true });
+    };
+
+    const navItems = [
+        {
+            title: "MAIN",
+            items: [
+                { text: "Dashboard", icon: <DashboardIcon />, path: "/admin/home" },
+            ],
+        },
+        {
+            title: "LISTS",
+            items: [
+                { text: "Users", icon: <PersonOutlineIcon />, path: "/admin/users" },
+                { text: "Tours", icon: <StoreIcon />, path: "/admin/tours" },
+                { text: "Hotels", icon: <CreditCardIcon />, path: "/admin/hotels" },
+                { text: "Flight", icon: <LocalShippingIcon />, path: "/admin/flights" },
+            ],
+        },
+        {
+            title: "CONTENT",
+            items: [
+                { text: "Blogs", icon: <ArticleIcon />, path: "/admin/posts" },
+            ],
+        },
+        {
+            title: "ACCOUNT",
+            items: [
+                {
+                    text: "Logout",
+                    icon: <ExitToAppIcon />,
+                    action: logout,
+                },
+            ],
+        },
+    ];
 
     return (
-        <div className="sidebar">
-            <div className="top">
-                <Link to="/admin/home" style={{ textDecoration: "none" }}>
-                    <span className="logo">Admin</span>
-                </Link>
-            </div>
-            <hr />
-            <div className="center">
-                <ul>
-                    <p className="title">MAIN</p>
+        <Box
+            sx={{
+
+                position: "fixed",           // 👈 giữ cố định
+                top: 0,
+                left: 0,
+                width: 240,
+                height: "100vh",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                boxShadow: 3,
+                p: 2,
+                bgcolor: "#fff",             // nên có để che nền khi cố định
+                zIndex: 1200,                // để đảm bảo nổi trên nội dung
+
+            }}
+        >
+            <Box>
+                <Box sx={{
+                    mb: 2, mt: 2,
+                    borderBottom: "1px solid #ccc", // 👈 Thêm dòng này để có border dưới màu xám nhạt
+                    pb: 1,
+
+                }}>
                     <Link to="/admin/home" style={{ textDecoration: "none" }}>
-                        <li>
-                            <DashboardIcon className="icon" />
-                            <span>Dashboard</span>
-                        </li>
+                        <Typography
+                            variant="h6"
+                            color="primary"
+                            sx={{ fontWeight: "bold", pl: 1, textAlign: "center", color: "var(--secondary-color)" }}
+                        >
+                            Admin
+                        </Typography>
                     </Link>
+                </Box>
 
-                    <p className="title">LISTS</p>
-                    <Link to="/admin/users" style={{ textDecoration: "none" }}>
-                        <li>
-                            <PersonOutlineIcon className="icon" />
-                            <span>Users</span>
-                        </li>
-                    </Link>
-                    <Link to="/admin/tours" style={{ textDecoration: "none" }}>
-                        <li>
-                            <StoreIcon className="icon" />
-                            <span>Tours</span>
-                        </li>
-                    </Link>
-                    <Link to="/admin/hotels" style={{ textDecoration: "none" }}>
-                        <li>
-                            <CreditCardIcon className="icon" />
-                            <span>Hotels</span>
-                        </li>
-                    </Link>
-                    <Link to="/admin/flights" style={{ textDecoration: "none" }}>
-                        <li>
-                            <LocalShippingIcon className="icon" />
-                            <span>Flight</span>
-                        </li>
-                    </Link>
+                {navItems.map((section, index) => (
+                    <Box key={index}>
+                        <Typography
+                            fontSize={12}
+                            color="textSecondary"
+                            sx={{ pl: 1, mt: 2 }}
+                        >
+                            {section.title}
+                        </Typography>
+                        <List>
+                            {section.items.map((item, i) =>
+                                item.action ? (
+                                    <ListItem
+                                        button
+                                        key={i}
+                                        onClick={item.action}
 
-                    {/* <p className="title">USEFUL</p>
-                    <li>
-                        <InsertChartIcon className="icon" />
-                        <span>Stats</span>
-                    </li> */}
+                                        sx={{
+                                            cursor: "pointer",
+                                            borderRadius: 2,
+                                            "&:hover": { backgroundColor: "rgb(223, 222, 222)" },
+                                        }}
+                                    >
+                                        <ListItemIcon>{item.icon}</ListItemIcon>
+                                        <Typography fontSize={16} fontWeight={500}>
+                                            {item.text}
+                                        </Typography>
+                                    </ListItem>
+                                ) : (
+                                    <Link
+                                        to={item.path}
+                                        key={i}
+                                        style={{ textDecoration: "none", color: "inherit" }}
+                                    >
+                                        <ListItem
+                                            button
 
-                    <p className="title">CONTENT</p>
-                    <Link to="/admin/posts" style={{ textDecoration: "none" }}>
-                        <li>
-                            <ArticleIcon className="icon" />
-                            <span>Blogs</span>
-                        </li>
-                    </Link>
-                    <p className="title">USER</p>
-                    {/* <li>
-                        <AccountCircleOutlinedIcon className="icon" />
-                        <span>Profile</span>
-                    </li> */}
-                    <li>
-                        <ExitToAppIcon className="icon" />
-                        {/* <Button onClick={logout}>
-                            Logout
-                        </Button > */}
-                        <span onClick={logout}>Logout</span>
-                    </li>
-                </ul>
-            </div>
-            <div className="bottom">
+                                            sx={{
+                                                borderRadius: 2,
+                                                "&:hover": { backgroundColor: "rgb(223, 222, 222)" },
+                                            }}
+                                        >
+                                            <ListItemIcon>{item.icon}</ListItemIcon>
+                                            <Typography fontSize={16} fontWeight={500}>
+                                                {item.text}
+                                            </Typography>
+                                        </ListItem>
+                                    </Link>
+                                )
+                            )}
+                        </List>
+                        {index < navItems.length - 1 && <Divider />}
+                    </Box>
+                ))}
+            </Box>
 
-            </div>
-        </div>
-
-        // <div className="sidebar">
-        //     <div className="top">
-        //         <span className="logo">Admin</span>
-        //     </div>
-        //     <div className="center">
-        //         <ul>
-        //             <li><span>Dashboard</span></li>
-        //         </ul>
-        //     </div>
-
-        //     <div className="bottom">
-
-        //     </div>
-        // </div>
+            <Box sx={{ height: 20 }} />
+        </Box>
     );
 };
 

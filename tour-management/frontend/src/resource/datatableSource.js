@@ -8,7 +8,17 @@ export const userColumns = [
         renderCell: (params) => {
             return (
                 <div className="cellWithImg">
-                    <img className="cellImg" src={params.row.photo || "https://t4.ftcdn.net/jpg/08/75/45/97/360_F_875459719_8i7J3atGbsDoRPT0ZW0DjBpgAFVTrKAe.jpg"} alt="avatar" />
+                    <img className="cellImg" src={params.row.photo || "https://t4.ftcdn.net/jpg/08/75/45/97/360_F_875459719_8i7J3atGbsDoRPT0ZW0DjBpgAFVTrKAe.jpg"}
+                        alt="avatar"
+                        style={{
+                            width: 32,
+                            height: 32,
+                            objectFit: "cover",
+                            borderRadius: "50%",
+                            margin: "8px",
+                        }}
+
+                    />
                     {params.row.username}
                 </div>
             )
@@ -25,7 +35,16 @@ export const tourColumns = [
         renderCell: (params) => {
             return (
                 <div className="cellWithImg">
-                    <img className="cellImg" src={params.row.photo || "https://png.pngtree.com/png-vector/20221125/ourmid/pngtree-no-image-available-icon-flatvector-illustration-picture-coming-creative-vector-png-image_40968940.jpg"} alt="image" />
+                    <img className="cellImg" src={params.row.photo || "https://png.pngtree.com/png-vector/20221125/ourmid/pngtree-no-image-available-icon-flatvector-illustration-picture-coming-creative-vector-png-image_40968940.jpg"}
+                        alt="image"
+                        style={{
+                            width: 32,
+                            height: 32,
+                            objectFit: "cover",
+                            borderRadius: "50%",
+                            margin: "8px",
+                        }}
+                    />
                     {params.row.title}
                 </div>
             )
@@ -49,6 +68,13 @@ export const hotelColumns = [
                         className="cellImg"
                         src={params.row.photo || "https://png.pngtree.com/png-vector/20221125/ourmid/pngtree-no-image-available-icon-flatvector-illustration-picture-coming-creative-vector-png-image_40968940.jpg"}
                         alt="hotel"
+                        style={{
+                            width: 32,
+                            height: 32,
+                            objectFit: "cover",
+                            borderRadius: "50%",
+                            margin: "8px",
+                        }}
                     />
                     {params.row.hotelName}
                 </div>
@@ -94,7 +120,16 @@ export const postColumns = [
         renderCell: (params) => {
             return (
                 <div className="cellWithImg">
-                    <img className="cellImg" src={params.row.photo || "https://png.pngtree.com/png-vector/20221125/ourmid/pngtree-no-image-available-icon-flatvector-illustration-picture-coming-creative-vector-png-image_40968940.jpg"} alt="blog" />
+                    <img className="cellImg" src={params.row.photo || "https://png.pngtree.com/png-vector/20221125/ourmid/pngtree-no-image-available-icon-flatvector-illustration-picture-coming-creative-vector-png-image_40968940.jpg"}
+                        alt="blog"
+                        style={{
+                            width: 32,
+                            height: 32,
+                            objectFit: "cover",
+                            borderRadius: "50%",
+                            margin: "8px",
+                        }}
+                    />
                     {params.row.title}
                 </div>
             );

@@ -10,27 +10,27 @@ const quick__links = [
     display: 'Home'
   },
   {
-    path: '/about',
-    display: 'About'
+    path: '/blog',
+    display: 'Blog'
   },
   {
-    path: '/tours',
-    display: 'Tours'
+    path: '/suggestion',
+    display: 'Suggestion'
   }
 ]
 
 const quick__links2 = [
   {
-    path: '/gallery',
-    display: 'Gallery'
+    path: '/tours',
+    display: 'Tours'
   },
   {
-    path: '/login',
-    display: 'Login'
+    path: '/stays',
+    display: 'Stays'
   },
   {
-    path: '/register',
-    display: 'Register'
+    path: '/flights',
+    display: 'Flights'
   }
 ]
 

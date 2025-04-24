@@ -1,18 +1,146 @@
+// import React, { useState, useEffect } from 'react'
+// import { Link, useLocation } from 'react-router-dom'
+// import { DataGrid } from '@mui/x-data-grid'
+// import './datatable.scss'
+// import { BASE_URL } from '../../../utils/config'
+// import useFetch from '../../../hooks/useFetch'
+
+
+// const Datatable = ({ columns }) => {
+//     const location = useLocation()
+//     const path = location.pathname.split("/")[2]
+//     const [rows, setRows] = useState([])
+//     const [page, setPage] = useState(0);
+//     // const { data: rows, loading, error } = useFetch(`${BASE_URL}/${path}`)
+
+
+//     const handleDelete = async (id) => {
+//         const confirmDelete = window.confirm("Are you sure you want to delete?");
+//         if (!confirmDelete) return;
+
+//         try {
+//             const res = await fetch(`${BASE_URL}/${path}/${id}`, {
+//                 method: "DELETE",
+//                 credentials: "include",
+//             });
+
+//             if (!res.ok) {
+//                 throw new Error("Failed to delete");
+//             }
+
+//             setRows((prevRows) => prevRows.filter((row) => row._id !== id));
+
+//             await new Promise(resolve => setTimeout(resolve, 100));
+
+//             // alert("User deleted successfully!");
+
+//         } catch (error) {
+//             console.error(error);
+//             alert("Error deleting");
+//         }
+//     }
+
+
+//     useEffect(() => {
+//         const fetchData = async () => {
+//             try {
+//                 const res = await fetch(`${BASE_URL}/${path}`, {
+//                     method: 'GET',
+//                     credentials: 'include',
+
+//                 })
+//                 if (!res.ok) {
+//                     throw new Error('Failed to fetch data')
+//                 }
+//                 const result = await res.json()
+//                 setRows(result.data)
+//                 setPage(0);
+//             } catch (error) {
+//                 console.error(error)
+//             }
+//         }
+
+//         fetchData()
+//     }, [path])
+
+//     const actionColumn = [
+//         {
+//             field: 'action',
+//             headerName: 'Action',
+//             width: 200,
+//             renderCell: (params) => {
+//                 return (
+//                     <div className="cellAction">
+//                         <Link to={`/admin/${path}/${params.row._id}`} style={{ textDecoration: 'none' }}>
+//                             <div className="viewButton">View</div>
+//                         </Link>
+//                         <div className="deleteButton"
+//                             onClick={() => handleDelete(params.row._id)}
+//                         >
+//                             Delete
+//                         </div>
+
+//                         <Link to={`/admin/${path}/${params.row._id}/edit`} style={{ textDecoration: 'none' }}>
+//                             <div className="editButton">Edit</div>
+//                         </Link>
+//                     </div>
+//                 )
+//             },
+//         },
+//     ]
+
+
+//     return (
+//         <div className='datatable'>
+//             <div className="datatableTitle">
+//                 <Link to={`/admin/${path}/new`} className="link">
+//                     Add new {path.endsWith("s") ? path.slice(0, -1) : path}
+//                 </Link>
+//             </div>
+
+//             <DataGrid
+//                 key={path}
+//                 className="datagrid"
+//                 rows={rows}
+//                 columns={columns.concat(actionColumn)}
+
+//                 getRowId={(row) => row._id}
+
+//                 initialState={{
+//                     pagination: {
+//                         paginationModel: {
+//                             pageSize: 8,
+//                             page: 0,
+//                         },
+//                     },
+//                 }}
+//                 pageSizeOptions={[8]}
+//                 checkboxSelection
+//                 disableRowSelectionOnClick
+//             />
+//         </div>
+//     )
+// }
+
+// export default Datatable
+
+
 import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { DataGrid } from '@mui/x-data-grid'
-import './datatable.scss'
+import { Box, Button, Typography, Stack } from '@mui/material'
 import { BASE_URL } from '../../../utils/config'
-import useFetch from '../../../hooks/useFetch'
-
+import { IconButton, Tooltip } from '@mui/material'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
+import AddIcon from '@mui/icons-material/Add'
 
 const Datatable = ({ columns }) => {
     const location = useLocation()
     const path = location.pathname.split("/")[2]
     const [rows, setRows] = useState([])
-    const [page, setPage] = useState(0);
-    // const { data: rows, loading, error } = useFetch(`${BASE_URL}/${path}`)
-
+    const [page, setPage] = useState(0)
 
     const handleDelete = async (id) => {
         const confirmDelete = window.confirm("Are you sure you want to delete?");
@@ -24,22 +152,17 @@ const Datatable = ({ columns }) => {
                 credentials: "include",
             });
 
-            if (!res.ok) {
-                throw new Error("Failed to delete");
-            }
+            if (!res.ok) throw new Error("Failed to delete")
 
-            setRows((prevRows) => prevRows.filter((row) => row._id !== id));
+            setRows((prevRows) => prevRows.filter((row) => row._id !== id))
 
-            await new Promise(resolve => setTimeout(resolve, 100));
-
-            // alert("User deleted successfully!");
+            await new Promise(resolve => setTimeout(resolve, 100))
 
         } catch (error) {
-            console.error(error);
-            alert("Error deleting");
+            console.error(error)
+            alert("Error deleting")
         }
     }
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -47,14 +170,11 @@ const Datatable = ({ columns }) => {
                 const res = await fetch(`${BASE_URL}/${path}`, {
                     method: 'GET',
                     credentials: 'include',
-
                 })
-                if (!res.ok) {
-                    throw new Error('Failed to fetch data')
-                }
+                if (!res.ok) throw new Error('Failed to fetch data')
                 const result = await res.json()
                 setRows(result.data)
-                setPage(0);
+                setPage(0)
             } catch (error) {
                 console.error(error)
             }
@@ -68,44 +188,84 @@ const Datatable = ({ columns }) => {
             field: 'action',
             headerName: 'Action',
             width: 200,
-            renderCell: (params) => {
-                return (
-                    <div className="cellAction">
-                        <Link to={`/admin/${path}/${params.row._id}`} style={{ textDecoration: 'none' }}>
-                            <div className="viewButton">View</div>
-                        </Link>
-                        <div className="deleteButton"
-                            onClick={() => handleDelete(params.row._id)}
+            renderCell: (params) => (
+                <Stack direction="row" spacing={1}>
+                    <Tooltip title="View">
+                        <IconButton
+                            color="info"
+                            component={Link}
+                            to={`/admin/${path}/${params.row._id}`}
+                            size="small"
                         >
-                            Delete
-                        </div>
+                            <VisibilityIcon sx={{ color: '#c7bed0' }} />
+                        </IconButton>
+                    </Tooltip>
 
-                        <Link to={`/admin/${path}/${params.row._id}/edit`} style={{ textDecoration: 'none' }}>
-                            <div className="editButton">Edit</div>
-                        </Link>
-                    </div>
-                )
-            },
+                    <Tooltip title="Edit">
+                        <IconButton
+                            color="warning"
+                            component={Link}
+                            to={`/admin/${path}/${params.row._id}/edit`}
+                            size="small"
+                        >
+                            <EditIcon sx={{ color: '#687581' }} />
+                        </IconButton>
+                    </Tooltip>
+
+                    <Tooltip title="Delete">
+                        <IconButton
+                            color="error"
+                            onClick={() => handleDelete(params.row._id)}
+                            size="small"
+                        >
+                            <DeleteIcon sx={{ color: 'rgb(210, 101, 101)' }} />
+                        </IconButton>
+                    </Tooltip>
+                </Stack>
+            )
+
         },
     ]
 
-
     return (
-        <div className='datatable'>
-            <div className="datatableTitle">
-                <Link to={`/admin/${path}/new`} className="link">
+        <Box sx={{ p: 3 }}>
+            <Box sx={{ mb: 4, display: 'flex', justifyContent: 'flex-start' }}>
+                {/* <Button
+                    variant="contained"
+                    color="primary"
+                    component={Link}
+                    to={`/admin/${path}/new`}
+                >
                     Add new {path.endsWith("s") ? path.slice(0, -1) : path}
-                </Link>
-            </div>
+                </Button> */}
+                <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    component={Link}
+                    to={`/admin/${path}/new`}
+                    sx={{
+                        borderRadius: '50px',
+                        backgroundColor: '#f5f0fa',
+                        color: '#6b46c1',
+                        textTransform: 'none',
+                        boxShadow: 3,
+                        fontSize: '1rem',
+                        '&:hover': {
+                            color: '#6b46c1',
+                            backgroundColor: '#e4d8f4',
+                            boxShadow: 4,
+                        }
+                    }}
+                >
+                    Add new {path.endsWith("s") ? path.slice(0, -1) : path}
+                </Button>
+            </Box>
 
             <DataGrid
                 key={path}
-                className="datagrid"
                 rows={rows}
                 columns={columns.concat(actionColumn)}
-
                 getRowId={(row) => row._id}
-
                 initialState={{
                     pagination: {
                         paginationModel: {
@@ -117,8 +277,27 @@ const Datatable = ({ columns }) => {
                 pageSizeOptions={[8]}
                 checkboxSelection
                 disableRowSelectionOnClick
+                autoHeight
+                sx={{
+                    backgroundColor: '#fff',
+                    borderRadius: 2,
+                    boxShadow: 3,
+                    '& .MuiDataGrid-cell:focus': {
+                        outline: 'none', // Loại bỏ border khi focus
+                    },
+                    '& .MuiDataGrid-cell:focus-within': {
+                        outline: 'none', // Khi có button hoặc input trong cell
+                    },
+                    '& .MuiDataGrid-cell--withRenderer.MuiDataGrid-cell:focus-within': {
+                        outline: 'none',
+                    },
+                    '& .MuiDataGrid-cell--editing': {
+                        outline: 'none',
+                        border: 'none',
+                    }
+                }}
             />
-        </div>
+        </Box>
     )
 }
 
