@@ -1,0 +1,182 @@
+import FlightV2 from '../models/FlightV2.js';
+import express from 'express';
+import axios from 'axios';
+import dayjs from 'dayjs';
+import { removeVietnameseTones } from '../utils/removeVietnamese.js';
+
+const airports = ["SGN", "HAN", "DAD", "CXR", "PQC", "HPH", "VII", "DLI", "UIH", "THD"];
+
+const daysToFetch = 3;
+
+export const importFlight = async (req, res) => {
+    const today = new Date();
+    const savedFlights = [];
+
+    try {
+        for (let d = 0; d < daysToFetch; d++) {
+            const date = new Date(today);
+            date.setDate(today.getDate() + d);
+            const isoDate = date.toISOString().split('T')[0] + 'T07:00:00';
+
+            for (const from of airports) {
+                for (const to of airports) {
+                    if (from === to) continue;
+
+                    const response = await axios.post('https://apiportal.ivivu.com/web_prot/flightinbound//gate/apiv1/GetFlightDepart', {
+                        roundTrip: false,
+                        fromPlace: from,
+                        toPlace: to,
+                        departDate: isoDate,
+                        returnDate: isoDate,
+                        adult: 1,
+                        child: 0,
+                        infant: 0,
+                        sources: "VietnamAirlines;VietJetAir;BambooAirways",
+                        ticketClass: null,
+                        timeIndayRecomment: "09:00",
+                        version: "2.0",
+                        flightType: "Direct"
+                    });
+
+                    const outboundGroup = response.data?.data?.[0] || {};
+                    const flights = (outboundGroup.flights || []).slice(0, 20);
+
+                    for (const f of flights) {
+                        const depart = dayjs(f.departTime);
+                        const landing = dayjs(f.landingTime);
+
+                        const flightDoc = {
+                            id: f.id,
+                            flightNumber: f.flightNumber,
+                            airline: f.airline,
+                            fromPlace: removeVietnameseTones(f.fromPlace),
+                            fromPlaceCode: f.fromPlaceCode,
+                            toPlace: removeVietnameseTones(f.toPlace),
+                            toPlaceCode: f.toPlaceCode,
+
+                            ticketType: f.ticketType,
+                            aircraftStr: f.aircraftStr,
+                            totalPrice: f.totalPrice,
+
+                            // Thời gian chuẩn
+                            departTime: f.departTime,
+                            landingTime: f.landingTime,
+                            departDate: depart.format('YYYY-MM-DD'),
+                            departTimeStr: depart.format('HH:mm'),
+                            landingDate: landing.format('YYYY-MM-DD'),
+                            landingTimeStr: landing.format('HH:mm'),
+
+                            isReturn: false
+                        };
+
+                        try {
+                            await FlightV2.updateOne({ id: f.id }, flightDoc, { upsert: true });
+                            savedFlights.push(flightDoc);
+                        } catch (e) {
+                            console.error('❌ Error saving flight:', f.id, e.message);
+                        }
+                    }
+                }
+            }
+        }
+
+        res.status(200).json({ message: '✅ Imported flights into FlightV2', count: savedFlights.length });
+    } catch (error) {
+        console.error('❌ Error importing flights:', error.message);
+        res.status(500).json({ error: 'Failed to import flights to FlightV2' });
+    }
+};
+
+
+export const getAllFlightsV2 = async (req, res) => {
+    const page = req.query.page ? parseInt(req.query.page) : null
+
+    try {
+        const flights = page !== null
+            ? await FlightV2.find().skip(page * 8).limit(8)
+            : await FlightV2.find()
+
+        res.status(200).json({
+            success: true,
+            count: flights.length,
+            message: 'Successfully retrieved flights',
+            data: flights,
+        })
+    } catch (error) {
+        res.status(404).json({
+            success: false,
+            message: 'Flights not found',
+        })
+
+    }
+}
+
+
+// export const searchFlightsV2 = async (req, res) => {
+//     const { fromPlaceCode, toPlaceCode, departDate, flightClass } = req.query;
+
+//     if (!fromPlaceCode || !toPlaceCode || !departDate) {
+//         return res.status(400).json({ error: 'Missing required fields' });
+//     }
+
+//     try {
+//         const query = {
+//             fromPlaceCode: new RegExp(fromPlaceCode, 'i'),
+//             toPlaceCode: new RegExp(toPlaceCode, 'i'),
+//             departDate: departDate, // vì trong DB là string
+//         };
+
+//         if (flightClass) {
+//             query.ticketType = new RegExp(flightClass, 'i');
+//         }
+
+//         const flights = await FlightV2.find(query).limit(50).sort({ totalPrice: 1 });
+
+//         res.status(200).json({
+//             success: true,
+//             message: "Flight search successful",
+//             data: flights,
+//         });
+//     } catch (error) {
+//         console.error("Flight search error:", error.message);
+//         res.status(500).json({
+//             success: false,
+//             message: "Internal server error",
+//         });
+//     }
+// };
+
+
+export const searchFlightsV2 = async (req, res) => {
+    const { fromPlace, toPlace, departDate, flightClass } = req.query;
+
+    if (!fromPlace || !toPlace || !departDate) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    try {
+        const query = {
+            fromPlace: new RegExp(fromPlace, 'i'),
+            toPlace: new RegExp(toPlace, 'i'),
+            departDate: departDate, // giữ nguyên kiểu string
+        };
+
+        if (flightClass) {
+            query.ticketType = new RegExp(flightClass, 'i');
+        }
+
+        const flights = await FlightV2.find(query).limit(50).sort({ totalPrice: 1 });
+
+        res.status(200).json({
+            success: true,
+            message: "Flight search successful",
+            data: flights,
+        });
+    } catch (error) {
+        console.error("Flight search error:", error.message);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+};

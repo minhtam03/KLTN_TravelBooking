@@ -1,11 +1,21 @@
+// bản cũ của fake data (chạy tốt)
+
 // import React, { useState } from 'react';
 // import {
-//     Box, TextField, MenuItem, Button, Grid,
-//     RadioGroup, FormControlLabel, Radio, IconButton, Paper
+//     Box, TextField, MenuItem, IconButton, Typography, Grid, RadioGroup, FormControlLabel, Radio
 // } from '@mui/material';
 // import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+// import SearchIcon from '@mui/icons-material/Search';
 // import { useNavigate } from 'react-router-dom';
+// import { styled } from '@mui/material/styles';
 // import { cityList } from '../../utils/cities';
+
+// const CustomRadio = styled(Radio)({
+//     color: '#ccc',
+//     '&.Mui-checked': {
+//         color: '#f06262',
+//     },
+// });
 
 // const FlightSearchBar = ({ initialValues = {} }) => {
 //     const [tripType, setTripType] = useState(initialValues.tripType || 'round-trip');
@@ -33,13 +43,6 @@
 //             flightClass,
 //         });
 
-//         // const params = new URLSearchParams();
-//         // params.append('tripType', tripType);
-//         // params.append('departureCity', departureCity);
-//         // params.append('arrivalCity', arrivalCity);
-//         // params.append('departureDate', departureDate);
-//         // params.append('class', flightClass);
-
 //         if (tripType === 'round-trip') {
 //             params.append('returnDate', returnDate);
 //         }
@@ -53,24 +56,47 @@
 //         setArrivalCity(temp);
 //     };
 
+//     const fieldStyle = {
+//         fontFamily: 'Mulish',
+//         '& input': { fontFamily: 'Mulish' },
+//         '& .MuiInputLabel-root': { fontFamily: 'Mulish' },
+//     };
+
 //     return (
-//         <Paper elevation={4} sx={{ padding: 3, borderRadius: 3, backgroundColor: '#f3f8ff' }}>
+//         <Box
+//             sx={{
+//                 p: 3,
+//                 px: 4,
+//                 borderRadius: '16px',
+//                 boxShadow: '0 12px 30px rgba(0, 128, 255, 0.1)',
+//                 width: '100%',
+//                 maxWidth: '1200px',
+
+//                 mb: 5,
+//                 mx: 'auto',
+//                 bgcolor: 'white',
+//                 fontFamily: 'Mulish, sans-serif',
+//             }}
+//         >
 //             <RadioGroup
 //                 row
 //                 value={tripType}
 //                 onChange={(e) => setTripType(e.target.value)}
 //                 sx={{ mb: 2 }}
 //             >
-//                 <FormControlLabel value="one-way" control={<Radio />} label="One-Way" />
-//                 <FormControlLabel value="round-trip" control={<Radio />} label="Round-Trip" />
+//                 <FormControlLabel value="one-way" control={<CustomRadio />} label="One-Way" />
+//                 <FormControlLabel value="round-trip" control={<CustomRadio />} label="Round-Trip" />
 //             </RadioGroup>
 
-//             <Grid container spacing={2} alignItems="center" sx={{ width: '100%', flexWrap: 'nowrap' }}>
-//                 <Grid item sx={{ flexGrow: 1 }}>
+//             <Grid container spacing={2} alignItems="center" flexWrap="nowrap">
+//                 <Grid item md>
 //                     <TextField
-//                         select fullWidth label="From"
+//                         select fullWidth
+//                         label="From"
 //                         value={departureCity}
 //                         onChange={(e) => setDepartureCity(e.target.value)}
+//                         variant="standard"
+//                         sx={fieldStyle}
 //                     >
 //                         {cityList.map((city) => (
 //                             <MenuItem key={city} value={city}>{city}</MenuItem>
@@ -79,16 +105,19 @@
 //                 </Grid>
 
 //                 <Grid item>
-//                     <IconButton onClick={handleSwapCities} color="primary">
+//                     <IconButton onClick={handleSwapCities}>
 //                         <SwapHorizIcon />
 //                     </IconButton>
 //                 </Grid>
 
-//                 <Grid item sx={{ flexGrow: 1 }}>
+//                 <Grid item md>
 //                     <TextField
-//                         select fullWidth label="To"
+//                         select fullWidth
+//                         label="To"
 //                         value={arrivalCity}
 //                         onChange={(e) => setArrivalCity(e.target.value)}
+//                         variant="standard"
+//                         sx={fieldStyle}
 //                     >
 //                         {cityList.filter((city) => city !== departureCity).map((city) => (
 //                             <MenuItem key={city} value={city}>{city}</MenuItem>
@@ -96,31 +125,42 @@
 //                     </TextField>
 //                 </Grid>
 
-//                 <Grid item sx={{ flexGrow: 1 }}>
+//                 <Grid item md>
 //                     <TextField
-//                         fullWidth type="date" label="Depart"
+//                         fullWidth
+//                         type="date"
+//                         label="Depart"
 //                         value={departureDate}
 //                         onChange={(e) => setDepartureDate(e.target.value)}
+//                         variant="standard"
 //                         InputLabelProps={{ shrink: true }}
+//                         sx={fieldStyle}
 //                     />
 //                 </Grid>
 
 //                 {tripType === 'round-trip' && (
-//                     <Grid item sx={{ flexGrow: 1 }}>
+//                     <Grid item md>
 //                         <TextField
-//                             fullWidth type="date" label="Return"
+//                             fullWidth
+//                             type="date"
+//                             label="Return"
 //                             value={returnDate}
 //                             onChange={(e) => setReturnDate(e.target.value)}
+//                             variant="standard"
 //                             InputLabelProps={{ shrink: true }}
+//                             sx={fieldStyle}
 //                         />
 //                     </Grid>
 //                 )}
 
-//                 <Grid item sx={{ flexGrow: 1 }}>
+//                 <Grid item md>
 //                     <TextField
-//                         select fullWidth label="Class"
+//                         select fullWidth
+//                         label="Class"
 //                         value={flightClass}
 //                         onChange={(e) => setFlightClass(e.target.value)}
+//                         variant="standard"
+//                         sx={fieldStyle}
 //                     >
 //                         <MenuItem value=""><em>Select class</em></MenuItem>
 //                         <MenuItem value="economy">Economy</MenuItem>
@@ -130,32 +170,36 @@
 //                 </Grid>
 
 //                 <Grid item>
-//                     <Button
-//                         variant="contained"
-//                         color="primary"
+//                     <IconButton
 //                         onClick={handleSearch}
-//                         sx={{ height: '100%' }}
+//                         sx={{
+//                             backgroundColor: 'var(--secondary-color)',
+//                             color: '#fff',
+//                             borderRadius: '10px 5px 10px 5px',
+//                             '&:hover': {
+//                                 backgroundColor: 'var(--secondary-color)',
+//                             },
+//                             height: '56px',
+//                             width: '56px'
+//                         }}
 //                     >
-//                         SEARCH
-//                     </Button>
+//                         <SearchIcon sx={{ fontSize: 24 }} />
+//                     </IconButton>
 //                 </Grid>
 //             </Grid>
-//         </Paper>
+//         </Box>
 //     );
 // };
 
 // export default FlightSearchBar;
 
+
 import React, { useState } from 'react';
 import {
-    Box, TextField, MenuItem, IconButton, Typography, Grid, RadioGroup, FormControlLabel, Radio
+    Box, TextField, MenuItem, IconButton, Grid, RadioGroup, FormControlLabel, Radio
 } from '@mui/material';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import SearchIcon from '@mui/icons-material/Search';
-import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
-import FlightLandIcon from '@mui/icons-material/FlightLand';
-import EventIcon from '@mui/icons-material/Event';
-import ClassIcon from '@mui/icons-material/Class';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { cityList } from '../../utils/cities';
@@ -168,7 +212,7 @@ const CustomRadio = styled(Radio)({
 });
 
 const FlightSearchBar = ({ initialValues = {} }) => {
-    const [tripType, setTripType] = useState(initialValues.tripType || 'round-trip');
+    const [tripType, setTripType] = useState(initialValues.tripType || 'one-way');
     const [flightClass, setFlightClass] = useState(initialValues.flightClass || '');
     const [departureCity, setDepartureCity] = useState(initialValues.departureCity || '');
     const [arrivalCity, setArrivalCity] = useState(initialValues.arrivalCity || '');
@@ -186,16 +230,18 @@ const FlightSearchBar = ({ initialValues = {} }) => {
         }
 
         const params = new URLSearchParams({
-            tripType,
-            departureCity,
-            arrivalCity,
-            departureDate,
-            flightClass,
+            fromPlace: departureCity,
+            toPlace: arrivalCity,
+            departDate: departureDate,
         });
 
-        if (tripType === 'round-trip') {
-            params.append('returnDate', returnDate);
+        if (flightClass) {
+            params.append('flightClass', flightClass);
         }
+
+        // if (tripType === 'round-trip') {
+        //     params.append('returnDate', returnDate);
+        // }
 
         navigate(`/flights/search?${params.toString()}`);
     };
@@ -221,97 +267,50 @@ const FlightSearchBar = ({ initialValues = {} }) => {
                 boxShadow: '0 12px 30px rgba(0, 128, 255, 0.1)',
                 width: '100%',
                 maxWidth: '1200px',
-
                 mb: 5,
                 mx: 'auto',
                 bgcolor: 'white',
                 fontFamily: 'Mulish, sans-serif',
             }}
         >
-            <RadioGroup
-                row
-                value={tripType}
-                onChange={(e) => setTripType(e.target.value)}
-                sx={{ mb: 2 }}
-            >
+            <RadioGroup row value={tripType} onChange={(e) => setTripType(e.target.value)} sx={{ mb: 2 }}>
                 <FormControlLabel value="one-way" control={<CustomRadio />} label="One-Way" />
                 <FormControlLabel value="round-trip" control={<CustomRadio />} label="Round-Trip" />
             </RadioGroup>
 
             <Grid container spacing={2} alignItems="center" flexWrap="nowrap">
                 <Grid item md>
-                    <TextField
-                        select fullWidth
-                        label="From"
-                        value={departureCity}
-                        onChange={(e) => setDepartureCity(e.target.value)}
-                        variant="standard"
-                        sx={fieldStyle}
-                    >
+                    <TextField select fullWidth label="From" value={departureCity} onChange={(e) => setDepartureCity(e.target.value)} variant="standard" sx={fieldStyle}>
                         {cityList.map((city) => (
-                            <MenuItem key={city} value={city}>{city}</MenuItem>
+                            <MenuItem key={city.name} value={city.name}>{city.name}</MenuItem>
                         ))}
                     </TextField>
                 </Grid>
 
                 <Grid item>
-                    <IconButton onClick={handleSwapCities}>
-                        <SwapHorizIcon />
-                    </IconButton>
+                    <IconButton onClick={handleSwapCities}><SwapHorizIcon /></IconButton>
                 </Grid>
 
                 <Grid item md>
-                    <TextField
-                        select fullWidth
-                        label="To"
-                        value={arrivalCity}
-                        onChange={(e) => setArrivalCity(e.target.value)}
-                        variant="standard"
-                        sx={fieldStyle}
-                    >
-                        {cityList.filter((city) => city !== departureCity).map((city) => (
-                            <MenuItem key={city} value={city}>{city}</MenuItem>
+                    <TextField select fullWidth label="To" value={arrivalCity} onChange={(e) => setArrivalCity(e.target.value)} variant="standard" sx={fieldStyle}>
+                        {cityList.filter((city) => city.name !== departureCity).map((city) => (
+                            <MenuItem key={city.name} value={city.name}>{city.name}</MenuItem>
                         ))}
                     </TextField>
                 </Grid>
 
                 <Grid item md>
-                    <TextField
-                        fullWidth
-                        type="date"
-                        label="Depart"
-                        value={departureDate}
-                        onChange={(e) => setDepartureDate(e.target.value)}
-                        variant="standard"
-                        InputLabelProps={{ shrink: true }}
-                        sx={fieldStyle}
-                    />
+                    <TextField fullWidth type="date" label="Depart" value={departureDate} onChange={(e) => setDepartureDate(e.target.value)} variant="standard" InputLabelProps={{ shrink: true }} sx={fieldStyle} />
                 </Grid>
 
                 {tripType === 'round-trip' && (
                     <Grid item md>
-                        <TextField
-                            fullWidth
-                            type="date"
-                            label="Return"
-                            value={returnDate}
-                            onChange={(e) => setReturnDate(e.target.value)}
-                            variant="standard"
-                            InputLabelProps={{ shrink: true }}
-                            sx={fieldStyle}
-                        />
+                        <TextField fullWidth type="date" label="Return" value={returnDate} onChange={(e) => setReturnDate(e.target.value)} variant="standard" InputLabelProps={{ shrink: true }} sx={fieldStyle} />
                     </Grid>
                 )}
 
                 <Grid item md>
-                    <TextField
-                        select fullWidth
-                        label="Class"
-                        value={flightClass}
-                        onChange={(e) => setFlightClass(e.target.value)}
-                        variant="standard"
-                        sx={fieldStyle}
-                    >
+                    <TextField select fullWidth label="Class" value={flightClass} onChange={(e) => setFlightClass(e.target.value)} variant="standard" sx={fieldStyle}>
                         <MenuItem value=""><em>Select class</em></MenuItem>
                         <MenuItem value="economy">Economy</MenuItem>
                         <MenuItem value="business">Business</MenuItem>
@@ -320,19 +319,7 @@ const FlightSearchBar = ({ initialValues = {} }) => {
                 </Grid>
 
                 <Grid item>
-                    <IconButton
-                        onClick={handleSearch}
-                        sx={{
-                            backgroundColor: 'var(--secondary-color)',
-                            color: '#fff',
-                            borderRadius: '10px 5px 10px 5px',
-                            '&:hover': {
-                                backgroundColor: 'var(--secondary-color)',
-                            },
-                            height: '56px',
-                            width: '56px'
-                        }}
-                    >
+                    <IconButton onClick={handleSearch} sx={{ backgroundColor: 'var(--secondary-color)', color: '#fff', borderRadius: '10px 5px 10px 5px', '&:hover': { backgroundColor: 'var(--secondary-color)' }, height: '56px', width: '56px' }}>
                         <SearchIcon sx={{ fontSize: 24 }} />
                     </IconButton>
                 </Grid>

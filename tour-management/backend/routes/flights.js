@@ -19,19 +19,28 @@ import {
     getSingleFlight,
     getAllFlights,
     searchFlights,
-    getFlightCount, importVNFlights3Days, crawlVNFlights3Days
+    getFlightCount, importVNFlights3Days,
 } from '../controllers/flightController.js'
+
+import { importFlight, getAllFlightsV2, searchFlightsV2 } from '../controllers/flightV2Controller.js';
 
 const router = express.Router()
 
-router.get('/crawl-flights-3days', crawlVNFlights3Days);
+
+router.post('/import-flights', importFlight);
 router.get('/import-real-flights', importVNFlights3Days);
-router.get('/search/filter', searchFlights)
+
+// router.get('/search/filter', searchFlights)
+router.get('/search/filter', searchFlightsV2)
+
 router.post('/', createFlight)
 router.put('/:id', updateFlight)
 router.delete('/:id', deleteFlight)
 router.get('/:id', getSingleFlight)
-router.get('/', getAllFlights)
+
+// router.get('/', getAllFlights)
+router.get('/', getAllFlightsV2)
+
 
 router.get('/count', getFlightCount)
 
