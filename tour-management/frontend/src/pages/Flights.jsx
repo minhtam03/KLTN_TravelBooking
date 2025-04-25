@@ -207,101 +207,131 @@
 
 // export default Flights;
 
-import React, { useEffect, useState } from 'react';
+// import React, { useEffect, useState } from 'react';
+// import { useLocation } from 'react-router-dom';
+// import axios from 'axios';
+// import { Container, Typography, Grid, Box } from '@mui/material';
+// import FlightSearchBar from '../components/FlightSearchBar/FlightSearchBar';
+// import FlightCard from '../shared/FlightCard';
+// import { BASE_URL } from '../utils/config';
+// import CommonSection from '../shared/CommonSection';
+
+// const Flights = () => {
+//   const location = useLocation();
+//   const [flights, setFlights] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [page, setPage] = useState(0);
+//   const [pageCount, setPageCount] = useState(0);
+
+//   const searchParams = new URLSearchParams(location.search);
+//   const initialValues = {
+//     tripType: searchParams.get('returnDate') ? 'round-trip' : 'one-way',
+//     departureCity: searchParams.get('fromPlace') || '',
+//     arrivalCity: searchParams.get('toPlace') || '',
+//     departureDate: searchParams.get('departDate') || '',
+//     returnDate: searchParams.get('returnDate') || '',
+//     flightClass: searchParams.get('flightClass') || '',
+//   };
+
+//   const fetchFlights = async () => {
+//     setLoading(true);
+//     try {
+//       const query = location.search;
+//       const endpoint = query ? `${BASE_URL}/flights/search/filter${query}` : `${BASE_URL}/flights`;
+//       const res = await axios.get(endpoint);
+
+//       setFlights(res.data.data);
+//     } catch (err) {
+//       console.error('Failed to fetch flights:', err);
+//       setFlights([]);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchFlights();
+//   }, [location.search]);
+
+//   useEffect(() => {
+//     const totalPages = Math.ceil(flights.length / 8);
+//     setPageCount(totalPages);
+//     setPage(0);
+//   }, [flights]);
+
+//   const currentPageFlights = Array.isArray(flights) ? flights.slice(page * 8, (page + 1) * 8) : [];
+
+//   return (
+//     <>
+//       <CommonSection title={"All Flights"} />
+//       <section>
+//         <FlightSearchBar initialValues={initialValues} />
+//       </section>
+//       <Container>
+//         {loading ? (
+//           <Typography>Loading...</Typography>
+//         ) : flights.length === 0 ? (
+//           <Typography>No flights found.</Typography>
+//         ) : (
+//           <>
+//             <Grid container spacing={2}>
+//               {currentPageFlights.map((flight) => (
+//                 <Grid item xs={12} key={flight._id}>
+//                   <Box display="flex" justifyContent="center">
+//                     <Box width="70%">
+//                       <FlightCard flight={flight} />
+//                     </Box>
+//                   </Box>
+//                 </Grid>
+//               ))}
+//             </Grid>
+//             <Grid item xs={12}>
+//               <div className="pagination d-flex align-items-center justify-content-center mt-4 gap-3">
+//                 {[...Array(pageCount).keys()].map(number => (
+//                   <span
+//                     key={number}
+//                     onClick={() => setPage(number)}
+//                     className={page === number ? "active__page" : ""}
+//                     style={{ cursor: 'pointer', fontWeight: 'bold' }}
+//                   >
+//                     {number + 1}
+//                   </span>
+//                 ))}
+//               </div>
+//             </Grid>
+//           </>
+//         )}
+//       </Container>
+//     </>
+//   );
+// };
+
+// export default Flights;
+
+
+import React from 'react';
 import { useLocation } from 'react-router-dom';
-import axios from 'axios';
-import { Container, Typography, Grid, Box } from '@mui/material';
-import FlightSearchBar from '../components/FlightSearchBar/FlightSearchBar';
-import FlightCard from '../shared/FlightCard';
-import { BASE_URL } from '../utils/config';
 import CommonSection from '../shared/CommonSection';
+import FlightSearchBar from '../components/FlightSearchBar/FlightSearchBar';
 
 const Flights = () => {
   const location = useLocation();
-  const [flights, setFlights] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(0);
-  const [pageCount, setPageCount] = useState(0);
-
-  const searchParams = new URLSearchParams(location.search);
-  const initialValues = {
-    tripType: searchParams.get('returnDate') ? 'round-trip' : 'one-way',
-    departureCity: searchParams.get('fromPlace') || '',
-    arrivalCity: searchParams.get('toPlace') || '',
-    departureDate: searchParams.get('departDate') || '',
-    returnDate: searchParams.get('returnDate') || '',
-    flightClass: searchParams.get('flightClass') || '',
-  };
-
-  const fetchFlights = async () => {
-    setLoading(true);
-    try {
-      const query = location.search;
-      const endpoint = query ? `${BASE_URL}/flights/search/filter${query}` : `${BASE_URL}/flights`;
-      const res = await axios.get(endpoint);
-
-      setFlights(res.data.data);
-    } catch (err) {
-      console.error('Failed to fetch flights:', err);
-      setFlights([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchFlights();
-  }, [location.search]);
-
-  useEffect(() => {
-    const totalPages = Math.ceil(flights.length / 8);
-    setPageCount(totalPages);
-    setPage(0);
-  }, [flights]);
-
-  const currentPageFlights = Array.isArray(flights) ? flights.slice(page * 8, (page + 1) * 8) : [];
+  const query = new URLSearchParams(location.search);
 
   return (
     <>
-      <CommonSection title={"All Flights"} />
+      <CommonSection title="Search flights" />
       <section>
-        <FlightSearchBar initialValues={initialValues} />
+        <FlightSearchBar
+          initialValues={{
+            fromPlace: query.get('fromPlace') || '',
+            toPlace: query.get('toPlace') || '',
+            departDate: query.get('departDate') || '',
+            landingDate: query.get('landingDate') || '',
+            ticketType: query.get('ticketType') || '',
+          }}
+        />
       </section>
-      <Container>
-        {loading ? (
-          <Typography>Loading...</Typography>
-        ) : flights.length === 0 ? (
-          <Typography>No flights found.</Typography>
-        ) : (
-          <>
-            <Grid container spacing={2}>
-              {currentPageFlights.map((flight) => (
-                <Grid item xs={12} key={flight._id}>
-                  <Box display="flex" justifyContent="center">
-                    <Box width="70%">
-                      <FlightCard flight={flight} />
-                    </Box>
-                  </Box>
-                </Grid>
-              ))}
-            </Grid>
-            <Grid item xs={12}>
-              <div className="pagination d-flex align-items-center justify-content-center mt-4 gap-3">
-                {[...Array(pageCount).keys()].map(number => (
-                  <span
-                    key={number}
-                    onClick={() => setPage(number)}
-                    className={page === number ? "active__page" : ""}
-                    style={{ cursor: 'pointer', fontWeight: 'bold' }}
-                  >
-                    {number + 1}
-                  </span>
-                ))}
-              </div>
-            </Grid>
-          </>
-        )}
-      </Container>
     </>
   );
 };

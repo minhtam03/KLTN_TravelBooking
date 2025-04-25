@@ -147,30 +147,81 @@ export const getAllFlightsV2 = async (req, res) => {
 // };
 
 
+// export const searchFlightsV2 = async (req, res) => {
+//     const { fromPlace, toPlace, departDate, flightClass } = req.query;
+
+//     if (!fromPlace || !toPlace || !departDate) {
+//         return res.status(400).json({ error: 'Missing required fields' });
+//     }
+
+//     try {
+//         const query = {
+//             fromPlace: new RegExp(fromPlace, 'i'),
+//             toPlace: new RegExp(toPlace, 'i'),
+//             departDate: departDate, // giữ nguyên kiểu string
+//         };
+
+//         if (flightClass) {
+//             query.ticketType = new RegExp(flightClass, 'i');
+//         }
+
+//         const flights = await FlightV2.find(query).limit(50).sort({ totalPrice: 1 });
+
+//         res.status(200).json({
+//             success: true,
+//             message: "Flight search successful",
+//             data: flights,
+//         });
+//     } catch (error) {
+//         console.error("Flight search error:", error.message);
+//         res.status(500).json({
+//             success: false,
+//             message: "Internal server error",
+//         });
+//     }
+// };
+
 export const searchFlightsV2 = async (req, res) => {
-    const { fromPlace, toPlace, departDate, flightClass } = req.query;
+    const { fromPlace, toPlace, departDate, landingDate, ticketType } = req.query;
 
     if (!fromPlace || !toPlace || !departDate) {
         return res.status(400).json({ error: 'Missing required fields' });
     }
 
     try {
-        const query = {
+        const outboundQuery = {
             fromPlace: new RegExp(fromPlace, 'i'),
             toPlace: new RegExp(toPlace, 'i'),
-            departDate: departDate, // giữ nguyên kiểu string
+            departDate: departDate,
         };
 
-        if (flightClass) {
-            query.ticketType = new RegExp(flightClass, 'i');
+        if (ticketType) {
+            outboundQuery.ticketType = new RegExp(ticketType, 'i');
         }
+        const outboundFlights = await FlightV2.find(outboundQuery).limit(50).sort({ totalPrice: 1 });
 
-        const flights = await FlightV2.find(query).limit(50).sort({ totalPrice: 1 });
+        let returnFlights = [];
+        if (landingDate) {
+            const returnQuery = {
+                fromPlace: new RegExp(toPlace, 'i'),
+                toPlace: new RegExp(fromPlace, 'i'),
+                departDate: landingDate,
+            };
+
+            if (ticketType) {
+                returnQuery.ticketType = new RegExp(ticketType, 'i');
+            }
+
+            returnFlights = await FlightV2.find(returnQuery).limit(50).sort({ totalPrice: 1 });
+        }
 
         res.status(200).json({
             success: true,
             message: "Flight search successful",
-            data: flights,
+            data: {
+                outboundFlights,
+                returnFlights,
+            },
         });
     } catch (error) {
         console.error("Flight search error:", error.message);
