@@ -367,8 +367,8 @@ const Suggestion = () => {
     if (hasValidResults) {
       const initialTotal =
         (results.tours[0].price || 0) +
-        (results.flights[0].price || 0) +
-        (results.flightsReturn[0].price || 0) +
+        (results.flights[0].totalPriceUSD || 0) +
+        (results.flightsReturn[0].totalPriceUSD || 0) +
         (results.hotels[0].pricePerNight || 0) * duration;
       setTotalCost(!isNaN(initialTotal) ? initialTotal : 0);
     } else {
@@ -444,12 +444,67 @@ const Suggestion = () => {
 
     const total =
       (newTour?.price || 0) +
-      (newFlight?.price || 0) +
-      (newReturnFlight?.price || 0) +
+      (newFlight?.totalPriceUSD || 0) +
+      (newReturnFlight?.totalPriceUSD || 0) +
       (newHotel?.pricePerNight * duration || 0);
 
     setTotalCost(total);
   };
+
+
+  const isOptionDisabled = (type, option) => {
+    let tempTotalCost = 0;
+
+    if (type === 'tour') {
+      tempTotalCost =
+        (option?.price || 0) +
+        (selectedFlight?.totalPriceUSD || 0) +
+        (selectedReturnFlight?.totalPriceUSD || 0) +
+        (selectedHotel?.pricePerNight * duration || 0);
+    } else if (type === 'flight') {
+      tempTotalCost =
+        (selectedTour?.price || 0) +
+        (option?.totalPriceUSD || 0) +
+        (selectedReturnFlight?.totalPriceUSD || 0) +
+        (selectedHotel?.pricePerNight * duration || 0);
+    } else if (type === 'returnFlight') {
+      tempTotalCost =
+        (selectedTour?.price || 0) +
+        (selectedFlight?.totalPriceUSD || 0) +
+        (option?.totalPriceUSD || 0) +
+        (selectedHotel?.pricePerNight * duration || 0);
+    } else if (type === 'hotel') {
+      tempTotalCost =
+        (selectedTour?.price || 0) +
+        (selectedFlight?.totalPriceUSD || 0) +
+        (selectedReturnFlight?.totalPriceUSD || 0) +
+        (option?.pricePerNight * duration || 0);
+    }
+
+    return tempTotalCost > budget;
+  };
+
+  // const isOptionDisabled = (type, option) => {
+  //   let tempSelectedTour = selectedTour;
+  //   let tempSelectedFlight = selectedFlight;
+  //   let tempSelectedReturnFlight = selectedReturnFlight;
+  //   let tempSelectedHotel = selectedHotel;
+
+  //   // Giả lập nếu chọn option mới
+  //   if (type === 'tour') tempSelectedTour = option;
+  //   if (type === 'flight') tempSelectedFlight = option;
+  //   if (type === 'returnFlight') tempSelectedReturnFlight = option;
+  //   if (type === 'hotel') tempSelectedHotel = option;
+
+  //   const tourPrice = tempSelectedTour?.price ?? 0;
+  //   const flightPrice = tempSelectedFlight?.totalPriceUSD ?? 0;
+  //   const returnFlightPrice = tempSelectedReturnFlight?.totalPriceUSD ?? 0;
+  //   const hotelPrice = (tempSelectedHotel?.pricePerNight ?? 0) * duration;
+
+  //   const tempTotalCost = tourPrice + flightPrice + returnFlightPrice + hotelPrice;
+
+  //   return tempTotalCost > budget;
+  // };
 
   return (
     <>
@@ -492,7 +547,7 @@ const Suggestion = () => {
               selectedHotel={selectedHotel}
               duration={duration}
               handleSelect={handleSelect}
-              isOptionDisabled={() => false}
+              isOptionDisabled={isOptionDisabled}
               totalCost={totalCost}
               reason={reason}
               destination={destination}

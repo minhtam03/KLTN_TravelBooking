@@ -24,7 +24,7 @@ export const getAvailableFlights = async (departure, destination, startDate, dur
 
         // Tính ngày về = startDate + duration (số ngày)
         const returnDate = new Date(departDate);
-        returnDate.setDate(departDate.getDate() + duration);
+        returnDate.setDate(departDate.getDate() + duration - 1);
 
         // Tìm chuyến đi (outbound)
         const outboundFlights = await FlightV2.find({
