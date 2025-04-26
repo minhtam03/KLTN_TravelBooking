@@ -6,7 +6,7 @@ import { getSuggestedToursByEmbedding } from "../controllers/suggestionEmbedding
 
 const router = express.Router();
 
-// create new tour
+
 router.post("/suggest", getSuggestions)
 // router.get("/suggested-destination/:userId", getSuggestedDestination)
 

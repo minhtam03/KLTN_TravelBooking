@@ -22,7 +22,7 @@
 import mongoose from 'mongoose';
 
 const flightV2Schema = new mongoose.Schema({
-    id: { type: String, unique: true },         // ID chuyến bay từ API
+    id: { type: String },         // ID chuyến bay từ API
     flightNumber: String,                       // Mã chuyến bay (VD: VN 210)
     airline: String,                            // Tên hãng bay
 
@@ -34,6 +34,7 @@ const flightV2Schema = new mongoose.Schema({
     ticketType: String,                         // Loại vé (VD: Eco (S))
     aircraftStr: String,                        // Loại máy bay (VD: Airbus A321)
     totalPrice: Number,                         // Tổng giá vé đã gồm thuế/phí
+    totalPriceUSD: Number,
 
     departTime: Date,                           // Thời gian khởi hành dạng ISO
     landingTime: Date,                          // Thời gian đến dạng ISO

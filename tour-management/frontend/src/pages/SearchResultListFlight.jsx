@@ -305,15 +305,21 @@ const SearchResultListFlight = () => {
                         ) : (
                             <Grid container spacing={4} mt={2}>
                                 {/* Chuyến đi */}
-                                <Grid item xs={12} md={isRoundTrip ? 6 : 12}>
-                                    <Typography variant="h6" mb={2}>✈️ Outbound Flights</Typography>
-                                    {outboundFlights.map((flight) => (
-                                        <Box key={flight._id} mb={2}>
-                                            <FlightCard flight={flight} />
-                                        </Box>
-                                    ))}
+                                <Grid
+                                    item
+                                    xs={12}
+                                    md={isRoundTrip ? 6 : 12}
+                                    sx={!isRoundTrip ? { display: 'flex', justifyContent: 'center' } : {}}
+                                >
+                                    <Box sx={!isRoundTrip ? { width: '70%' } : { width: '100%' }}>
+                                        <Typography variant="h6" mb={2}>✈️ Outbound Flights</Typography>
+                                        {outboundFlights.map((flight) => (
+                                            <Box key={flight._id} mb={2}>
+                                                <FlightCard flight={flight} />
+                                            </Box>
+                                        ))}
+                                    </Box>
                                 </Grid>
-
                                 {/* Chuyến về */}
                                 {isRoundTrip && (
                                     <Grid item xs={12} md={6}>
@@ -325,7 +331,7 @@ const SearchResultListFlight = () => {
                                                 </Box>
                                             ))
                                         ) : (
-                                            <Typography>Không có chuyến về phù hợp.</Typography>
+                                            <Typography>Not found flight.</Typography>
                                         )}
                                     </Grid>
                                 )}

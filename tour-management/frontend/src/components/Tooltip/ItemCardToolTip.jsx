@@ -197,7 +197,7 @@ import { Link } from 'react-router-dom';
 const ItemCardTooltip = ({ item, type }) => {
     if (!item) return null;
 
-    let id, photo, title, price, location, featured, reviews = [];
+    let id, photo, title, price, location, featured, reviews, locationTo = [];
 
     if (type === "tour") {
         id = item._id;
@@ -219,8 +219,9 @@ const ItemCardTooltip = ({ item, type }) => {
         id = item._id;
         photo = item.photo || defaultImg;
         title = `${item.airline} - ${item.flightNumber}`;
-        location = item.arrivalCity;
-        price = item.price;
+        location = item.fromPlace;
+        locationTo = item.toPlace;
+        price = item.totalPriceUSD;
         featured = false;
         reviews = [];
     }
@@ -244,7 +245,7 @@ const ItemCardTooltip = ({ item, type }) => {
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
                     <Box display="flex" alignItems="center" gap={0.5} color="text.secondary">
                         <LocationOnIcon fontSize="small" />
-                        <Typography variant="body2">{location}</Typography>
+                        <Typography variant="body2"> {type === "flight" ? `${location} → ${locationTo}` : location}</Typography>
                     </Box>
 
                     {type === "tour" && (

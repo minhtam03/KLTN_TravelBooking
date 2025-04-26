@@ -236,7 +236,7 @@ const FlightCard = ({ flight }) => {
 
                         <Box mt={1}>
                             <Chip
-                                label={`${flight.fromPlace} (${flight.fromPlaceCode}) → ${flight.toPlace} (${flight.toPlaceCode})`}
+                                label={`${flight.fromPlace} → ${flight.toPlace} `}
                                 color="primary"
                                 size="small"
                             />
@@ -251,12 +251,12 @@ const FlightCard = ({ flight }) => {
                         </Typography>
 
                         <Typography variant="body2" sx={{ mt: 1 }}>
-                            Class: <strong>{flight.ticketType}</strong>
+                            Class: {flight.ticketType}
                         </Typography>
-
+                        {/* 
                         <Typography variant="body2" sx={{ mt: 1 }}>
                             Airplane Type: {flight.aircraftStr}
-                        </Typography>
+                        </Typography> */}
                     </CardContent>
                 </Grid>
 
@@ -273,10 +273,10 @@ const FlightCard = ({ flight }) => {
                 >
                     <Box>
                         <Typography variant="h6" fontWeight={600}>
-                            {flight.totalPrice?.toLocaleString('vi-VN')} ₫
+                            {flight.totalPriceUSD?.toLocaleString('vi-VN')} $
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
-                            Đã bao gồm thuế và phí
+                            Includes taxes and fees
                         </Typography>
                     </Box>
 
@@ -284,7 +284,7 @@ const FlightCard = ({ flight }) => {
                         <Button
                             variant="contained"
                             component={Link}
-                            to={`/flights/${flight.id}`}
+                            to={`/flights/${flight._id}`}
                             sx={{
                                 borderRadius: 2,
                                 backgroundColor: "#7bbcb0",

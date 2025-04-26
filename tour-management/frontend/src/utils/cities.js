@@ -14,15 +14,15 @@ export const cityList = [
 ];
 
 
-// export const cityList = [
-//     { code: 'SGN', name: 'Ho Chi Minh' },
-//     { code: 'HAN', name: 'Ha Noi' },
-//     { code: 'DAD', name: 'Da Nang' },
-//     { code: 'CXR', name: 'Nha Trang' },
-//     { code: 'PQC', name: 'Phu Quoc' },
-//     { code: 'HPH', name: 'Hai Phong' },
-//     { code: 'VII', name: 'Vinh' },
-//     { code: 'DLI', name: 'Da Lat' },
-//     { code: 'UIH', name: 'Quy Nhon' },
-//     { code: 'THD', name: 'Thanh Hoa' },
-// ];
+export const cityAirport = [
+    'Ho Chi Minh',
+    'Ha Noi',
+    'Da Nang',
+    'Nha Trang',
+    'Phu Quoc',
+    'Hai Phong',
+    'Vinh',
+    'Da Lat',
+    'Quy Nhon',
+    'Thanh Hoa',
+];

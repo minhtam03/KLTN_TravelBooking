@@ -4,8 +4,9 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import { removeVietnameseTones } from '../utils/removeVietnamese.js';
 
-const airports = ["SGN", "HAN", "DAD", "CXR", "PQC", "HPH", "VII", "DLI", "UIH", "THD"];
 
+const airports = ["SGN", "HAN", "DAD", "CXR", "PQC", "HPH", "VII", "DLI", "UIH", "THD"];
+const VND_TO_USD = 25000;
 const daysToFetch = 3;
 
 export const importFlight = async (req, res) => {
@@ -56,7 +57,9 @@ export const importFlight = async (req, res) => {
 
                             ticketType: f.ticketType,
                             aircraftStr: f.aircraftStr,
+
                             totalPrice: f.totalPrice,
+                            // totalPrice: +(f.totalPrice / VND_TO_USD).toFixed(2),
 
                             // Thời gian chuẩn
                             departTime: f.departTime,
@@ -87,7 +90,6 @@ export const importFlight = async (req, res) => {
     }
 };
 
-
 export const getAllFlightsV2 = async (req, res) => {
     const page = req.query.page ? parseInt(req.query.page) : null
 
@@ -110,76 +112,6 @@ export const getAllFlightsV2 = async (req, res) => {
 
     }
 }
-
-
-// export const searchFlightsV2 = async (req, res) => {
-//     const { fromPlaceCode, toPlaceCode, departDate, flightClass } = req.query;
-
-//     if (!fromPlaceCode || !toPlaceCode || !departDate) {
-//         return res.status(400).json({ error: 'Missing required fields' });
-//     }
-
-//     try {
-//         const query = {
-//             fromPlaceCode: new RegExp(fromPlaceCode, 'i'),
-//             toPlaceCode: new RegExp(toPlaceCode, 'i'),
-//             departDate: departDate, // vì trong DB là string
-//         };
-
-//         if (flightClass) {
-//             query.ticketType = new RegExp(flightClass, 'i');
-//         }
-
-//         const flights = await FlightV2.find(query).limit(50).sort({ totalPrice: 1 });
-
-//         res.status(200).json({
-//             success: true,
-//             message: "Flight search successful",
-//             data: flights,
-//         });
-//     } catch (error) {
-//         console.error("Flight search error:", error.message);
-//         res.status(500).json({
-//             success: false,
-//             message: "Internal server error",
-//         });
-//     }
-// };
-
-
-// export const searchFlightsV2 = async (req, res) => {
-//     const { fromPlace, toPlace, departDate, flightClass } = req.query;
-
-//     if (!fromPlace || !toPlace || !departDate) {
-//         return res.status(400).json({ error: 'Missing required fields' });
-//     }
-
-//     try {
-//         const query = {
-//             fromPlace: new RegExp(fromPlace, 'i'),
-//             toPlace: new RegExp(toPlace, 'i'),
-//             departDate: departDate, // giữ nguyên kiểu string
-//         };
-
-//         if (flightClass) {
-//             query.ticketType = new RegExp(flightClass, 'i');
-//         }
-
-//         const flights = await FlightV2.find(query).limit(50).sort({ totalPrice: 1 });
-
-//         res.status(200).json({
-//             success: true,
-//             message: "Flight search successful",
-//             data: flights,
-//         });
-//     } catch (error) {
-//         console.error("Flight search error:", error.message);
-//         res.status(500).json({
-//             success: false,
-//             message: "Internal server error",
-//         });
-//     }
-// };
 
 export const searchFlightsV2 = async (req, res) => {
     const { fromPlace, toPlace, departDate, landingDate, ticketType } = req.query;
@@ -228,6 +160,49 @@ export const searchFlightsV2 = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Internal server error",
+        });
+    }
+};
+
+export const getSingleFlightV2 = async (req, res) => {
+    const id = req.params.id
+
+    try {
+        const flight = await FlightV2.findById(id)
+        res.status(200).json({
+            success: true,
+            message: 'Flight retrieved successfully',
+            data: flight,
+        })
+    } catch (error) {
+        res.status(404).json({
+            success: false,
+            message: 'Flight not found',
+        })
+    }
+}
+
+
+export const convertPricesToUSD = async (req, res) => {
+    try {
+        const flights = await FlightV2.find({}); // Lấy tất cả chuyến bay
+
+        for (const flight of flights) {
+            if (flight.totalPrice) {
+                flight.totalPriceUSD = Math.round(flight.totalPrice / VND_TO_USD);
+                await flight.save();
+            }
+        }
+
+        res.status(200).json({
+            success: true,
+            message: `✅ Đã cập nhật ${flights.length} chuyến bay với totalPriceUSD.`,
+        });
+    } catch (error) {
+        console.error('❌ Error converting prices:', error.message);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to convert prices.',
         });
     }
 };

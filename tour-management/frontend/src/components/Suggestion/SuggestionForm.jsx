@@ -31,7 +31,7 @@ const SuggestionForm = ({
                         fullWidth
                         label="Budget"
                         value={budget}
-                        onChange={(e) => setBudget(e.target.value)}
+                        onChange={(e) => setBudget(Number(e.target.value))}
                         disabled={loading}
                     />
                 </Box>
@@ -44,7 +44,7 @@ const SuggestionForm = ({
                         fullWidth
                         label="Duration (Days)"
                         value={duration}
-                        onChange={(e) => setDuration(e.target.value)}
+                        onChange={(e) => setDuration(Number(e.target.value))}
                         disabled={loading}
                     />
                 </Box>

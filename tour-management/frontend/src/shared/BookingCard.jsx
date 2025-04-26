@@ -44,9 +44,9 @@ const BookingCard = ({ booking, type }) => {
     itemId = booking.flightId;
     itemName = itemId ? `${itemId.airline} - ${itemId.flightNumber}` : "Flight";
     photo = "https://www.libertytravel.com/sites/default/files/styles/full_size/public/flight-hero.jpg?itok=LKyRwKDq";
-    unitPrice = itemId?.price || 0;
+    unitPrice = booking.flightId?.totalPriceUSD || 0;
     quantity = booking.guestSize;
-    date = itemId?.departureDate;
+    date = itemId?.departDate;
     dateLabel = "Departure";
     qtyLabel = "Passengers";
   }

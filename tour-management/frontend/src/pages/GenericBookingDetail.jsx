@@ -72,7 +72,7 @@ const GenericBookingDetail = ({ type }) => {
             quantity = booking.nights;
             itemName = booking.hotelName;
         } else if (type === "flight") {
-            unitPrice = booking.flightId?.price || 0;
+            unitPrice = booking.flightId?.totalPriceUSD || 0;
             quantity = booking.guestSize;
             itemName = `${booking.flightId?.airline} - ${booking.flightId?.flightNumber}`;
         }
@@ -139,7 +139,7 @@ const GenericBookingDetail = ({ type }) => {
         image = item?.photo || "https://www.libertytravel.com/sites/default/files/styles/full_size/public/flight-hero.jpg?itok=LKyRwKDq";
         name = `${item?.airline} - ${item?.flightNumber}`;
         quantity = booking.guestSize;
-        unitPrice = item?.price || 0;
+        unitPrice = item?.totalPriceUSD || 0;
         quantityLabel = "Passengers";
         dateLabel = "Departure";
         date = item?.departureDate;

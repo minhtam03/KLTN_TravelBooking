@@ -339,7 +339,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { cityList } from '../../utils/cities';
-
+import { cityAirport } from '../../utils/cities';
 const CustomRadio = styled(Radio)({
     color: '#ccc',
     '&.Mui-checked': {
@@ -420,7 +420,7 @@ const FlightSearchBar = ({ initialValues = {} }) => {
                         variant="standard"
                         sx={fieldStyle}
                     >
-                        {cityList.map((city) => (
+                        {cityAirport.map((city) => (
                             <MenuItem key={city} value={city}>{city}</MenuItem>
                         ))}
                     </TextField>
@@ -441,7 +441,7 @@ const FlightSearchBar = ({ initialValues = {} }) => {
                         variant="standard"
                         sx={fieldStyle}
                     >
-                        {cityList.filter((city) => city !== fromPlace).map((city) => (
+                        {cityAirport.filter((city) => city !== fromPlace).map((city) => (
                             <MenuItem key={city} value={city}>{city}</MenuItem>
                         ))}
                     </TextField>
