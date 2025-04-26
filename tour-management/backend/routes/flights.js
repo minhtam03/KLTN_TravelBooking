@@ -24,7 +24,8 @@ import {
 
 import {
     importFlight, getAllFlightsV2,
-    searchFlightsV2, getSingleFlightV2, convertPricesToUSD
+    searchFlightsV2, getSingleFlightV2, convertPricesToUSD,
+    deleteFlightV2, updateFlightV2, createFlightV2
 } from '../controllers/flightV2Controller.js';
 
 const router = express.Router()
@@ -36,9 +37,16 @@ router.get('/import-real-flights', importVNFlights3Days);
 // router.get('/search/filter', searchFlights)
 router.get('/search/filter', searchFlightsV2)
 
-router.post('/', createFlight)
-router.put('/:id', updateFlight)
-router.delete('/:id', deleteFlight)
+// router.post('/', createFlight)
+router.post('/', createFlightV2)
+
+
+// router.put('/:id', updateFlight)
+router.put('/:id', updateFlightV2)
+
+// router.delete('/:id', deleteFlight)
+router.delete('/:id', deleteFlightV2)
+
 // router.get('/:id', getSingleFlight)
 router.get('/:id', getSingleFlightV2)
 

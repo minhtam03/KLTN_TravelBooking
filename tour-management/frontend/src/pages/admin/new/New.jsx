@@ -21,6 +21,21 @@ import Sidebar from "../../../components/admin/sidebar/Sidebar";
 import Navbar from "../../../components/admin/navbar/Navbar";
 import { BASE_URL } from "../../../utils/config";
 import axios from "axios";
+import { placeCodeMap } from "../../../utils/cities";
+
+
+// const placeCodeMap = {
+//     'Ha Noi': 'HAN',
+//     'Ho Chi Minh': 'SGN',
+//     'Da Nang': 'DAD',
+//     'Hai Phong': 'HPH',
+//     'Can Tho': 'VCA',
+//     'Hue': 'HUI',
+//     'Vinh': 'VII',
+//     'Nha Trang': 'CXR',
+//     'Quy Nhon': 'UIH',
+//     'Phu Quoc': 'PQC',
+// };
 
 const New = ({ inputs, title }) => {
     const [info, setInfo] = useState({});
@@ -42,6 +57,24 @@ const New = ({ inputs, title }) => {
     //         setInfo((prev) => ({ ...prev, [name]: value }));
     //     }
     // };
+    // const handleChange = (e) => {
+    //     const { name, value } = e.target;
+
+    //     const parsedValue =
+    //         name === "price"
+    //             ? parseFloat(value)
+    //             : name === "guestSize"
+    //                 ? parseInt(value)
+    //                 : value;
+
+    //     if (name === "tripType") setTripType(value);
+
+    //     if (path === "users") {
+    //         setCredentials((prev) => ({ ...prev, [name]: parsedValue }));
+    //     } else {
+    //         setInfo((prev) => ({ ...prev, [name]: parsedValue }));
+    //     }
+    // };
     const handleChange = (e) => {
         const { name, value } = e.target;
 
@@ -57,9 +90,23 @@ const New = ({ inputs, title }) => {
         if (path === "users") {
             setCredentials((prev) => ({ ...prev, [name]: parsedValue }));
         } else {
-            setInfo((prev) => ({ ...prev, [name]: parsedValue }));
+            setInfo((prev) => {
+                let updated = { ...prev, [name]: parsedValue };
+
+                if (path === "flights") {
+                    if (name === "fromPlace") {
+                        updated.fromPlaceCode = placeCodeMap[value] || "";
+                    }
+                    if (name === "toPlace") {
+                        updated.toPlaceCode = placeCodeMap[value] || "";
+                    }
+                }
+
+                return updated;
+            });
         }
     };
+
 
     const handleClick = async (e) => {
         e.preventDefault();

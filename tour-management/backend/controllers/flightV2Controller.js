@@ -206,3 +206,63 @@ export const convertPricesToUSD = async (req, res) => {
         });
     }
 };
+
+export const deleteFlightV2 = async (req, res) => {
+    const id = req.params.id
+
+    try {
+        await FlightV2.findByIdAndDelete(id)
+        res.status(200).json({
+            success: true,
+            message: 'Successfully deleted flight',
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Failed to delete flight',
+        })
+    }
+}
+
+export const updateFlightV2 = async (req, res) => {
+    const id = req.params.id
+
+    try {
+        const updatedFlight = await FlightV2.findByIdAndUpdate(
+            id,
+            { $set: req.body },
+            { new: true }
+        )
+
+        res.status(200).json({
+            success: true,
+            message: 'Successfully updated flight',
+            data: updatedFlight,
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Failed to update flight',
+        })
+    }
+}
+
+
+export const createFlightV2 = async (req, res) => {
+    try {
+        const newFlight = new FlightV2(req.body)
+        const savedFlight = await newFlight.save()
+
+        res.status(200).json({
+            success: true,
+            message: 'Successfully created flight',
+            data: savedFlight,
+        })
+    } catch (error) {
+        console.error('Create flight failed:', error.message)
+        res.status(500).json({
+            success: false,
+            message: 'Failed to create flight. Try again.',
+        })
+    }
+}

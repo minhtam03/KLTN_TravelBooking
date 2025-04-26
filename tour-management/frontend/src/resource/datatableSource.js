@@ -156,27 +156,9 @@ export const flightColumns = [
     { field: '_id', headerName: 'ID', width: 150 },
     { field: 'flightNumber', headerName: 'Flight No.', width: 130 },
 
-    { field: 'departureCity', headerName: 'From', width: 130 },
-    { field: 'arrivalCity', headerName: 'To', width: 130 },
-    // {
-    //     field: 'departureDate',
-    //     headerName: 'Departure Date',
-    //     width: 150,
-    //     valueFormatter: (params) =>
-    //         params?.value ? new Date(params.value).toLocaleDateString() : "-"
-    // },
-    // { field: 'departureTime', headerName: 'Time', width: 100 },
-    // { field: 'tripType', headerName: 'Trip', width: 110 },
+    { field: 'fromPlace', headerName: 'From', width: 130 },
+    { field: 'toPlace', headerName: 'To', width: 130 },
 
-    // {
-    //     field: 'returnDate',
-    //     headerName: 'Return Date',
-    //     width: 150,
-    //     valueFormatter: (params) =>
-    //         params?.value ? new Date(params.value).toLocaleDateString() : "-"
-    // },
-    // { field: 'returnTime', headerName: 'Return Time', width: 110 },
-    { field: 'flightClass', headerName: 'Class', width: 110 },
-    // { field: 'airplaneType', headerName: 'Aircraft', width: 130 },
-    { field: 'price', headerName: 'Price ($)', width: 120 }
+    { field: 'ticketType', headerName: 'Class', width: 110 },
+    { field: 'totalPriceUSD', headerName: 'Price ($)', width: 120 }
 ];

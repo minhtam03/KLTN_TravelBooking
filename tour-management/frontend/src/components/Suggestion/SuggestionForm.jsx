@@ -9,6 +9,7 @@ import {
     Box
 } from '@mui/material';
 import { cityList } from '../../utils/cities';
+import { cityAirport } from '../../utils/cities';
 
 const SuggestionForm = ({
     budget, setBudget,
@@ -62,7 +63,7 @@ const SuggestionForm = ({
                             disabled={loading}
                             renderValue={(selected) => selected || "Select a departure"}
                         >
-                            {cityList.map((city) => (
+                            {cityAirport.map((city) => (
                                 <MenuItem key={city} value={city}>
                                     {city}
                                 </MenuItem>
@@ -84,7 +85,7 @@ const SuggestionForm = ({
                             disabled={loading}
                             renderValue={(selected) => selected || "Select a destination"}
                         >
-                            {cityList.map((city) => (
+                            {cityAirport.map((city) => (
                                 <MenuItem key={city} value={city}>
                                     {city}
                                 </MenuItem>

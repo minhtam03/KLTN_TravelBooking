@@ -308,29 +308,27 @@ const SingleFlight = () => {
                                         <Typography variant="body2">{flight?.flightNumber || 'N/A'}</Typography>
 
                                         <Typography variant="body2" fontWeight={600}>From:</Typography>
-                                        <Typography variant="body2">{flight?.departureCity || 'N/A'}</Typography>
+                                        <Typography variant="body2">{flight?.fromPlace || 'N/A'}</Typography>
 
                                         <Typography variant="body2" fontWeight={600}>To:</Typography>
-                                        <Typography variant="body2">{flight?.arrivalCity || 'N/A'}</Typography>
+                                        <Typography variant="body2">{flight?.toPlace || 'N/A'}</Typography>
 
                                         <Typography variant="body2" fontWeight={600}>Departure:</Typography>
-                                        <Typography variant="body2">{flight?.departureDate?.slice(0, 10)} at {flight?.departureTime}</Typography>
+                                        <Typography variant="body2">{flight?.departDate?.slice(0, 10)} at {flight?.departTimeStr}</Typography>
 
-                                        {flight?.tripType === 'round-trip' && (
-                                            <>
-                                                <Typography variant="body2" fontWeight={600}>Return:</Typography>
-                                                <Typography variant="body2">{flight?.returnDate?.slice(0, 10)} at {flight?.returnTime}</Typography>
-                                            </>
-                                        )}
+                                        <Typography variant="body2" fontWeight={600}>Landing:</Typography>
+                                        <Typography variant="body2">{flight?.landingDate?.slice(0, 10)} at {flight?.landingTimeStr}</Typography>
+
+
 
                                         <Typography variant="body2" fontWeight={600}>Class:</Typography>
-                                        <Typography variant="body2">{flight?.flightClass || 'N/A'}</Typography>
+                                        <Typography variant="body2">{flight?.ticketType || 'N/A'}</Typography>
 
                                         <Typography variant="body2" fontWeight={600}>Aircraft:</Typography>
-                                        <Typography variant="body2">{flight?.airplaneType || 'N/A'}</Typography>
+                                        <Typography variant="body2">{flight?.aircraftStr || 'N/A'}</Typography>
 
                                         <Typography variant="body2" fontWeight={600}>Price:</Typography>
-                                        <Typography variant="body2">${flight?.price || 'N/A'}</Typography>
+                                        <Typography variant="body2">${flight?.totalPriceUSD || 'N/A'}</Typography>
                                     </Box>
                                 </Box>
                             </Card>

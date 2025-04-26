@@ -1,3 +1,5 @@
+import { placeCodeMap } from "../utils/cities";
+
 export const userInputs = [
     {
         id: "username",
@@ -192,6 +194,94 @@ export const hotelInputs = [
     },
 ];
 
+// export const flightInputs = [
+//     {
+//         id: "flightNumber",
+//         label: "Flight Number",
+//         type: "text",
+//         placeholder: "VN123",
+//         name: "flightNumber",
+//     },
+//     {
+//         id: "airline",
+//         label: "Airline",
+//         type: "text",
+//         placeholder: "Vietnam Airlines",
+//         name: "airline",
+//     },
+//     {
+//         id: "departureCity",
+//         label: "Departure City",
+//         type: "select",
+//         name: "departureCity",
+//         options: [
+//             'Ha Noi', 'Ho Chi Minh', 'Da Nang', 'Hai Phong', 'Can Tho', 'Hue', 'Vinh', 'Nha Trang', 'Quy Nhon', 'Phu Quoc'
+//         ],
+//     },
+//     {
+//         id: "arrivalCity",
+//         label: "Arrival City",
+//         type: "select",
+//         name: "arrivalCity",
+//         options: [
+//             'Ha Noi', 'Ho Chi Minh', 'Da Nang', 'Hai Phong', 'Can Tho', 'Hue', 'Vinh', 'Nha Trang', 'Quy Nhon', 'Phu Quoc'
+//         ],
+//     },
+//     {
+//         id: "tripType",
+//         label: "Trip Type",
+//         type: "select",
+//         name: "tripType",
+//         options: ["one-way", "round-trip"],
+//     },
+//     {
+//         id: "departureDate",
+//         label: "Departure Date",
+//         type: "date",
+//         name: "departureDate",
+//     },
+//     {
+//         id: "departureTime",
+//         label: "Departure Time",
+//         type: "time",
+//         name: "departureTime",
+//     },
+//     {
+//         id: "returnDate",
+//         label: "Return Date",
+//         type: "date",
+//         name: "returnDate",
+//     },
+//     {
+//         id: "returnTime",
+//         label: "Return Time",
+//         type: "time",
+//         name: "returnTime",
+//     },
+//     {
+//         id: "price",
+//         label: "Price ($)",
+//         type: "number",
+//         placeholder: "100",
+//         name: "price",
+//     },
+//     {
+//         id: "airplaneType",
+//         label: "Airplane Type",
+//         type: "text",
+//         placeholder: "Airbus A321",
+//         name: "airplaneType",
+//     },
+//     {
+//         id: "flightClass",
+//         label: "Class",
+//         type: "select",
+//         name: "flightClass",
+//         options: ["economy", "business", "first"],
+//     },
+// ];
+
+
 export const flightInputs = [
     {
         id: "flightNumber",
@@ -208,73 +298,61 @@ export const flightInputs = [
         name: "airline",
     },
     {
-        id: "departureCity",
+        id: "fromPlace",
         label: "Departure City",
         type: "select",
-        name: "departureCity",
-        options: [
-            'Ha Noi', 'Ho Chi Minh', 'Da Nang', 'Hai Phong', 'Can Tho', 'Hue', 'Vinh', 'Nha Trang', 'Quy Nhon', 'Phu Quoc'
-        ],
+        name: "fromPlace",
+        options: Object.keys(placeCodeMap),
     },
     {
-        id: "arrivalCity",
+        id: "toPlace",
         label: "Arrival City",
         type: "select",
-        name: "arrivalCity",
-        options: [
-            'Ha Noi', 'Ho Chi Minh', 'Da Nang', 'Hai Phong', 'Can Tho', 'Hue', 'Vinh', 'Nha Trang', 'Quy Nhon', 'Phu Quoc'
-        ],
+        name: "toPlace",
+        options: Object.keys(placeCodeMap),
     },
     {
-        id: "tripType",
-        label: "Trip Type",
-        type: "select",
-        name: "tripType",
-        options: ["one-way", "round-trip"],
+        id: "ticketType",
+        label: "Ticket Type",
+        type: "text",
+        name: "ticketType",
     },
     {
-        id: "departureDate",
-        label: "Departure Date",
-        type: "date",
-        name: "departureDate",
-    },
-    {
-        id: "departureTime",
-        label: "Departure Time",
-        type: "time",
-        name: "departureTime",
-    },
-    {
-        id: "returnDate",
-        label: "Return Date",
-        type: "date",
-        name: "returnDate",
-    },
-    {
-        id: "returnTime",
-        label: "Return Time",
-        type: "time",
-        name: "returnTime",
-    },
-    {
-        id: "price",
-        label: "Price ($)",
-        type: "number",
-        placeholder: "100",
-        name: "price",
-    },
-    {
-        id: "airplaneType",
+        id: "aircraftStr",
         label: "Airplane Type",
         type: "text",
         placeholder: "Airbus A321",
-        name: "airplaneType",
+        name: "aircraftStr",
     },
     {
-        id: "flightClass",
-        label: "Class",
-        type: "select",
-        name: "flightClass",
-        options: ["economy", "business", "first"],
+        id: "departDate",
+        label: "Departure Date",
+        type: "date",
+        name: "departDate",
+    },
+    {
+        id: "departTimeStr",
+        label: "Departure Time",
+        type: "time",
+        name: "departTimeStr",
+    },
+    {
+        id: "landingDate",
+        label: "Landing Date",
+        type: "date",
+        name: "landingDate",
+    },
+    {
+        id: "landingTimeStr",
+        label: "Landing Time",
+        type: "time",
+        name: "landingTimeStr",
+    },
+    {
+        id: "totalPriceUSD",
+        label: "Price (USD)",
+        type: "number",
+        placeholder: "99",
+        name: "totalPriceUSD",
     },
 ];

@@ -24,9 +24,26 @@ import Sidebar from "../../../components/admin/sidebar/Sidebar";
 import Navbar from "../../../components/admin/navbar/Navbar";
 import { BASE_URL } from "../../../utils/config";
 import axios from "axios";
+import { placeCodeMap } from "../../../utils/cities";
+
 
 const formatDateInput = (dateStr) => (!dateStr ? "" : new Date(dateStr).toISOString().split("T")[0]);
 const formatTimeInput = (timeStr) => (!timeStr ? "" : timeStr.length === 5 ? timeStr : timeStr.slice(0, 5));
+
+
+// const placeCodeMap = {
+//     'Ha Noi': 'HAN',
+//     'Ho Chi Minh': 'SGN',
+//     'Da Nang': 'DAD',
+//     'Hai Phong': 'HPH',
+//     'Can Tho': 'VCA',
+//     'Hue': 'HUI',
+//     'Vinh': 'VII',
+//     'Nha Trang': 'CXR',
+//     'Quy Nhon': 'UIH',
+//     'Phu Quoc': 'PQC',
+// };
+
 
 const Edit = ({ inputs, title }) => {
     const { id } = useParams();
@@ -63,10 +80,30 @@ const Edit = ({ inputs, title }) => {
         fetchData();
     }, [id, path]);
 
+    // const handleChange = (e) => {
+    //     const { name, value } = e.target;
+    //     if (name === "tripType") setTripType(value);
+    //     setInfo((prev) => ({ ...prev, [name]: value }));
+    // };
     const handleChange = (e) => {
         const { name, value } = e.target;
-        if (name === "tripType") setTripType(value);
-        setInfo((prev) => ({ ...prev, [name]: value }));
+
+        setInfo((prev) => {
+            let updated = { ...prev, [name]: value };
+
+            if (path === "flights") {
+                if (name === "fromPlace") {
+                    updated.fromPlaceCode = placeCodeMap[value] || "";
+                }
+                if (name === "toPlace") {
+                    updated.toPlaceCode = placeCodeMap[value] || "";
+                }
+            }
+
+            if (name === "tripType") setTripType(value);
+
+            return updated;
+        });
     };
 
     const handleUpdate = async (e) => {

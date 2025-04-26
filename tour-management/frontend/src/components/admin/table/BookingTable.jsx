@@ -140,7 +140,12 @@ const BookingTable = ({ userId, tourId, hotelId, flightId }) => {
                                     <TableCell>{booking.fullName}</TableCell>
                                     <TableCell>{booking.guestSize}</TableCell>
                                     <TableCell>{booking.phone}</TableCell>
-                                    <TableCell>{new Date(booking.bookAt).toLocaleDateString()}</TableCell>
+                                    <TableCell>
+                                        {booking.flightId?.departDate
+                                            ? new Date(booking.flightId.departDate).toLocaleDateString()
+                                            : new Date(booking.bookAt).toLocaleDateString()
+                                        }
+                                    </TableCell>
                                     <TableCell>{new Date(booking.createdAt).toLocaleDateString()}</TableCell>
                                     <TableCell>{booking.amount ? `$${booking.amount}` : "N/A"}</TableCell>
                                     {/* <TableCell>
