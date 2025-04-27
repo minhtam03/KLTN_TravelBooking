@@ -5,14 +5,23 @@ const hotelSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  location: {
+  location: {   // ten thanh pho
     type: String,
     required: true,
   },
-  pricePerNight: {
+  city: {   // ten thanh pho
+    type: String,
+    // required: true,
+  },
+  address: {   // dia chi cu the
+    type: String,
+    // required: true,
+  },
+  pricePerNight: {  // giá đô
     type: Number,
     required: true,
   },
+  pricePerNightOriginal: { type: Number },  // giá việt
   stars: {
     type: Number,
     required: true,

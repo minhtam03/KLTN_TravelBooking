@@ -20,12 +20,17 @@ const SearchBarStay = () => {
   const navigate = useNavigate();
 
   const handleSearch = async () => {
+    if (!destination.trim()) {
+      alert('Please enter destination');
+      return;
+    }
+
     try {
       const res = await axios.get(`${BASE_URL}/hotels/search/getHotelBySearch`, {
         params: {
           location: destination,
-          minPrice: minPrice || 0,
-          maxPrice: maxPrice || 9999
+          minPrice: parseInt(minPrice) || 0,
+          maxPrice: parseInt(maxPrice) || 9999999
         }
       });
 

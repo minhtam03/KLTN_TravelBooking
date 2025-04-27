@@ -107,6 +107,9 @@ import {
 } from '@mui/material';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import StorefrontIcon from '@mui/icons-material/Storefront';
+import BedIcon from '@mui/icons-material/Bed';
+import hotelImgDefault from '../../assets/images/hotel.jpg'
+
 const SearchHotelItem = ({ hotel }) => {
     return (
         <Card
@@ -123,7 +126,7 @@ const SearchHotelItem = ({ hotel }) => {
             {/* Hình ảnh khách sạn */}
             <CardMedia
                 component="img"
-                image={hotel.photo}
+                image={hotel.photo && hotel.photo.trim() !== "" ? hotel.photo : hotelImgDefault}
                 alt={hotel.hotelName}
                 sx={{
                     width: 200,
@@ -180,16 +183,12 @@ const SearchHotelItem = ({ hotel }) => {
                                 Amenities: {hotel.amenities?.join(', ') || 'N/A'}
                             </Typography>
                         </Box>
-
-
-                        {/* 
-                        <Typography variant="body2" sx={{ mt: 1, color: '#555' }}>
-                            <strong>Amenities:</strong> {hotel.amenities?.join(', ') || 'N/A'}
-                        </Typography> */}
-                        {/* 
-                        <Typography variant="body2" sx={{ mt: 1, color: 'success.main', fontWeight: 600 }}>
-                            Free cancellation
-                        </Typography> */}
+                        <Box display="flex" alignItems="center" gap={1} mb={1.5}>
+                            <BedIcon sx={{ fontSize: 22, fill: 'rgb(125,125,125)' }} />
+                            <Typography variant="body2" fontFamily="Mulish, sans-serif" fontWeight={500}>
+                                Rooms available: {hotel.roomsAvailable}
+                            </Typography>
+                        </Box>
                     </CardContent>
                 </Grid>
 

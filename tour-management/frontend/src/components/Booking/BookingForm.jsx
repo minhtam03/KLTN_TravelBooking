@@ -152,8 +152,27 @@ const BookingForm = ({ item, type, avgRating }) => {
                 </ListItem>
             </List>
 
-            <Button variant="contained" fullWidth sx={{ mt: 3, fontFamily: 'Mulish', backgroundColor: 'var(--secondary-color)', '&:hover': { backgroundColor: '#71aea3' } }} onClick={handleClick}>
+            {/* <Button variant="contained"
+                fullWidth
+                disabled={item.roomsAvailable === 0}
+                sx={{ mt: 3, fontFamily: 'Mulish', backgroundColor: 'var(--secondary-color)', '&:hover': { backgroundColor: '#71aea3' } }} onClick={handleClick}>
                 Book Now
+            </Button> */}
+            <Button
+                variant="contained"
+                fullWidth
+                disabled={item.roomsAvailable === 0}
+                sx={{
+                    mt: 3,
+                    fontFamily: 'Mulish',
+                    backgroundColor: item.roomsAvailable === 0 ? '#ccc' : 'var(--secondary-color)',
+                    '&:hover': {
+                        backgroundColor: item.roomsAvailable === 0 ? '#ccc' : '#71aea3'
+                    }
+                }}
+                onClick={handleClick}
+            >
+                {item.roomsAvailable === 0 ? 'Sold Out' : 'Book Now'}
             </Button>
         </Paper>
     );

@@ -210,22 +210,38 @@ import {
 import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
 import { Link } from 'react-router-dom';
 
+import vietnamAirlinesLogo from '../assets/images/vnairline.jpg';
+import vietjetLogo from '../assets/images/vietjet.jpg';
+import bambooLogo from '../assets/images/bamboo.jpg';
+
+const getAirlineLogo = (airline) => {
+    switch (airline) {
+        case 'VietnamAirlines':
+            return vietnamAirlinesLogo;
+        case 'VietJetAir':
+            return vietjetLogo;
+        case 'BambooAirways':
+            return bambooLogo;
+        default:
+            return vietnamAirlinesLogo; // fallback default nếu không khớp
+    }
+};
+
+
 const FlightCard = ({ flight }) => {
     return (
         <Card sx={{ display: 'flex', p: 2, borderRadius: 3, boxShadow: 3, mb: 4 }}>
             <CardMedia
+                component="img"
+                image={getAirlineLogo(flight.airline)}
+                alt={flight.airline}
                 sx={{
                     width: 200,
                     height: 200,
                     borderRadius: 2,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    bgcolor: '#e0f7fa',
+                    objectFit: 'cover',
                 }}
-            >
-                <AirplanemodeActiveIcon sx={{ fontSize: 60, color: '#0097a7' }} />
-            </CardMedia>
+            />
 
             <Grid container spacing={2} sx={{ ml: 2 }}>
                 <Grid item xs={12} md={8}>
@@ -250,7 +266,7 @@ const FlightCard = ({ flight }) => {
                             Arrival: {flight.landingDate} at {flight.landingTimeStr}
                         </Typography>
 
-                        <Typography variant="body2" sx={{ mt: 1 }}>
+                        <Typography variant="body2" sx={{ mt: 1, minHeight: '40px', }}>
                             Class: {flight.ticketType}
                         </Typography>
                         {/* 

@@ -3,16 +3,17 @@ import express from 'express';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import { removeVietnameseTones } from '../utils/removeVietnamese.js';
+import { placeCodeMap } from '../utils/cities.js';
 
-
-const airports = ["SGN", "HAN", "DAD", "CXR", "PQC", "HPH", "VII", "DLI", "UIH", "THD"];
 const VND_TO_USD = 25000;
-const daysToFetch = 3;
+const daysToFetch = 5;
+const airports = Object.values(placeCodeMap);
+
 
 export const importFlight = async (req, res) => {
     const today = new Date();
     const savedFlights = [];
-
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
     try {
         for (let d = 0; d < daysToFetch; d++) {
             const date = new Date(today);
@@ -22,7 +23,7 @@ export const importFlight = async (req, res) => {
             for (const from of airports) {
                 for (const to of airports) {
                     if (from === to) continue;
-
+                    await sleep(2000)
                     const response = await axios.post('https://apiportal.ivivu.com/web_prot/flightinbound//gate/apiv1/GetFlightDepart', {
                         roundTrip: false,
                         fromPlace: from,
@@ -38,7 +39,7 @@ export const importFlight = async (req, res) => {
                         version: "2.0",
                         flightType: "Direct"
                     });
-
+                    console.log(response)
                     const outboundGroup = response.data?.data?.[0] || {};
                     const flights = (outboundGroup.flights || []).slice(0, 20);
 
@@ -71,24 +72,124 @@ export const importFlight = async (req, res) => {
 
                             isReturn: false
                         };
-
+                        console.log("done")
                         try {
                             await FlightV2.updateOne({ id: f.id }, flightDoc, { upsert: true });
                             savedFlights.push(flightDoc);
                         } catch (e) {
-                            console.error('❌ Error saving flight:', f.id, e.message);
+                            console.error('Error saving flight:', f.id, e.message);
                         }
                     }
                 }
             }
         }
 
-        res.status(200).json({ message: '✅ Imported flights into FlightV2', count: savedFlights.length });
+        res.status(200).json({ message: 'Imported flights into FlightV2', count: savedFlights.length });
     } catch (error) {
-        console.error('❌ Error importing flights:', error.message);
+        console.error('Error importing flights:', error.message);
         res.status(500).json({ error: 'Failed to import flights to FlightV2' });
     }
 };
+
+// export const importFlight = async (req, res) => {
+//     const today = new Date();
+//     const savedFlights = [];
+
+//     try {
+//         for (let d = 0; d < daysToFetch; d++) {
+//             const date = new Date(today);
+//             date.setDate(today.getDate() + d + 10);
+//             // date.setDate(today.getDate() + d);
+//             const isoDate = date.toISOString().split('T')[0] + 'T07:00:00';
+
+//             // Tạo danh sách tất cả các promise trước
+//             const allRequests = [];
+
+//             for (const from of airports) {
+//                 for (const to of airports) {
+//                     if (from === to) continue;
+
+//                     const payload = {
+//                         roundTrip: false,
+//                         fromPlace: from,
+//                         toPlace: to,
+//                         departDate: isoDate,
+//                         returnDate: isoDate,
+//                         adult: 1,
+//                         child: 0,
+//                         infant: 0,
+//                         sources: "VietnamAirlines;VietJetAir;BambooAirways",
+//                         ticketClass: null,
+//                         timeIndayRecomment: "09:00",
+//                         version: "2.0",
+//                         flightType: "Direct"
+//                     };
+
+//                     const reqPromise = axios.post('https://apiportal.ivivu.com/web_prot/flightinbound//gate/apiv1/GetFlightDepart', payload)
+//                         .then(response => ({ success: true, data: response.data, from, to }))
+//                         .catch(error => ({ success: false, error: error.message, from, to }));
+
+//                     allRequests.push(reqPromise);
+//                 }
+//             }
+
+//             // Chạy song song tất cả request trong ngày
+//             const responses = await Promise.all(allRequests);
+
+//             // Xử lý từng response
+//             for (const resp of responses) {
+//                 if (!resp.success) {
+//                     console.error(`Error fetching from ${resp.from} to ${resp.to}:`, resp.error);
+//                     continue;
+//                 }
+
+//                 const outboundGroup = resp.data?.data?.[0] || {};
+//                 const flights = (outboundGroup.flights || []).slice(0, 20);
+
+//                 for (const f of flights) {
+//                     const depart = dayjs(f.departTime);
+//                     const landing = dayjs(f.landingTime);
+
+//                     const flightDoc = {
+//                         id: f.id,
+//                         flightNumber: f.flightNumber,
+//                         airline: f.airline,
+//                         fromPlace: removeVietnameseTones(f.fromPlace),
+//                         fromPlaceCode: f.fromPlaceCode,
+//                         toPlace: removeVietnameseTones(f.toPlace),
+//                         toPlaceCode: f.toPlaceCode,
+
+//                         ticketType: f.ticketType,
+//                         aircraftStr: f.aircraftStr,
+
+//                         totalPrice: f.totalPrice,
+
+//                         departTime: f.departTime,
+//                         landingTime: f.landingTime,
+//                         departDate: depart.format('YYYY-MM-DD'),
+//                         departTimeStr: depart.format('HH:mm'),
+//                         landingDate: landing.format('YYYY-MM-DD'),
+//                         landingTimeStr: landing.format('HH:mm'),
+
+//                         isReturn: false
+//                     };
+
+//                     try {
+//                         await FlightV2.updateOne({ id: f.id }, flightDoc, { upsert: true });
+//                         savedFlights.push(flightDoc);
+//                     } catch (e) {
+//                         console.error('Error saving flight:', f.id, e.message);
+//                     }
+//                 }
+//             }
+//         }
+
+//         res.status(200).json({ message: 'Imported flights into FlightV2', count: savedFlights.length });
+//     } catch (error) {
+//         console.error('Error importing flights:', error.message);
+//         res.status(500).json({ error: 'Failed to import flights to FlightV2' });
+//     }
+// };
 
 export const getAllFlightsV2 = async (req, res) => {
     const page = req.query.page ? parseInt(req.query.page) : null

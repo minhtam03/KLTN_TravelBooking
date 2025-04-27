@@ -20,6 +20,24 @@ import SmartphoneOutlinedIcon from '@mui/icons-material/SmartphoneOutlined';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import CommonSection from "../shared/CommonSection";
 
+import vietnamAirlinesLogo from '../assets/images/vnairline.jpg';
+import vietjetLogo from '../assets/images/vietjet.jpg';
+import bambooLogo from '../assets/images/bamboo.jpg';
+
+
+const getAirlineLogo = (airline) => {
+    switch (airline) {
+        case 'VietnamAirlines':
+            return vietnamAirlinesLogo;
+        case 'VietJetAir':
+            return vietjetLogo;
+        case 'BambooAirways':
+            return bambooLogo;
+        default:
+            return 'https://www.libertytravel.com/sites/default/files/styles/full_size/public/flight-hero.jpg?itok=LKyRwKDq';
+    }
+};
+
 const GenericBookingDetail = ({ type }) => {
     const { user } = useContext(AuthContext);
     const { bookingId } = useParams();
@@ -136,7 +154,7 @@ const GenericBookingDetail = ({ type }) => {
         detailLink = `/stays/${item?._id}`;
     } else if (type === "flight") {
         item = booking.flightId;
-        image = item?.photo || "https://www.libertytravel.com/sites/default/files/styles/full_size/public/flight-hero.jpg?itok=LKyRwKDq";
+        image = getAirlineLogo(item.airline)
         name = `${item?.airline} - ${item?.flightNumber}`;
         quantity = booking.guestSize;
         unitPrice = item?.totalPriceUSD || 0;
@@ -171,7 +189,7 @@ const GenericBookingDetail = ({ type }) => {
                             <img
                                 src={image}
                                 alt={name}
-                                style={{ width: "100%", height: "auto", objectFit: "cover", borderRadius: 12 }}
+                                style={{ width: "100%", maxHeight: "370px", objectFit: "cover", borderRadius: 12 }}
                             />
                         </Box>
                     </Grid>

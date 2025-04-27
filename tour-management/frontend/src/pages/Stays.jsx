@@ -9,7 +9,7 @@ import FeaturedProperties from '../components/Featured-property/FeaturedProperti
 import { BASE_URL } from '../utils/config';
 import axios from 'axios';
 import SearchHotelItem from '../components/SearchHotelItem/SearchHotelItem';
-
+import { Pagination, Box } from '@mui/material';
 import '../styles/stays.css'
 
 const Stays = () => {
@@ -60,7 +60,7 @@ const Stays = () => {
         )}
 
         {/* Pagination */}
-        <div className="pagination d-flex align-items-center justify-content-center mt-4 gap-3">
+        {/* <div className="pagination d-flex align-items-center justify-content-center mt-4 gap-3">
           {[...Array(pageCount).keys()].map(number => (
             <span
               key={number}
@@ -70,7 +70,27 @@ const Stays = () => {
               {number + 1}
             </span>
           ))}
-        </div>
+        </div> */}
+        <Box display="flex" justifyContent="center" mt={8}>
+          <Pagination
+            count={pageCount}
+            page={page + 1}
+            onChange={(event, value) => setPage(value - 1)}
+            shape="rounded" // ✅ Bo tròn nút
+            sx={{
+              '& .MuiPaginationItem-root': {
+                borderRadius: '50%', // bo tròn hơn mặc định
+              },
+              '& .Mui-selected': {
+                backgroundColor: 'rgb(201, 201, 201)', // màu xám đậm khi active
+                // chữ trắng
+                '&:hover': {
+                  backgroundColor: 'rgb(220, 219, 219)', // hover active đậm hơn nữa
+                }
+              }
+            }}
+          />
+        </Box>
       </div>
       {/* </section> */}
     </>

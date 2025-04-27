@@ -5,12 +5,11 @@ const citySchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        trim: true,
     },
-    description: {
+    cityId: {
         type: String,
-        required: false,
-        trim: true,
+        required: true,
+        unique: true,
     },
 }, { timestamps: true });
 

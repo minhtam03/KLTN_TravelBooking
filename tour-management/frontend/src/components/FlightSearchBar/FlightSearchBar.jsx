@@ -486,7 +486,7 @@ const FlightSearchBar = ({ initialValues = {} }) => {
                         sx={fieldStyle}
                     >
                         <MenuItem value=""><em>Select class</em></MenuItem>
-                        <MenuItem value="economy">Economy</MenuItem>
+                        <MenuItem value="eco">Economy</MenuItem>
                         <MenuItem value="business">Business</MenuItem>
                         <MenuItem value="first">First</MenuItem>
                     </TextField>

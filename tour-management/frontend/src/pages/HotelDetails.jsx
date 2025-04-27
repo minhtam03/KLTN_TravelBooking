@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { Col, Row } from 'reactstrap';
 import {
     Typography, Box, List,
@@ -48,11 +48,14 @@ const HotelDetail = () => {
     const [reviewList, setReviewList] = useState([]);
 
     const { user } = useContext(AuthContext);
+
     const { data: hotel, loading, error } = useFetch(`${BASE_URL}/hotels/${id}`);
-    const { photo, hotelName, stars, pricePerNight, location, amenities, reviews = [] } = hotel || {};
+    const { photo, hotelName, stars, roomsAvailable, pricePerNight, location, amenities, reviews = [] } = hotel || {};
     const { avgRating } = calculateAvgRating(reviewList);
     const [page, setPage] = useState(1);
     const reviewsPerPage = 8;
+
+    const location1 = useLocation();
 
     const updateSummary = async () => {
         try {
@@ -75,17 +78,18 @@ const HotelDetail = () => {
     const pageCount = Math.ceil(reversedReviews.length / reviewsPerPage);
     const displayedReviews = reversedReviews.slice((page - 1) * reviewsPerPage, page * reviewsPerPage);
 
-    // const renderSummary = () => {
-    //     if (!summary) return <p>Loading summary...</p>;
-    //     const { positive, negative, impression } = extractSummarySections(summary);
-    //     return (
-    //         <Box mb={3}>
-    //             <div><h6>Positive Reviews:</h6><p>{positive || 'No positive reviews yet.'}</p></div>
-    //             <div><h6>Negative Reviews:</h6><p>{negative || 'No negative reviews yet.'}</p></div>
-    //             <div><h6>Overall Impression:</h6><p>{impression || 'No overall impression yet.'}</p></div>
-    //         </Box>
-    //     );
-    // };
+    const refetchHotelData = async () => {
+        try {
+            const res = await axios.get(`${BASE_URL}/hotels/${id}`);
+            if (res.data.success) {
+                window.location.reload(); // đơn giản: reload luôn cả trang
+            }
+        } catch (error) {
+            console.error('Failed to refetch hotel data', error);
+        }
+    };
+
+
     const renderSummary = () => {
         if (reviewList.length === 0) {
             return <Typography variant="h6"
@@ -143,6 +147,12 @@ const HotelDetail = () => {
         window.scrollTo(0, 0);
     }, [hotel]);
 
+    useEffect(() => {
+        if (document.referrer.includes('checkout')) { // giả sử từ trang thanh toán quay về
+            refetchHotelData();
+        }
+    }, []);
+
     const dateFormat = { day: 'numeric', month: 'long', year: 'numeric' };
 
     return (
@@ -174,6 +184,7 @@ const HotelDetail = () => {
                                     <Typography variant="body1" mb={2} sx={{ fontFamily: 'Mulish' }}><strong>Price:</strong> ${pricePerNight} / night</Typography>
                                     <Typography variant="body1" mb={2} sx={{ fontFamily: 'Mulish' }}><strong>Stars:</strong> {stars}</Typography>
                                     <Typography variant="body1" mb={2} sx={{ fontFamily: 'Mulish' }}><strong>Amenities:</strong> {amenities?.join(', ')}</Typography>
+                                    <Typography variant="body1" mb={2} sx={{ fontFamily: 'Mulish' }}><strong>Rooms available:</strong> {roomsAvailable}</Typography>
                                 </Box>
                                 <Box mt={4} ml={2}>
                                     <Typography variant="h6" fontWeight={700} mb={2} sx={{ fontFamily: 'Mulish' }}>Reviews ({reviewList.length})</Typography>

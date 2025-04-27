@@ -15,6 +15,25 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useNavigate } from 'react-router-dom';
 import defaultImg from "../assets/images/tour-img04.jpg";
 
+import vietnamAirlinesLogo from '../assets/images/vnairline.jpg';
+import vietjetLogo from '../assets/images/vietjet.jpg';
+import bambooLogo from '../assets/images/bamboo.jpg';
+
+
+const getAirlineLogo = (airline) => {
+  switch (airline) {
+    case 'VietnamAirlines':
+      return vietnamAirlinesLogo;
+    case 'VietJetAir':
+      return vietjetLogo;
+    case 'BambooAirways':
+      return bambooLogo;
+    default:
+      return 'https://www.libertytravel.com/sites/default/files/styles/full_size/public/flight-hero.jpg?itok=LKyRwKDq';
+  }
+};
+
+
 const BookingCard = ({ booking, type }) => {
   const navigate = useNavigate();
   const { _id, createdAt, paymentStatus } = booking;
@@ -43,7 +62,7 @@ const BookingCard = ({ booking, type }) => {
   } else if (type === "flight") {
     itemId = booking.flightId;
     itemName = itemId ? `${itemId.airline} - ${itemId.flightNumber}` : "Flight";
-    photo = "https://www.libertytravel.com/sites/default/files/styles/full_size/public/flight-hero.jpg?itok=LKyRwKDq";
+    photo = getAirlineLogo(itemId.airline)
     unitPrice = booking.flightId?.totalPriceUSD || 0;
     quantity = booking.guestSize;
     date = itemId?.departDate;

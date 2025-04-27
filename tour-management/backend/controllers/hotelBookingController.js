@@ -1,15 +1,42 @@
 import HotelBooking from "../models/HotelBooking.js";
+import Hotel from "../models/Hotel.js"
 
 // Create hotel booking
+// export const createHotelBooking = async (req, res) => {
+//     try {
+//         const newBooking = new HotelBooking(req.body);
+//         const saved = await newBooking.save();
+//         res.status(200).json({ success: true, message: "Hotel booking created", data: saved });
+//     } catch (err) {
+//         res.status(500).json({ success: false, message: "Failed to create hotel booking", error: err.message });
+//     }
+// };
 export const createHotelBooking = async (req, res) => {
     try {
+        // 1. Kiểm tra hotelId có tồn tại và còn phòng không
+        const hotel = await Hotel.findById(req.body.hotelId);
+        if (!hotel) {
+            return res.status(404).json({ success: false, message: "Hotel not found" });
+        }
+
+        if (hotel.roomsAvailable <= 0) {
+            return res.status(400).json({ success: false, message: "Hotel is fully booked" });
+        }
+
+        // 2. Tạo booking
         const newBooking = new HotelBooking(req.body);
-        const saved = await newBooking.save();
-        res.status(200).json({ success: true, message: "Hotel booking created", data: saved });
+        const savedBooking = await newBooking.save();
+
+        // 3. Giảm số lượng roomsAvailable
+        hotel.roomsAvailable -= 1;
+        await hotel.save();
+
+        res.status(200).json({ success: true, message: "Hotel booking created", data: savedBooking });
     } catch (err) {
         res.status(500).json({ success: false, message: "Failed to create hotel booking", error: err.message });
     }
 };
+
 
 // Get hotel booking history for a specific user with pagination
 export const getHotelBookingHistory = async (req, res) => {

@@ -317,6 +317,25 @@ import { AuthContext } from '../../context/AuthContext';
 import { BASE_URL } from '../../utils/config';
 import axios from 'axios';
 
+import vietnamAirlinesLogo from '../../assets/images/vnairline.jpg';
+import vietjetLogo from '../../assets/images/vietjet.jpg';
+import bambooLogo from '../../assets/images/bamboo.jpg';
+
+
+const getAirlineLogo = (airline) => {
+    switch (airline) {
+        case 'VietnamAirlines':
+            return vietnamAirlinesLogo;
+        case 'VietJetAir':
+            return vietjetLogo;
+        case 'BambooAirways':
+            return bambooLogo;
+        default:
+            return 'https://www.libertytravel.com/sites/default/files/styles/full_size/public/flight-hero.jpg?itok=LKyRwKDq';
+    }
+};
+
+
 const BookingFlightForm = ({ flight }) => {
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -401,7 +420,7 @@ const BookingFlightForm = ({ flight }) => {
                     <Paper elevation={3} sx={{ padding: 3, borderRadius: 2, fontFamily: 'Mulish' }}>
                         <Box sx={{ mb: 2 }}>
                             <img
-                                src={flight.photo || 'https://www.libertytravel.com/sites/default/files/styles/full_size/public/flight-hero.jpg?itok=LKyRwKDq'}
+                                src={getAirlineLogo(flight.airline)}
                                 alt="Flight"
                                 style={{
                                     width: '100%',
