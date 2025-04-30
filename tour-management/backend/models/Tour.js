@@ -77,6 +77,10 @@ const tourSchema = new mongoose.Schema(
       required: false,
       default: []
     },
+    avgRating: {
+      type: Number,
+      default: 0,
+    }
   },
   { timestamps: true }
 );

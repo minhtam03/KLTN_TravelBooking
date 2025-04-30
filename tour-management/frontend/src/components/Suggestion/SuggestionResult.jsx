@@ -457,20 +457,26 @@ const SuggestionResult = ({
                             onChange={(e) => handleSelect('tour', e.target.value)}
                             renderValue={(selected) => selected?.title || "Select a tour"}
                         >
-                            {results.tours.map((tour, index) => (
-                                <MenuItem
-                                    key={index}
-                                    value={tour}
-                                    disabled={isOptionDisabled('tour', tour)}
-                                    sx={{ position: 'relative' }}
-                                >
-                                    <Tooltip title={<ItemCardTooltip item={tour} type="tour" />} {...tooltipProps}>
-                                        <Box sx={{ width: '100%' }}>
-                                            {tour.title} - ${tour.price}
-                                        </Box>
-                                    </Tooltip>
-                                </MenuItem>
-                            ))}
+                            {results.tours
+                                .sort((a, b) => {
+                                    const ratingDiff = (b.avgRating || 0) - (a.avgRating || 0);
+                                    if (ratingDiff !== 0) return ratingDiff;
+                                    return a.price - b.price;
+                                })
+                                .map((tour, index) => (
+                                    <MenuItem
+                                        key={index}
+                                        value={tour}
+                                        disabled={isOptionDisabled('tour', tour)}
+                                        sx={{ position: 'relative' }}
+                                    >
+                                        <Tooltip title={<ItemCardTooltip item={tour} type="tour" />} {...tooltipProps}>
+                                            <Box sx={{ width: '100%' }}>
+                                                {tour.title} - ${tour.price}
+                                            </Box>
+                                        </Tooltip>
+                                    </MenuItem>
+                                ))}
                         </Select>
                     </FormControl>
                 </Grid>

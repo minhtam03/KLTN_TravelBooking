@@ -81,7 +81,14 @@ export const getSuggestedTours = async (userId, topK = 5) => {
             .filter(Boolean)
             .map(id => id.toString());
 
-        if (!bookedTourIds.length) return [];
+        // if (!bookedTourIds.length) return [];
+        if (!bookedTourIds.length) {
+            const topRatedTours = await Tour.find({ avgRating: { $gt: 0 } })
+                .sort({ avgRating: -1 })
+                .limit(topK);
+
+            return topRatedTours.map(tour => ({ ...tour.toObject(), score: null }));
+        }
 
         // Bước 2: Lấy thông tin các tour đã đặt để tạo embedding người dùng
         const bookedTours = await Tour.find({ _id: { $in: bookedTourIds } });

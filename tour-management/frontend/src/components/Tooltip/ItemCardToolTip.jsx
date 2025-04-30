@@ -197,7 +197,7 @@ import { Link } from 'react-router-dom';
 const ItemCardTooltip = ({ item, type }) => {
     if (!item) return null;
 
-    let id, photo, title, price, location, featured, reviews, locationTo = [];
+    let id, photo, title, price, location, featured, reviews, locationTo, avgRating = [];
 
     if (type === "tour") {
         id = item._id;
@@ -206,6 +206,7 @@ const ItemCardTooltip = ({ item, type }) => {
         location = item.city;
         price = item.price;
         featured = item.featured;
+        avgRating = item.avgRating || 0;
         // reviews = item.reviews || [];
     } else if (type === "hotel") {
         id = item._id;
@@ -226,7 +227,7 @@ const ItemCardTooltip = ({ item, type }) => {
         reviews = [];
     }
 
-    const { totalRating, avgRating } = calculateAvgRating(reviews);
+    // const { totalRating, avgRating } = calculateAvgRating(reviews);
 
     let detailLink = `/${type}s/${id}`;
     if (type === "hotel") detailLink = `/stays/${id}`;
@@ -250,10 +251,10 @@ const ItemCardTooltip = ({ item, type }) => {
 
                     {type === "tour" && (
                         <Box display="flex" alignItems="center" gap={0.5} color="warning.main">
-                            {/* <StarIcon fontSize="small" /> */}
-                            {/* <Typography variant="body2">
-                                {avgRating === 0 ? 'Not rated' : `${avgRating} (${reviews.length})`}
-                            </Typography> */}
+                            <StarIcon fontSize="small" />
+                            <Typography variant="body2">
+                                {avgRating === 0 ? 'Not rated' : `${avgRating}`}
+                            </Typography>
                         </Box>
                     )}
                 </Box>

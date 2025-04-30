@@ -1,4 +1,5 @@
 import Tour from '../models/Tour.js'
+import Review from "../models/Review.js";
 import { getEmbedding } from '../utils/embeddingHelper.js';
 
 // create new tour
@@ -33,7 +34,7 @@ export const createTour = async (req, res) => {
 
         const newTour = new Tour({
             ...req.body,
-            embedding, // thêm embedding vào tour
+            embedding,
         });
 
         const savedTour = await newTour.save();
