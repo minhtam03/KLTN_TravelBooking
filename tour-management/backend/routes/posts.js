@@ -7,6 +7,7 @@ import {
     updatePost,
     deletePost,
     likePost,
+    getAllPostsPagination,
     // getPostsPaginated,
     searchPosts
 } from "../controllers/postController.js";
@@ -17,6 +18,8 @@ const router = express.Router();
 
 // create new tour
 router.post("/", createPost)
+router.get("/page", getAllPostsPagination)
+
 router.get("/", getAllPosts)
 router.patch("/:id/like", likePost)
 router.get("/:id", getSinglePost)

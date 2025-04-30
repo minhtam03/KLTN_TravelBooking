@@ -147,7 +147,7 @@ export default function PostDetail() {
                 </Card>
             )}
 
-            <Typography
+            {/* <Typography
                 sx={{
                     mt: 2,
                     fontSize: 18,
@@ -156,7 +156,17 @@ export default function PostDetail() {
                 }}
             >
                 {post.content}
-            </Typography>
+            </Typography> */}
+
+            <Typography
+                sx={{
+                    mt: 2,
+                    fontSize: 18,
+                    lineHeight: 1.6,
+                    color: '#444'
+                }}
+                dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, "<br />") }}
+            />
         </Box>
     );
 }

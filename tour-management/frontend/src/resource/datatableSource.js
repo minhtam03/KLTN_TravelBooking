@@ -60,7 +60,7 @@ export const hotelColumns = [
     {
         field: 'hotelName',
         headerName: 'Hotel Name',
-        width: 300,
+        width: 400,
         renderCell: (params) => {
             return (
                 <div className="cellWithImg">
@@ -83,6 +83,7 @@ export const hotelColumns = [
     },
     // { field: 'city', headerName: 'City', width: 150 },
     { field: 'location', headerName: 'City', width: 200 },
+    { field: 'roomsAvailable', headerName: 'Rooms available', width: 200 },
     { field: 'pricePerNight', headerName: 'Price/Night ($)', width: 150 },
 ]
 
@@ -159,6 +160,6 @@ export const flightColumns = [
     { field: 'fromPlace', headerName: 'From', width: 130 },
     { field: 'toPlace', headerName: 'To', width: 130 },
 
-    { field: 'ticketType', headerName: 'Class', width: 110 },
+    { field: 'ticketType', headerName: 'Class', width: 150 },
     { field: 'totalPriceUSD', headerName: 'Price ($)', width: 120 }
 ];

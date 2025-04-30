@@ -211,10 +211,66 @@ const New = ({ inputs, title }) => {
                                             fullWidth: true
                                         };
 
+                                        // return (
+                                        //     <Grid item xs={12} sm={6} key={input.id}>
+                                        //         <Box display="flex" alignItems="center" gap={3}>
+                                        //             <Typography sx={{ width: 140, fontWeight: 500 }}>{input.label}:</Typography>
+                                        //             {input.id === "password" ? (
+                                        //                 <TextField
+                                        //                     {...commonProps}
+                                        //                     type={showPassword ? "text" : "password"}
+                                        //                     InputProps={{
+                                        //                         endAdornment: (
+                                        //                             <InputAdornment position="end">
+                                        //                                 <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                                        //                                     {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        //                                 </IconButton>
+                                        //                             </InputAdornment>
+                                        //                         ),
+                                        //                     }}
+                                        //                     variant="standard"
+                                        //                 />
+                                        //             ) : input.type === "select" ? (
+                                        //                 <FormControl variant="standard" fullWidth>
+                                        //                     <Select
+                                        //                         name={input.id}
+                                        //                         defaultValue=""
+                                        //                         onChange={handleChange}
+                                        //                     >
+                                        //                         {input.options?.map((opt) => (
+                                        //                             <MenuItem key={opt} value={opt}>{opt}</MenuItem>
+                                        //                         ))}
+                                        //                     </Select>
+                                        //                 </FormControl>
+                                        //             ) : (
+                                        //                 // <TextField
+                                        //                 //     {...commonProps}
+                                        //                 //     type={input.type || "text"}
+                                        //                 //     variant="standard"
+                                        //                 // />
+                                        //                 <TextField
+                                        //                     {...commonProps}
+                                        //                     type={input.type === "textarea" ? undefined : input.type || "text"}
+                                        //                     variant="standard"
+                                        //                     multiline={input.type === "textarea"}
+                                        //                     minRows={input.type === "textarea" ? 6 : undefined}
+                                        //                 />
+                                        //             )}
+                                        //         </Box>
+                                        //     </Grid>
+                                        // );
                                         return (
-                                            <Grid item xs={12} sm={6} key={input.id}>
-                                                <Box display="flex" alignItems="center" gap={3}>
-                                                    <Typography sx={{ width: 140, fontWeight: 500 }}>{input.label}:</Typography>
+                                            <Grid item xs={input.id === "content" ? 12 : 6} key={input.id}>
+                                                <Box display="flex" alignItems={input.id === "content" ? "flex-start" : "center"} gap={3}>
+                                                    <Typography
+                                                        sx={{
+                                                            width: 140,
+                                                            fontWeight: 500,
+                                                            mt: input.id === "content" ? 1 : 0
+                                                        }}
+                                                    >
+                                                        {input.label}:
+                                                    </Typography>
                                                     {input.id === "password" ? (
                                                         <TextField
                                                             {...commonProps}
@@ -245,13 +301,16 @@ const New = ({ inputs, title }) => {
                                                     ) : (
                                                         <TextField
                                                             {...commonProps}
-                                                            type={input.type || "text"}
+                                                            type={input.type === "textarea" ? undefined : input.type || "text"}
                                                             variant="standard"
+                                                            multiline={input.type === "textarea"}
+                                                            minRows={input.type === "textarea" ? 6 : undefined}
                                                         />
                                                     )}
                                                 </Box>
                                             </Grid>
                                         );
+
                                     })}
                                 </Grid>
 

@@ -239,10 +239,16 @@ const Edit = ({ inputs, title }) => {
                                                                                 ? formatTimeInput(info[input.id])
                                                                                 : info[input.id] || ""
                                                                     }
-                                                                    type={input.type || "text"}
+                                                                    // type={input.type || "text"}
+                                                                    // onChange={handleChange}
+                                                                    // fullWidth
+                                                                    // variant="standard"
+                                                                    type={input.type === "textarea" ? undefined : input.type || "text"}
                                                                     onChange={handleChange}
                                                                     fullWidth
                                                                     variant="standard"
+                                                                    multiline={input.type === "textarea"}
+                                                                    minRows={input.type === "textarea" ? 6 : undefined}
                                                                 />
                                                             )}
                                                         </Box>

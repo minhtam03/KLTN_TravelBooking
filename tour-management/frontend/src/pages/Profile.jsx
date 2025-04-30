@@ -218,15 +218,26 @@ const Profile = () => {
                                     />
                                 </Box>
                             </Paper>
+
+                            <Box sx={{ mt: 4, textAlign: "center" }}>
+                                {/* <Button type="submit" variant="contained" color="primary">
+                            Save Changes
+                        </Button> */}
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    sx={{ backgroundColor: 'var(--secondary-color)', fontWeight: 'bold', textTransform: 'none', '&:hover': { backgroundColor: '#71aea3' } }}
+                                    disabled={uploading}
+                                >
+                                    {uploading ? "Uploading..." : "Save Changes"}
+                                </Button>
+                            </Box>
                         </Grid>
                     </Grid>
 
                     {/* Submit Button */}
-                    <Box sx={{ mt: 4, textAlign: "center" }}>
-                        <Button type="submit" variant="contained" color="primary">
-                            Save Changes
-                        </Button>
-                    </Box>
+
                 </form>
             </Container>
         </>

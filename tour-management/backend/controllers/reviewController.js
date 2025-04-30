@@ -100,7 +100,7 @@ export const getReviewSummary = async (req, res) => {
 
         const model = new ChatGroq({
             apiKey: process.env.CHATGROQ_API_KEY,
-            model: "llama-3.1-8b-instant"
+            model: "llama-3.3-70b-versatile"
         });
 
         const message = new HumanMessage(`

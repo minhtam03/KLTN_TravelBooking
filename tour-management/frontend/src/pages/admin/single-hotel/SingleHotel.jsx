@@ -248,8 +248,9 @@ const SingleHotel = () => {
                                         <Typography variant="body1">{hotel?.stars || 'N/A'}</Typography>
 
                                         <Typography variant="body1" fontWeight={600}>Amenities:</Typography>
-                                        <Typography variant="body1">{hotel?.amenities || 'N/A'}</Typography>
-
+                                        <Typography variant="body1">
+                                            {hotel?.amenities?.length > 0 ? hotel.amenities.join(', ') : 'N/A'}
+                                        </Typography>
                                         <Typography variant="body1" fontWeight={600}>Price/Night:</Typography>
                                         <Typography variant="body1">{hotel?.pricePerNight || 'N/A'} $</Typography>
                                     </Box>

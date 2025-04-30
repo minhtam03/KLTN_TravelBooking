@@ -102,17 +102,6 @@ const TourDetails = ({ type = "Tour" }) => {
     page * reviewsPerPage
   );
 
-  // const renderSummary = () => {
-  //   if (!summary) return <p>Loading summary...</p>;
-  //   const { positive, negative, impression } = extractSummarySections(summary);
-  //   return (
-  //     <Box mb={3}>
-  //       <div><h6>Positive Reviews:</h6><p>{positive || 'No positive reviews yet.'}</p></div>
-  //       <div><h6>Negative Reviews:</h6><p>{negative || 'No negative reviews yet.'}</p></div>
-  //       <div><h6>Overall Impression:</h6><p>{impression || 'No overall impression yet.'}</p></div>
-  //     </Box>
-  //   );
-  // };
   const renderSummary = () => {
     if (reviewList.length === 0) {
       return <Typography variant="h6"

@@ -23,7 +23,7 @@ export const importFlight = async (req, res) => {
             for (const from of airports) {
                 for (const to of airports) {
                     if (from === to) continue;
-                    await sleep(2000)
+                    await sleep(1000)
                     const response = await axios.post('https://apiportal.ivivu.com/web_prot/flightinbound//gate/apiv1/GetFlightDepart', {
                         roundTrip: false,
                         fromPlace: from,

@@ -170,7 +170,7 @@ const GenericBookingDetail = ({ type }) => {
         <>
             <CommonSection title="Booking Information" />
             <Container sx={{ mt: 5, mb: 5 }}>
-                <Typography
+                {/* <Typography
                     variant="h4"
                     sx={{ fontWeight: 700, color: '#1C2B38', fontFamily: 'Volkhov, Georgia, serif' }}
                     gutterBottom
@@ -179,6 +179,26 @@ const GenericBookingDetail = ({ type }) => {
                     <Link to={detailLink} style={{ textDecoration: "none", color: "inherit" }}>
                         {name}
                     </Link>
+                </Typography> */}
+                <Typography
+                    component={Link}
+                    to={detailLink}
+                    variant="h4"
+                    sx={{
+                        fontWeight: 700,
+                        color: '#1C2B38',
+                        fontFamily: 'Volkhov, Georgia, serif',
+                        textDecoration: 'none',
+                        lineHeight: 1.2, // hoặc 1.1 để đẹp hơn
+                        display: 'inline-block',
+                        marginBottom: 4, // tự set margin-bottom nếu cần khoảng cách
+                        '&:hover': {
+                            textDecoration: 'none',
+                            color: "black"
+                        },
+                    }}
+                >
+                    {name}
                 </Typography>
                 <Grid container spacing={4}>
                     <Grid item xs={12} md={7}>

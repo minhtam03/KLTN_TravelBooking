@@ -224,8 +224,13 @@ export const importHotels = async (req, res) => {
                     };
 
                     try {
+                        // await Hotel.updateOne(
+                        //     { hotelName: hotelDoc.hotelName, address: hotelDoc.address },
+                        //     hotelDoc,
+                        //     { upsert: true }
+                        // );
                         await Hotel.updateOne(
-                            { hotelName: hotelDoc.hotelName, location: hotelDoc.location },
+                            { address: hotelDoc.address },
                             hotelDoc,
                             { upsert: true }
                         );

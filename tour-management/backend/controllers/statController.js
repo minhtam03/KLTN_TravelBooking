@@ -4,13 +4,14 @@ import Payment from "../models/Payment.js";
 import Tour from "../models/Tour.js";
 import Hotel from "../models/Hotel.js"
 import Flight from "../models/Flight.js"
+import FlightV2 from "../models/FlightV2.js"
 
 export const getWidgetData = async (req, res) => {
     try {
         const userCount = await User.countDocuments();
         const tourCount = await Tour.countDocuments();
         const hotelCount = await Hotel.countDocuments();
-        const flightCount = await Flight.countDocuments();
+        const flightCount = await FlightV2.countDocuments();
         const bookingCount = await Booking.countDocuments();
         // const earnings = await Payment.aggregate([{ $group: { _id: null, total: { $sum: "$amount" } } }]);
 
@@ -69,7 +70,7 @@ export const getHotelCount = async (req, res) => {
 
 export const getFlightCount = async (req, res) => {
     try {
-        const flightCount = await Flight.countDocuments();
+        const flightCount = await FlightV2.countDocuments();
         res.status(200).json({ success: true, count: flightCount });
     } catch (error) {
         res.status(500).json({ success: false, message: "Internal server error" });

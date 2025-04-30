@@ -220,7 +220,7 @@ const SearchHotelItem = ({ hotel }) => {
 
                     <Box mt={2}>
                         <Typography variant="h6" fontWeight={700} color="#1C2B38">
-                            ${hotel.pricePerNight}
+                            $ {hotel.pricePerNight} / night
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
                             Includes taxes and fees

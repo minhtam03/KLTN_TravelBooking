@@ -15,7 +15,9 @@ export default function PostList() {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await fetch(`${BASE_URL}/posts?page=${page}`);
+                // const response = await fetch(`${BASE_URL}/posts/?page=${page}`);
+
+                const response = await fetch(`${BASE_URL}/posts/page/?page=${page}`);
                 const data = await response.json();
 
                 if (!response.ok) {

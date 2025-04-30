@@ -141,26 +141,41 @@ export const getProfile = async (req, res) => {
     }
 };
 
-// export const updateProfile = async (req, res) => {
 
+// export const updateProfile = async (req, res) => {
 //     try {
 //         const updateData = { ...req.body };
 
 //         // Không cho phép cập nhật email
 //         delete updateData.email;
 
-//         if (updateData.password) {
+//         // Kiểm tra mật khẩu hiện tại nếu người dùng muốn thay đổi mật khẩu
+//         if (updateData.newPassword) {
+//             // Lấy người dùng từ database
+//             const user = await User.findById(req.user?.id);
+
+//             // Kiểm tra xem mật khẩu hiện tại có đúng không
+//             const isMatch = await bcrypt.compare(updateData.currentPassword, user.password);
+
+//             if (!isMatch) {
+//                 return res.status(400).json({ success: false, message: "Current password is incorrect" });
+//             }
+
+//             // Mã hóa mật khẩu mới nếu mật khẩu hiện tại đúng
 //             const salt = bcrypt.genSaltSync(10);
-//             updateData.password = bcrypt.hashSync(updateData.password, salt);
+//             updateData.password = bcrypt.hashSync(updateData.newPassword, salt); // Mã hóa mật khẩu mới
+//             delete updateData.newPassword;  // Xóa trường newPassword sau khi đã thay đổi mật khẩu
+//             delete updateData.currentPassword; // Xóa trường currentPassword sau khi đã xác nhận
 //         } else {
-//             delete updateData.password;
+//             delete updateData.password; // Nếu không có mật khẩu mới, xóa trường password
 //         }
 
+//         // Cập nhật thông tin người dùng
 //         const updatedUser = await User.findByIdAndUpdate(
-//             req.user?.id,  // 👈 Kiểm tra req.user.id có hợp lệ không
+//             req.user?.id,
 //             { $set: updateData },
 //             { new: true }
-//         ).select("-password");
+//         ).select("-password"); // Đảm bảo không trả về mật khẩu trong kết quả
 
 //         if (!updatedUser) {
 //             return res.status(404).json({ success: false, message: "User not found" });
@@ -181,53 +196,43 @@ export const getProfile = async (req, res) => {
 //     }
 // };
 
-
 export const updateProfile = async (req, res) => {
     try {
-        const updateData = { ...req.body };
+        const { username, phone, address, photo, currentPassword, newPassword } = req.body;
 
-        // Không cho phép cập nhật email
-        delete updateData.email;
+        const user = await User.findById(req.user?.id);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
 
-        // Kiểm tra mật khẩu hiện tại nếu người dùng muốn thay đổi mật khẩu
-        if (updateData.newPassword) {
-            // Lấy người dùng từ database
-            const user = await User.findById(req.user?.id);
+        // Cập nhật các thông tin cơ bản
+        if (username) user.username = username;
+        if (phone) user.phone = phone;
+        if (address) user.address = address;
+        if (photo) user.photo = photo;
 
-            // Kiểm tra xem mật khẩu hiện tại có đúng không
-            const isMatch = await bcrypt.compare(updateData.currentPassword, user.password);
-
+        // Nếu có yêu cầu đổi mật khẩu
+        if (newPassword) {
+            const isMatch = await bcrypt.compare(currentPassword, user.password);
             if (!isMatch) {
                 return res.status(400).json({ success: false, message: "Current password is incorrect" });
             }
-
-            // Mã hóa mật khẩu mới nếu mật khẩu hiện tại đúng
             const salt = bcrypt.genSaltSync(10);
-            updateData.password = bcrypt.hashSync(updateData.newPassword, salt); // Mã hóa mật khẩu mới
-            delete updateData.newPassword;  // Xóa trường newPassword sau khi đã thay đổi mật khẩu
-            delete updateData.currentPassword; // Xóa trường currentPassword sau khi đã xác nhận
-        } else {
-            delete updateData.password; // Nếu không có mật khẩu mới, xóa trường password
+            user.password = bcrypt.hashSync(newPassword, salt);
         }
 
-        // Cập nhật thông tin người dùng
-        const updatedUser = await User.findByIdAndUpdate(
-            req.user?.id,
-            { $set: updateData },
-            { new: true }
-        ).select("-password"); // Đảm bảo không trả về mật khẩu trong kết quả
+        await user.save();
 
-        if (!updatedUser) {
-            return res.status(404).json({ success: false, message: "User not found" });
-        }
+        // Ẩn trường password khi trả về
+        const { password, ...userWithoutPassword } = user.toObject();
 
         res.status(200).json({
             success: true,
             message: "Profile updated successfully",
-            data: updatedUser,
+            data: userWithoutPassword,
         });
     } catch (error) {
-        console.error("Update Profile Error:", error.message); // Log lỗi chi tiết
+        console.error("Update Profile Error:", error.message);
         res.status(500).json({
             success: false,
             message: "Failed to update profile",

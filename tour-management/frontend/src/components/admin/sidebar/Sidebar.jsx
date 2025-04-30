@@ -17,6 +17,8 @@ import {
     Article as ArticleIcon,
     ExitToApp as ExitToAppIcon,
 } from "@mui/icons-material";
+import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
+import TourIcon from '@mui/icons-material/Tour';
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../context/AuthContext";
 
@@ -40,9 +42,9 @@ const Sidebar = () => {
             title: "LISTS",
             items: [
                 { text: "Users", icon: <PersonOutlineIcon />, path: "/admin/users" },
-                { text: "Tours", icon: <StoreIcon />, path: "/admin/tours" },
-                { text: "Hotels", icon: <CreditCardIcon />, path: "/admin/hotels" },
-                { text: "Flight", icon: <LocalShippingIcon />, path: "/admin/flights" },
+                { text: "Tours", icon: <TourIcon />, path: "/admin/tours" },
+                { text: "Hotels", icon: <StoreIcon />, path: "/admin/hotels" },
+                { text: "Flight", icon: <FlightTakeoffIcon />, path: "/admin/flights" },
             ],
         },
         {

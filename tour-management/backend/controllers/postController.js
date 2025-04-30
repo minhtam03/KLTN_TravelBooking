@@ -41,7 +41,7 @@ export const createPost = async (req, res) => {
 // }
 
 // Get all posts with pagination
-export const getAllPosts = async (req, res) => {
+export const getAllPostsPagination = async (req, res) => {
     const page = req.query.page ? parseInt(req.query.page) : 0;  // Get the current page, default to 0 if not provided
     const limit = 6;  // Number of posts per page
 
@@ -65,6 +65,23 @@ export const getAllPosts = async (req, res) => {
         });
     }
 };
+
+export const getAllPosts = async (req, res) => {
+    try {
+        const posts = await Post.find();  // Lấy tất cả posts luôn, không skip, không limit
+
+        res.status(200).json({
+            success: true,
+            data: posts,  // Trả về danh sách bài viết
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch posts. Try again.",
+        });
+    }
+};
+
 
 
 
@@ -90,7 +107,7 @@ export const getSinglePost = async (req, res) => {
 // update post
 export const updatePost = async (req, res) => {
     const { id } = req.params;  // Get the post ID from the request parameters
-    const { title, content, author, attachment, likeCount } = req.body;  // Get new data from request body
+    const { title, content, author, attachment, likeCount, photo } = req.body;  // Get new data from request body
 
     try {
         // Find the post by ID and update it with the new data
@@ -99,7 +116,8 @@ export const updatePost = async (req, res) => {
             content,
             author,
             attachment,
-            likeCount
+            likeCount,
+            photo,
         }, { new: true });  // `new: true` will return the updated post
 
         // If the post is not found

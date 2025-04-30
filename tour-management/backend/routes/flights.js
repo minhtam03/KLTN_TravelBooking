@@ -19,7 +19,7 @@ import {
     getSingleFlight,
     getAllFlights,
     searchFlights,
-    getFlightCount, importVNFlights3Days,
+    getFlightCount,
 } from '../controllers/flightController.js'
 
 import {
@@ -32,7 +32,6 @@ const router = express.Router()
 
 
 router.post('/import-flights', importFlight);
-router.get('/import-real-flights', importVNFlights3Days);
 
 // router.get('/search/filter', searchFlights)
 router.get('/search/filter', searchFlightsV2)
