@@ -1,40 +1,3 @@
-// import React, {useState} from 'react'
-// import CommonSection from './../shared/CommonSection'
-
-// import { Container, Row, Col } from 'reactstrap'
-// import { useLocation } from 'react-router-dom'
-// import TourCard from '../shared/TourCard'
-
-// const SearchResultList = () => {
-//   const location = useLocation()
-//   const [data] = useState(location.state)
-//   console.log(data)
-
-//   return <>
-//     <CommonSection title={"Tour Search Result"}/>
-//     <section>
-//       <Container>
-//         <Row>
-//           {
-//             data.length === 0 ? (
-//               <h4 className='text-center'>No tour found</h4>
-//             ) : (
-//               data?.map(tour => (
-//                 <Col lg='3' className='mb-4' key={tour._id}>
-//                   <TourCard tour = {tour}/>
-
-//                 </Col>
-//               ))
-//             )
-//           }
-//         </Row>
-//       </Container>
-//     </section>
-//   </>
-// }
-
-// export default SearchResultList
-
 import React, { useState, useEffect } from 'react';
 import CommonSection from './../shared/CommonSection';
 import { Container, Row, Col } from 'reactstrap';
@@ -42,6 +5,7 @@ import { useLocation } from 'react-router-dom';
 import TourCard from '../shared/TourCard';
 import { BASE_URL } from '../utils/config';
 import SearchBar from '../shared/SearchBar';
+import { Pagination, Box } from '@mui/material';
 
 const SearchResultList = () => {
   const location = useLocation();
@@ -110,7 +74,7 @@ const SearchResultList = () => {
             )}
 
 
-            <Col lg='12'>
+            {/* <Col lg='12'>
               <div className="pagination d-flex align-items-center justify-content-center mt-4 gap-3">
                 {[...Array(pageCount || 1).keys()].map(number => (
                   <span
@@ -122,6 +86,25 @@ const SearchResultList = () => {
                   </span>
                 ))}
               </div>
+            </Col> */}
+            <Col lg='12' className="d-flex justify-content-center mt-4">
+              <Pagination
+                count={pageCount}
+                page={page + 1}
+                onChange={(event, value) => setPage(value - 1)}
+                shape="rounded"
+                sx={{
+                  '& .MuiPaginationItem-root': {
+                    borderRadius: '50%',
+                  },
+                  '& .Mui-selected': {
+                    backgroundColor: 'rgb(201, 201, 201)',
+                    '&:hover': {
+                      backgroundColor: 'rgb(220, 219, 219)',
+                    }
+                  }
+                }}
+              />
             </Col>
 
           </Row>

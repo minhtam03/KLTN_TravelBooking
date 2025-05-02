@@ -3,9 +3,8 @@ import CommonSection from '../shared/CommonSection'
 import '../styles/tour.css'
 import TourCard from './../shared/TourCard'
 import SearchBar from './../shared/SearchBar'
-
 import { Container, Row, Col } from 'reactstrap'
-
+import { Pagination, Box } from '@mui/material';
 import { BASE_URL } from '../utils/config'
 import useFetch from '../hooks/useFetch'
 
@@ -48,7 +47,7 @@ const Tours = () => {
                     </Col>)
                 }
 
-                <Col lg='12'>
+                {/* <Col lg='12'>
                   <div className="pagination d-flex align-items-center
                 justify-content-center mt-4 gap-3">
                     {[...Array(pageCount).keys()].map(number => (
@@ -59,6 +58,25 @@ const Tours = () => {
                       </span>
                     ))}
                   </div>
+                </Col> */}
+                <Col lg='12' className="d-flex justify-content-center mt-4">
+                  <Pagination
+                    count={pageCount}
+                    page={page + 1}
+                    onChange={(event, value) => setPage(value - 1)}
+                    shape="rounded"
+                    sx={{
+                      '& .MuiPaginationItem-root': {
+                        borderRadius: '50%',
+                      },
+                      '& .Mui-selected': {
+                        backgroundColor: 'rgb(201, 201, 201)',
+                        '&:hover': {
+                          backgroundColor: 'rgb(220, 219, 219)',
+                        }
+                      }
+                    }}
+                  />
                 </Col>
               </Row>)
           }

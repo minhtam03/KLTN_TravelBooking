@@ -160,6 +160,9 @@ export const flightColumns = [
     { field: 'fromPlace', headerName: 'From', width: 130 },
     { field: 'toPlace', headerName: 'To', width: 130 },
 
+    { field: 'departDate', headerName: 'Depart Date', width: 130 },
+    { field: 'departTimeStr', headerName: 'Depart Time', width: 130 },
+
     { field: 'ticketType', headerName: 'Class', width: 150 },
     { field: 'totalPriceUSD', headerName: 'Price ($)', width: 120 }
 ];

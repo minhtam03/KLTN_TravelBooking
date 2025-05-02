@@ -21,9 +21,6 @@ const SuggestionForm = ({
     variant = "outlined"
 }) => {
     return (
-
-
-
         <Grid container spacing={3} sx={{ marginBottom: 3, marginLeft: 4 }}>
             <Grid item xs={12}>
                 <Box sx={{ width: '70%', mx: 'auto' }}>

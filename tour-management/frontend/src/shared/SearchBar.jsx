@@ -3,7 +3,7 @@ import {
     Box,
     TextField,
     IconButton,
-    Typography,
+    Typography, Select, MenuItem,
     Grid
 } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -12,6 +12,7 @@ import TimelineIcon from '@mui/icons-material/Timeline';
 import GroupIcon from '@mui/icons-material/Group';
 import SearchIcon from '@mui/icons-material/Search';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import { cityList } from '../utils/cities';
 
 import { BASE_URL } from '../utils/config';
 
@@ -94,14 +95,40 @@ const SearchBar = () => {
                             Location
                         </Typography>
                     </Box>
-                    <TextField
+                    {/* <TextField
                         fullWidth
                         placeholder="Where are you going"
                         value={locationInput}
                         onChange={e => setLocationInput(e.target.value)}
                         variant="standard"
                         sx={inputFieldStyle}
-                    />
+                    /> */}
+                    <Select
+                        fullWidth
+                        value={locationInput}
+                        onChange={(e) => setLocationInput(e.target.value)}
+                        variant="standard"
+                        displayEmpty
+                        sx={{
+                            ...inputFieldStyle,
+                            '& .MuiSelect-root': {
+                                color: locationInput ? 'inherit' : '#999',
+                            },
+                            '& .MuiInputBase-input': {
+                                color: locationInput ? 'inherit' : '#999',
+                            },
+                        }}
+                        renderValue={(selected) => selected || "Where are you going"}
+                    >
+                        <MenuItem value="">
+                            <em>Where are you going</em>
+                        </MenuItem>
+                        {cityList.map((city) => (
+                            <MenuItem key={city} value={city}>
+                                {city}
+                            </MenuItem>
+                        ))}
+                    </Select>
                 </Grid>
 
                 {/* Duration */}

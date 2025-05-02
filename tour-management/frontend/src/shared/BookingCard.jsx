@@ -62,7 +62,7 @@ const BookingCard = ({ booking, type }) => {
   } else if (type === "flight") {
     itemId = booking.flightId;
     itemName = itemId ? `${itemId.airline} - ${itemId.flightNumber}` : "Flight";
-    photo = getAirlineLogo(itemId.airline)
+    photo = getAirlineLogo(booking.flightId?.airline)
     unitPrice = booking.flightId?.totalPriceUSD || 0;
     quantity = booking.guestSize;
     date = itemId?.departDate;

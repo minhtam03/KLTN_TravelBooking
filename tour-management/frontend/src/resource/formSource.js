@@ -1,4 +1,5 @@
 import { placeCodeMap } from "../utils/cities";
+import { cityList } from "../utils/cities";
 
 export const userInputs = [
     {
@@ -32,82 +33,70 @@ export const tourInputs = [
         label: "Title",
         type: "text",
         placeholder: "Amazing Beach Tour",
-        name: "title",
+        name: "title", required: true
     },
     {
         id: "city",
         label: "City",
         type: "select",
         name: "city",
-        options: [
-            'Ha Noi', 'Ho Chi Minh', 'Da Nang', 'Hai Phong', 'Can Tho',
-            'Binh Duong', 'Bac Ninh', 'Vinh', 'Hue', 'Long An', 'Nghe An',
-            'Bac Giang', 'Quang Ninh', 'Nam Dinh', 'Thanh Hoa', 'Quang Binh',
-            'Son La', 'Tien Giang', 'Vinh Long', 'Dak Lak', 'Binh Thuan',
-            'Quang Tri', 'Lam Dong', 'An Giang', 'Ninh Binh', 'Tay Ninh',
-            'Ben Tre', 'Kien Giang', 'Dong Nai', 'Gia Lai', 'Bac Lieu',
-            'Phu Tho', 'Ca Mau', 'Hau Giang', 'Binh Phuoc', 'Ha Giang',
-            'Soc Trang', 'Dak Nong', 'Thanh Hoa', 'Lai Chau', 'Ha Tinh',
-            'Khanh Hoa', 'Yen Bai', 'Quang Nam', 'Nghe An', 'Bac Kan',
-            'Quang Ngai', 'Lang Son', 'Nam Dinh', 'Thai Nguyen', 'Hoa Binh',
-            'Quang Binh', 'Tuyen Quang', 'Hien Giang', 'Long An', 'Lam Dong',
-            'Sapa', 'Hung Yen', 'Bac Giang', 'Tuyen Quang', 'Quang Tri'
-        ]
+        options: cityList, required: true
     },
     {
         id: "address",
         label: "Address",
         type: "text",
         placeholder: "123 Main Street",
-        name: "address",
-    },
-    {
-        id: "distance",
-        label: "Distance (km)",
-        type: "number",
-        placeholder: "10",
-        name: "distance",
-    },
-    {
-        id: "desc",
-        label: "Description",
-        type: "textarea",
-        placeholder: "A beautiful tour with amazing experiences...",
-        name: "desc",
-    },
-    {
-        id: "highlights",
-        label: "Highlights",
-        type: "textarea",
-        placeholder: "A beautiful tour with amazing experiences...",
-        name: "highlights",
+        name: "address", required: true
     },
     {
         id: "duration",
         label: "Duration (days)",
         type: "number",
         placeholder: "5",
-        name: "duration",
+        name: "duration", required: false
     },
+    // {
+    //     id: "distance",
+    //     label: "Distance (km)",
+    //     type: "number",
+    //     placeholder: "10",
+    //     name: "distance", required: false
+    // },
+    {
+        id: "desc",
+        label: "Description",
+        type: "textarea",
+        placeholder: "A beautiful tour with amazing experiences...",
+        name: "desc", required: true
+    },
+    {
+        id: "highlights",
+        label: "Highlights",
+        type: "textarea",
+        placeholder: "A beautiful tour with amazing experiences...",
+        name: "highlights", required: false
+    },
+
     {
         id: "price",
         label: "Price ($)",
         type: "number",
         placeholder: "250",
-        name: "price",
+        name: "price", required: false
     },
     {
         id: "maxGroupSize",
         label: "Max Group Size",
         type: "number",
         placeholder: "15",
-        name: "maxGroupSize",
+        name: "maxGroupSize", required: false,
     },
     {
         id: "featured",
         label: "Featured",
         type: "checkbox",
-        name: "featured",
+        name: "featured", required: false,
     },
 ];
 
@@ -130,7 +119,7 @@ export const postInputs = [
         id: "author",
         label: "Author",
         type: "text",
-        placeholder: "John Doe",
+        placeholder: "admin",
         name: "author",
     },
 
@@ -149,76 +138,7 @@ export const hotelInputs = [
         label: "Location",
         type: "select",
         name: "location",
-        options: [
-            "Vung Tau",
-            "Binh Duong",
-            "Binh Phuoc",
-            "Binh Thuan",
-            "Binh Dinh",
-            "Bac Giang",
-            "Bac Kan",
-            "Bac Ninh",
-            "Cao Bang",
-            "Ca Mau",
-            "Can Tho",
-            "Gia Lai",
-            "Ha Giang",
-            "Ha Nam",
-            "Ha Noi",
-            "Ha Tinh",
-            "Hoa Binh",
-            "Hung Yen",
-            "Hai Duong",
-            "Hai Phong",
-            "Khanh Hoa",
-            "Kien Giang",
-            "Kon Tum",
-            "Lai Chau",
-            "Long An",
-            "Lao Cai",
-            "Lam Dong",
-            "Lang Son",
-            "Nam Dinh",
-            "Nghe An",
-            "Ninh Binh",
-            "Ninh Thuan",
-            "Phu Tho",
-            "Phu Yen",
-            "Quang Binh",
-            "Quang Nam",
-            "Quang Ngai",
-            "Quang Ninh",
-            "Quang Tri",
-            "Soc Trang",
-            "Son La",
-            "Ho Chi Minh",
-            "Thanh Hoa",
-            "Thai Binh",
-            "Thai Nguyen",
-            "Thua Thien Hue",
-            "Tien Giang",
-            "Tra Vinh",
-            "Tuyen Quang",
-            "Tay Ninh",
-            "Vinh Long",
-            "Vinh Phuc",
-            "Yen Bai",
-            "Dien Bien",
-            "Da Nang",
-            "Dak Lak",
-            "Dak Nong",
-            "Dong Nai",
-            "Dong Thap",
-            "Nha Trang",
-            "Phu Quoc",
-            "Sapa",
-            "Ha Long",
-            "Quy Nhon",
-            "Hoi An",
-            "Da Lat",
-            "Tam Dao",
-            "Hue",
-        ]
+        options: cityList
     },
     {
         id: "pricePerNight",
@@ -249,94 +169,6 @@ export const hotelInputs = [
         name: "amenities",
     },
 ];
-
-// export const flightInputs = [
-//     {
-//         id: "flightNumber",
-//         label: "Flight Number",
-//         type: "text",
-//         placeholder: "VN123",
-//         name: "flightNumber",
-//     },
-//     {
-//         id: "airline",
-//         label: "Airline",
-//         type: "text",
-//         placeholder: "Vietnam Airlines",
-//         name: "airline",
-//     },
-//     {
-//         id: "departureCity",
-//         label: "Departure City",
-//         type: "select",
-//         name: "departureCity",
-//         options: [
-//             'Ha Noi', 'Ho Chi Minh', 'Da Nang', 'Hai Phong', 'Can Tho', 'Hue', 'Vinh', 'Nha Trang', 'Quy Nhon', 'Phu Quoc'
-//         ],
-//     },
-//     {
-//         id: "arrivalCity",
-//         label: "Arrival City",
-//         type: "select",
-//         name: "arrivalCity",
-//         options: [
-//             'Ha Noi', 'Ho Chi Minh', 'Da Nang', 'Hai Phong', 'Can Tho', 'Hue', 'Vinh', 'Nha Trang', 'Quy Nhon', 'Phu Quoc'
-//         ],
-//     },
-//     {
-//         id: "tripType",
-//         label: "Trip Type",
-//         type: "select",
-//         name: "tripType",
-//         options: ["one-way", "round-trip"],
-//     },
-//     {
-//         id: "departureDate",
-//         label: "Departure Date",
-//         type: "date",
-//         name: "departureDate",
-//     },
-//     {
-//         id: "departureTime",
-//         label: "Departure Time",
-//         type: "time",
-//         name: "departureTime",
-//     },
-//     {
-//         id: "returnDate",
-//         label: "Return Date",
-//         type: "date",
-//         name: "returnDate",
-//     },
-//     {
-//         id: "returnTime",
-//         label: "Return Time",
-//         type: "time",
-//         name: "returnTime",
-//     },
-//     {
-//         id: "price",
-//         label: "Price ($)",
-//         type: "number",
-//         placeholder: "100",
-//         name: "price",
-//     },
-//     {
-//         id: "airplaneType",
-//         label: "Airplane Type",
-//         type: "text",
-//         placeholder: "Airbus A321",
-//         name: "airplaneType",
-//     },
-//     {
-//         id: "flightClass",
-//         label: "Class",
-//         type: "select",
-//         name: "flightClass",
-//         options: ["economy", "business", "first"],
-//     },
-// ];
-
 
 export const flightInputs = [
     {

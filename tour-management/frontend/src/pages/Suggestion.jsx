@@ -14,6 +14,7 @@ const Suggestion = () => {
   const [departure, setDeparture] = useState('');
   const [destination, setDestination] = useState('');
   const [startDate, setStartDate] = useState('');
+
   const [results, setResults] = useState({
     tours: [],
     flights: [],
@@ -40,12 +41,44 @@ const Suggestion = () => {
       results.flightsReturn?.length > 0 &&
       results.hotels?.length > 0;
 
+    // if (!destination) {
+    //   setSelectedTour(null);
+    //   setSelectedFlight(null);
+    //   setSelectedReturnFlight(null);
+    //   setSelectedHotel(null);
+    //   setTotalCost(0);
+    //   return;
+    // }
+
     if (!destination) {
-      setSelectedTour(null);
-      setSelectedFlight(null);
-      setSelectedReturnFlight(null);
-      setSelectedHotel(null);
-      setTotalCost(0);
+      if (results.tours?.length > 0) {
+        const firstTour = results.tours[0];
+        setSelectedTour(firstTour);
+
+        const city = firstTour.city;
+
+        const flightGo = results.flights.find(f => f.toPlace === city);
+        const flightBack = results.flightsReturn.find(f => f.fromPlace === city);
+        const hotel = results.hotels.find(h => h.location === city);
+
+        setSelectedFlight(flightGo || null);
+        setSelectedReturnFlight(flightBack || null);
+        setSelectedHotel(hotel || null);
+
+        const total = (firstTour.price || 0)
+          + (flightGo?.totalPriceUSD || 0)
+          + (flightBack?.totalPriceUSD || 0)
+          + ((hotel?.pricePerNight || 0) * duration);
+
+        setTotalCost(!isNaN(total) ? total : 0);
+      } else {
+        // không có tour → reset tất cả
+        setSelectedTour(null);
+        setSelectedFlight(null);
+        setSelectedReturnFlight(null);
+        setSelectedHotel(null);
+        setTotalCost(0);
+      }
       return;
     }
 
@@ -86,6 +119,12 @@ const Suggestion = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
+        setResults({ tours: [], flights: [], flightsReturn: [], hotels: [] });
+        setSelectedTour(null);
+        setSelectedFlight(null);
+        setSelectedReturnFlight(null);
+        setSelectedHotel(null);
+        setTotalCost(0);
         if (response.status === 404) {
           alert('No options found within your budget.');
         } else {

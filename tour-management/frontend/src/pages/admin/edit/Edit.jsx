@@ -89,7 +89,16 @@ const Edit = ({ inputs, title }) => {
         const { name, value } = e.target;
 
         setInfo((prev) => {
-            let updated = { ...prev, [name]: value };
+            let parsedValue = value;
+
+            if (name === "highlights") {
+                parsedValue = value
+                    .split(",")
+                    .map((item) => item.trim())
+                    .filter((item) => item);
+            }
+
+            let updated = { ...prev, [name]: parsedValue };
 
             if (path === "flights") {
                 if (name === "fromPlace") {
@@ -204,7 +213,7 @@ const Edit = ({ inputs, title }) => {
                                                     return (
                                                         <Grid item xs={12} sm={6} key={input.id}>
                                                             <FormControlLabel
-                                                                control={<Checkbox name="feature" checked={info.feature === true || info.feature === "true"} onChange={(e) => setInfo(prev => ({ ...prev, feature: e.target.checked }))} />}
+                                                                control={<Checkbox name="featured" checked={info.featured === true || info.featured === "true"} onChange={(e) => setInfo(prev => ({ ...prev, featured: e.target.checked }))} />}
                                                                 label={input.label}
                                                             />
                                                         </Grid>

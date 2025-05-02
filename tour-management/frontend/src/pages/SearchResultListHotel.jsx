@@ -95,11 +95,15 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { Box, Grid, Typography, TextField, Button, Container, Card, CardContent } from '@mui/material';
+import {
+  Box, Grid, Typography, TextField, Select, MenuItem,
+  Button, Container, Card, CardContent
+} from '@mui/material';
 import SearchBarStay from '../shared/SearchBarStay';
 import SearchHotelItem from '../components/SearchHotelItem/SearchHotelItem';
 import CommonSection from './../shared/CommonSection';
 import { BASE_URL } from '../utils/config';
+import { cityList } from '../utils/cities';
 
 const SearchResultListHotel = () => {
   const location = useLocation();
@@ -142,13 +146,49 @@ const SearchResultListHotel = () => {
                 <Typography variant="h6" gutterBottom>Search</Typography>
 
                 <Box mb={2}>
-                  <TextField
+                  {/* <TextField
                     label="Destination"
                     fullWidth
                     variant="standard"
                     value={destination}
                     onChange={(e) => setDestination(e.target.value)}
-                  />
+                  /> */}
+                  <Select
+                    fullWidth
+                    value={destination}
+                    onChange={(e) => setDestination(e.target.value)}
+                    variant="standard"
+                    displayEmpty
+                    renderValue={(selected) => selected || "Where are you going?"}
+                    sx={{
+                      fontFamily: 'Mulish',
+                      fontSize: '0.85rem',
+                      '& .MuiSelect-root': {
+                        color: destination ? 'inherit' : '#999',
+                      },
+                      '& .MuiInputBase-input': {
+                        color: destination ? 'inherit' : '#999',
+                      },
+                      '& .MuiInput-underline:after': {
+                        borderBottomColor: '#ccc',
+                      },
+                      '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
+                        borderBottomColor: '#999',
+                      },
+                      '& .MuiInput-underline:before': {
+                        borderBottomColor: '#ccc',
+                      },
+                    }}
+                  >
+                    <MenuItem value="">
+                      <em>Where are you going?</em>
+                    </MenuItem>
+                    {cityList.map((city) => (
+                      <MenuItem key={city} value={city}>
+                        {city}
+                      </MenuItem>
+                    ))}
+                  </Select>
                 </Box>
 
                 <Box mb={2}>

@@ -44,7 +44,7 @@ const TourCard = ({ tour }) => {
                             position: 'absolute',
                             bottom: 0,
                             right: 0,
-                            background: 'var(--primary-color)',
+                            background: '#cc484b',
                             color: '#fff',
                             px: 1,
                             py: 0.5,

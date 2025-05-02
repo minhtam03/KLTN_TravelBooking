@@ -4,7 +4,7 @@ import {
   Box,
   TextField,
   IconButton,
-  Typography,
+  Typography, MenuItem, Select,
   Grid
 } from "@mui/material";
 import HotelIcon from "@mui/icons-material/Hotel";
@@ -12,6 +12,7 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
 import { BASE_URL } from "../utils/config";
+import { cityList } from "../utils/cities";
 
 const SearchBarStay = () => {
   const [destination, setDestination] = useState("");
@@ -88,7 +89,7 @@ const SearchBarStay = () => {
     >
       <Grid container spacing={2} alignItems="center">
         {/* Destination */}
-        <Grid item xs={12} sm={6} md={3}>
+        {/* <Grid item xs={12} sm={6} md={3}>
           <Box display="flex" alignItems="center" gap={1} mb={1}>
             <HotelIcon sx={{ color: '#ee6e6e', fontSize: 20 }} />
             <Typography variant="body1" fontWeight={700} fontFamily="Mulish">
@@ -103,6 +104,40 @@ const SearchBarStay = () => {
             variant="standard"
             sx={inputFieldStyle}
           />
+        </Grid> */}
+        <Grid item xs={12} sm={6} md={3}>
+          <Box display="flex" alignItems="center" gap={1} mb={1}>
+            <HotelIcon sx={{ color: '#ee6e6e', fontSize: 20 }} />
+            <Typography variant="body1" fontWeight={700} fontFamily="Mulish">
+              Destination
+            </Typography>
+          </Box>
+          <Select
+            fullWidth
+            value={destination}
+            onChange={(e) => setDestination(e.target.value)}
+            variant="standard"
+            displayEmpty
+            renderValue={(selected) => selected || "Where are you going?"}
+            sx={{
+              ...inputFieldStyle,
+              '& .MuiSelect-root': {
+                color: destination ? 'inherit' : '#999',
+              },
+              '& .MuiInputBase-input': {
+                color: destination ? 'inherit' : '#999',
+              },
+            }}
+          >
+            <MenuItem value="">
+              <em>Where are you going?</em>
+            </MenuItem>
+            {cityList.map((city) => (
+              <MenuItem key={city} value={city}>
+                {city}
+              </MenuItem>
+            ))}
+          </Select>
         </Grid>
 
         {/* Min Price */}

@@ -134,11 +134,14 @@ export const getAllTour = async (req, res) => {
 
         if (page !== null) {
             tours = await Tour.find({})
+                .sort({ createdAt: -1, _id: -1 })
                 .populate('reviews')
                 .skip(page * 8)
                 .limit(8);
         } else {
-            tours = await Tour.find({}).populate('reviews');
+            tours = await Tour.find({})
+                .sort({ createdAt: -1, _id: -1 })
+                .populate('reviews');
         }
 
         res.status(200).json({

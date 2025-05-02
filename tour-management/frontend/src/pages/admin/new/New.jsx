@@ -24,19 +24,6 @@ import axios from "axios";
 import { placeCodeMap } from "../../../utils/cities";
 
 
-// const placeCodeMap = {
-//     'Ha Noi': 'HAN',
-//     'Ho Chi Minh': 'SGN',
-//     'Da Nang': 'DAD',
-//     'Hai Phong': 'HPH',
-//     'Can Tho': 'VCA',
-//     'Hue': 'HUI',
-//     'Vinh': 'VII',
-//     'Nha Trang': 'CXR',
-//     'Quy Nhon': 'UIH',
-//     'Phu Quoc': 'PQC',
-// };
-
 const New = ({ inputs, title }) => {
     const [info, setInfo] = useState({});
     const [tripType, setTripType] = useState("");
@@ -78,12 +65,21 @@ const New = ({ inputs, title }) => {
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        const parsedValue =
-            name === "price"
-                ? parseFloat(value)
-                : name === "guestSize"
-                    ? parseInt(value)
-                    : value;
+        // const parsedValue =
+        //     name === "price"
+        //         ? parseFloat(value)
+        //         : name === "guestSize"
+        //             ? parseInt(value)
+        //             : value;
+        let parsedValue = value;
+        if (name === "price") parsedValue = parseFloat(value);
+        else if (name === "guestSize") parsedValue = parseInt(value);
+        else if (name === "highlights") {
+            parsedValue = value
+                .split(",")
+                .map((item) => item.trim())
+                .filter((item) => item); // loại bỏ item rỗng
+        }
 
         if (name === "tripType") setTripType(value);
 
@@ -191,9 +187,9 @@ const New = ({ inputs, title }) => {
                                                     <FormControlLabel
                                                         control={
                                                             <Checkbox
-                                                                name="feature"
-                                                                checked={info.feature === true || info.feature === "true"}
-                                                                onChange={(e) => setInfo(prev => ({ ...prev, feature: e.target.checked }))}
+                                                                name="featured"
+                                                                checked={info.featured === true || info.featured === "true"}
+                                                                onChange={(e) => setInfo(prev => ({ ...prev, featured: e.target.checked }))}
                                                             />
                                                         }
                                                         label={input.label}
@@ -305,6 +301,15 @@ const New = ({ inputs, title }) => {
                                                             variant="standard"
                                                             multiline={input.type === "textarea"}
                                                             minRows={input.type === "textarea" ? 6 : undefined}
+
+                                                        // value={
+                                                        //     input.id === "highlights"
+                                                        //         ? Array.isArray(info.highlights)
+                                                        //             ? info.highlights.join(", ")
+                                                        //             : info.highlights || ""
+                                                        //         : info[input.id] || ""
+                                                        // }
+
                                                         />
                                                     )}
                                                 </Box>
