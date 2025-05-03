@@ -212,10 +212,21 @@ const Suggestion = () => {
     <>
       <CommonSection title={'Suggestion'} />
 
-      <Box sx={{ px: 4, py: 5 }}>
+      <Box sx={{ px: 4, mx: 20 }}>
         <Grid container spacing={0}>
-          <Grid item xs={12} md={6}>
-            <Box sx={{ borderRadius: 2, p: 3, mt: 5 }}>
+          <Grid item xs={12} >
+            <Box
+              sx={{
+                // borderRadius: 2, 
+                // p: 3, mt: 5 
+                // border: '1px solid #ccc',
+                // borderRadius: 2,
+                borderRadius: '10px',
+                boxShadow: '0 12px 30px rgba(0, 128, 255, 0.2)',
+                p: 3,
+                mt: 5,
+
+              }}>
               <SuggestionForm
                 budget={budget} setBudget={setBudget}
                 duration={duration} setDuration={setDuration}
@@ -225,22 +236,12 @@ const Suggestion = () => {
                 loading={loading}
                 reason={reason}
                 variant="standard"
+                onSubmit={handleSubmit}
               />
-              <Box sx={{ display: "flex", justifyContent: "center", mt: 8, ml: 5 }}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{ backgroundColor: 'var(--secondary-color)', fontWeight: 'bold', textTransform: 'none', '&:hover': { backgroundColor: '#71aea3' } }}
-                  onClick={handleSubmit}
-                  disabled={loading}
-                >
-                  {loading ? <CircularProgress size={20} color="inherit" /> : 'Suggest'}
-                </Button>
-              </Box>
             </Box>
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} >
             <SuggestionResult
               results={results}
               selectedTour={selectedTour}
