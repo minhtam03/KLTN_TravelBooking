@@ -36,7 +36,7 @@ const ItemCardTooltip = ({ item, type }) => {
         price = item.pricePerNight;
         featured = item.stars >= 4;
         reviews = item.reviews || [];
-    } else if (type === "flight" || type === "returnFlight") {
+    } else if (type === "flight") {
         id = item._id;
         photo = item.photo || defaultFlight;
         title = `${item.airline} - ${item.flightNumber}`;
@@ -46,6 +46,7 @@ const ItemCardTooltip = ({ item, type }) => {
         featured = false;
         reviews = [];
     }
+
     // const { totalRating, avgRating } = calculateAvgRating(reviews);
 
     let detailLink = `/${type}s/${id}`;
@@ -117,4 +118,3 @@ const ItemCardTooltip = ({ item, type }) => {
 };
 
 export default ItemCardTooltip;
-

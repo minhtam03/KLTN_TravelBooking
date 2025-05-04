@@ -78,6 +78,7 @@ const BookingCard = ({ booking, type }) => {
 
   return (
     <Card
+      data-testid="booking-card"
       onClick={handleClick}
       sx={{
         border: '1px solid #ddd',

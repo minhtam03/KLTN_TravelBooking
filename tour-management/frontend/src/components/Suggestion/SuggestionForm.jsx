@@ -6,7 +6,7 @@ import {
     Select,
     FormControl,
     InputLabel, Paper,
-    Box, Button, CircularProgress
+    Box
 } from '@mui/material';
 import { cityList } from '../../utils/cities';
 import { cityAirport } from '../../utils/cities';
@@ -18,111 +18,102 @@ const SuggestionForm = ({
     destination, setDestination,
     startDate, setStartDate,
     loading,
-    onSubmit,
     variant = "outlined"
 }) => {
     return (
-        <Grid container spacing={2} alignItems="center" justifyContent="center" sx={{ mb: 3 }}>
-            <Grid item xs={12} md={2}>
-                <TextField
-                    variant={variant}
-                    fullWidth
-                    label="Budget"
-                    value={budget}
-                    onChange={(e) => setBudget(Number(e.target.value))}
-                    disabled={loading}
-                />
-            </Grid>
-
-            <Grid item xs={12} md={2}>
-                <TextField
-                    variant={variant}
-                    fullWidth
-                    label="Duration (Days)"
-                    value={duration}
-                    onChange={(e) => setDuration(Number(e.target.value))}
-                    disabled={loading}
-                />
-            </Grid>
-
-
-
-            <Grid item xs={12} md={2}>
-                <FormControl fullWidth variant={variant}>
-                    <InputLabel id="select-departure">Departure</InputLabel>
-                    <Select
+        <Grid container spacing={3} sx={{ marginBottom: 3, marginLeft: 4 }}>
+            <Grid item xs={12}>
+                <Box sx={{ width: '70%', mx: 'auto' }}>
+                    <TextField
+                        data-testid="input-budget"
                         variant={variant}
-                        labelId="select-departure"
-                        value={departure}
-                        onChange={(e) => setDeparture(e.target.value)}
+                        fullWidth
+                        label="Budget"
+                        value={budget}
+                        onChange={(e) => setBudget(Number(e.target.value))}
                         disabled={loading}
-                        renderValue={(selected) => selected || "Select"}
-                    >
-                        {cityAirport.map((city) => (
-                            <MenuItem key={city} value={city}>
-                                {city}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                    />
+                </Box>
             </Grid>
 
-            <Grid item xs={12} md={2}>
-                <FormControl fullWidth variant={variant}>
-                    <InputLabel id="select-destination">Destination</InputLabel>
-                    <Select
+            <Grid item xs={12}>
+                <Box sx={{ width: '70%', mx: 'auto' }}>
+                    <TextField
+                        data-testid="input-duration"
                         variant={variant}
-                        labelId="select-destination"
-                        value={destination}
-                        onChange={(e) => setDestination(e.target.value)}
+                        fullWidth
+                        label="Duration (Days)"
+                        value={duration}
+                        onChange={(e) => setDuration(Number(e.target.value))}
                         disabled={loading}
-                        renderValue={(selected) => selected || "Select"}
-                    >
-                        {cityAirport.map((city) => (
-                            <MenuItem key={city} value={city}>
-                                {city}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                    />
+                </Box>
             </Grid>
 
-            <Grid item xs={12} md={2}>
-                <TextField
-                    variant={variant}
-                    fullWidth
-                    label="Start Date"
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    InputLabelProps={{ shrink: true }}
-                    disabled={loading}
-                />
+            <Grid item xs={12}>
+                <Box sx={{ width: '70%', mx: 'auto' }}>
+                    <FormControl fullWidth variant={variant}>
+                        <InputLabel id="select-departure">Departure</InputLabel>
+                        <Select
+                            data-testid="select-departure"
+                            variant={variant}
+                            labelId="select-departure"
+                            value={departure}
+                            onChange={(e) => setDeparture(e.target.value)}
+                            disabled={loading}
+                            renderValue={(selected) => selected || "Select a departure"}
+                        >
+                            {cityAirport.map((city) => (
+                                <MenuItem key={city} value={city} data-testid={`city-depart-${city}`}>
+                                    {city}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Box>
             </Grid>
-            <Grid item>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    sx={{
-                        px: 3,
-                        py: 1.5,
-                        ml: 4,
-                        backgroundColor: 'var(--secondary-color)',
-                        fontWeight: 'bold',
-                        textTransform: 'none',
-                        '&:hover': { backgroundColor: '#71aea3' }
-                    }}
-                    onClick={onSubmit}
-                    disabled={loading}
-                >
-                    {loading ? <CircularProgress size={20} color="inherit" /> : 'Suggest'}
-                </Button>
+
+            <Grid item xs={12}>
+                <Box sx={{ width: '70%', mx: 'auto' }}>
+                    <FormControl fullWidth variant={variant}>
+                        <InputLabel id="select-destination">Destination</InputLabel>
+                        <Select
+                            data-testid="select-destination"
+                            variant={variant}
+                            labelId="select-destination"
+                            value={destination}
+                            onChange={(e) => setDestination(e.target.value)}
+                            disabled={loading}
+                            renderValue={(selected) => selected || "Select a destination"}
+                        >
+                            {cityAirport.map((city) => (
+                                <MenuItem key={city} value={city} data-testid={`city-dest-${city}`}>
+                                    {city}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Box>
+            </Grid>
+
+            <Grid item xs={12}>
+                <Box sx={{ width: '70%', mx: 'auto' }}>
+                    <TextField
+                        data-testid="input-start-date"
+                        variant={variant}
+                        fullWidth
+                        label="Start Date"
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                        InputLabelProps={{ shrink: true }}
+                        disabled={loading}
+                    />
+                </Box>
             </Grid>
         </Grid>
-
 
     );
 };
 
 export default SuggestionForm;
-

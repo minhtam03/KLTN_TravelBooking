@@ -21,6 +21,7 @@ const TourCard = ({ tour }) => {
 
     return (
         <Card
+            data-testid="tour-card"
             elevation={4}
             sx={{
                 borderRadius: '10px',
@@ -77,7 +78,7 @@ const TourCard = ({ tour }) => {
                         },
                     }}
                 >
-                    <Link to={`/tours/${_id}`}>{title}</Link>
+                    <Link to={`/tours/${_id}`} data-testid="tour-title">{title}</Link>
                 </Typography>
 
                 {/* Location */}

@@ -19,22 +19,6 @@
 
 
 describe('Login Functionality', () => {
-  // beforeEach(() => {
-  //   // Trước mỗi bài kiểm thử, thực hiện đăng nhập
-  //   const email = 'test19@gmail.com';
-  //   const password = '123456';
-
-  //   // Truy cập trang đăng nhập
-  //   cy.visit('/login');
-
-  //   // Điền thông tin đăng nhập
-  //   cy.get('input[id="email"]').type(email);  // Điền email
-  //   cy.get('input[id="password"]').type(password);  // Điền mật khẩu
-
-  //   // Nhấn nút đăng nhập
-  //   cy.get('button[type="submit"]').click();
-  // });
-
   it('login successfully with valid credentials', () => {
     const email = 'test19@gmail.com';
     const password = '123456';

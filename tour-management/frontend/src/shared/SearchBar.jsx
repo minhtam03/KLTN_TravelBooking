@@ -95,15 +95,9 @@ const SearchBar = () => {
                             Location
                         </Typography>
                     </Box>
-                    {/* <TextField
-                        fullWidth
-                        placeholder="Where are you going"
-                        value={locationInput}
-                        onChange={e => setLocationInput(e.target.value)}
-                        variant="standard"
-                        sx={inputFieldStyle}
-                    /> */}
+
                     <Select
+                        data-testid="location-select"
                         fullWidth
                         value={locationInput}
                         onChange={(e) => setLocationInput(e.target.value)}
@@ -120,11 +114,11 @@ const SearchBar = () => {
                         }}
                         renderValue={(selected) => selected || "Where are you going"}
                     >
-                        <MenuItem value="">
+                        <MenuItem value="" data-testid="city-empty">
                             <em>Where are you going</em>
                         </MenuItem>
                         {cityList.map((city) => (
-                            <MenuItem key={city} value={city}>
+                            <MenuItem key={city} value={city} data-testid={`city-${city}`}>
                                 {city}
                             </MenuItem>
                         ))}
@@ -173,6 +167,7 @@ const SearchBar = () => {
                 <Grid item xs={12} sm={6} md={3} textAlign="center">
 
                     <IconButton
+                        data-testid="search-button"
                         onClick={searchHandler}
                         sx={{
                             backgroundColor: 'var(--secondary-color)',

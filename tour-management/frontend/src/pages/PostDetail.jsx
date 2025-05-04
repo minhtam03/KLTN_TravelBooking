@@ -117,7 +117,10 @@ export default function PostDetail() {
                 />
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Tooltip title={isLiked ? "Unlike" : "Like"}>
-                        <IconButton onClick={onLikeBtnClick} color={isLiked ? "error" : "default"}>
+                        <IconButton
+                            data-testid="like-button"
+                            onClick={onLikeBtnClick}
+                            color={isLiked ? "error" : "default"}>
                             <FavoriteIcon />
                             <Typography component="span" sx={{ ml: 0.5 }}>
                                 {likeCount}

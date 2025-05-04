@@ -34,6 +34,7 @@ const RatingStars = ({ current, onRate }) => (
       <Box
         key={star}
         onClick={() => onRate(star)}
+        data-testid={`rating-star-${star}`}
         sx={{
           display: 'flex',
           alignItems: 'center',
@@ -62,6 +63,7 @@ const TourDetails = ({ type = "Tour" }) => {
   const [tourRating, setTourRating] = useState(null);
   const [summary, setSummary] = useState('');
   const [reviewList, setReviewList] = useState([]);
+  const [hasBooked, setHasBooked] = useState(false);
 
   const { user } = useContext(AuthContext);
   const { data: tour, loading, error } = useFetch(`${BASE_URL}/tours/${id}`);
@@ -82,6 +84,23 @@ const TourDetails = ({ type = "Tour" }) => {
       setSummary('Không thể tải tóm tắt đánh giá.');
     }
   };
+
+  useEffect(() => {
+    const checkBookingStatus = async () => {
+      if (!user || !title) return;
+      try {
+        const resBookings = await axios.get(`${BASE_URL}/booking/tour/all`, { withCredentials: true });
+        const bookings = resBookings.data.data || [];
+        const booked = bookings.some(b => b.tourName === title);
+        setHasBooked(booked);
+      } catch (err) {
+        console.error('Error checking booking status:', err);
+        setHasBooked(false);
+      }
+    };
+
+    checkBookingStatus();
+  }, [user, title]);
 
   useEffect(() => {
     if (tour && tour.reviews && tour.reviews.length > 0 && !hasFetchedSummary.current) {
@@ -106,7 +125,7 @@ const TourDetails = ({ type = "Tour" }) => {
     if (reviewList.length === 0) {
       return <Typography variant="h6"
         fontSize="1rem"
-        sx={{ fontFamily: 'Mulish', pr: 5 }}>No reviews yet. Be the first to leave a comment!</Typography>;
+        sx={{ fontFamily: 'Mulish', pr: 5 }}>No reviews yet. Book this tour to be the first to leave a comment!</Typography>;
     }
 
     if (!summary) return <p>Loading summary...</p>;
@@ -255,7 +274,8 @@ const TourDetails = ({ type = "Tour" }) => {
                   </Typography>
 
                   {renderSummary()}
-                  <Box
+
+                  {/* <Box
                     component="form"
                     onSubmit={submitHandler}
                     sx={{
@@ -267,10 +287,9 @@ const TourDetails = ({ type = "Tour" }) => {
                       gap: 2,
                     }}
                   >
-                    {/* Rating sao */}
+                    
                     <RatingStars current={tourRating} onRate={setTourRating} sx={{ p: 1 }} />
 
-                    {/* Input và button trên cùng 1 hàng */}
                     <Box
                       sx={{
                         display: 'flex',
@@ -284,6 +303,7 @@ const TourDetails = ({ type = "Tour" }) => {
                       }}
                     >
                       <TextField
+                        data-testid="review-text"
                         inputRef={reviewMsgRef}
                         placeholder="Share your thoughts"
                         required
@@ -305,6 +325,7 @@ const TourDetails = ({ type = "Tour" }) => {
                         }}
                       />
                       <Button
+                        data-testid="submit-review"
                         type="submit"
                         variant="contained"
 
@@ -319,7 +340,72 @@ const TourDetails = ({ type = "Tour" }) => {
                         Submit
                       </Button>
                     </Box>
-                  </Box>
+                  </Box> */}
+                  {user ? (
+                    hasBooked ? (
+                      <Box
+                        component="form"
+                        onSubmit={submitHandler}
+                        sx={{ p: 1, mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}
+                      >
+                        {/* Rating sao */}
+                        <RatingStars current={tourRating} onRate={setTourRating} sx={{ p: 1 }} />
+
+                        {/* Input và button */}
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 2,
+                            borderRadius: '2rem',
+                            border: '1px solid',
+                            borderColor: '#ccc',
+                            pr: 2,
+                            pt: 1,
+                            pb: 1,
+                          }}
+                        >
+                          <TextField
+                            data-testid="review-text"
+                            inputRef={reviewMsgRef}
+                            placeholder="Share your thoughts"
+                            required
+                            variant="standard"
+                            fullWidth
+                            InputProps={{
+                              disableUnderline: true,
+                              sx: { px: 1, fontSize: '1rem', color: 'var(--text-color)' }
+                            }}
+                          />
+                          <Button
+                            data-testid="submit-review"
+                            type="submit"
+                            variant="contained"
+                            sx={{
+                              borderRadius: '2rem',
+                              textTransform: 'none',
+                              px: 3,
+                              py: 1,
+                              backgroundColor: 'var(--secondary-color)'
+                            }}
+                          >
+                            Submit
+                          </Button>
+                        </Box>
+                      </Box>
+                    ) : (
+                      <Typography
+                        variant="body1"
+                        color="error"
+                        textAlign="center"
+                        sx={{ fontFamily: 'Mulish', mt: 2 }}
+                      >
+                        {/* You need to book this tour to leave a review. */}
+                      </Typography>
+                    )
+                  ) : null}
+
+
                   <List sx={{ mt: 5 }}>
                     {displayedReviews.map((review, index) => (
                       <ListItem
