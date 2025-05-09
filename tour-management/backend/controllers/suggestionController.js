@@ -398,14 +398,25 @@ export const getSuggestions = async (req, res) => {
             console.log("✨ Gợi ý cá nhân hóa cho user:", userId);
 
             const { recommendedTours, embeddingData } = await getSuggestedTours(userId, 5);
-            console.table(recommendedTours.map(tour => ({
+            const tableData = recommendedTours.map(tour => ({
                 Title: tour.title,
                 City: tour.city,
                 Price: `$${tour.price.toFixed(2)}`,
-                Rating: tour.avgRating ?? "N/A",
                 Score: tour.score !== undefined ? tour.score.toFixed(4) : "N/A"
-            })));
+            }));
 
+            console.table(tableData);
+
+            // Tính score trung bình (chỉ tính những tour có score hợp lệ)
+            const validScores = recommendedTours
+                .filter(tour => typeof tour.score === 'number')
+                .map(tour => tour.score);
+
+            const averageScore = validScores.length > 0
+                ? (validScores.reduce((sum, val) => sum + val, 0) / validScores.length).toFixed(4)
+                : "N/A";
+
+            console.log("Trung bình điểm tương đồng:", averageScore);
             if (!recommendedTours.length) {
                 return res.status(404).json({ message: "No recommended tour" });
             }
@@ -436,6 +447,7 @@ export const getSuggestions = async (req, res) => {
                     }).sort((a, b) => b.similarity - a.similarity);
 
                     reason = `Suggestions based on your interests: ${topKeywords.slice(0, 5).map(k => k.keyword).join(", ")}.`;
+                    console.log(reason)
                 }
             } else {
                 reason = "Top rated tours based on other users' reviews.";

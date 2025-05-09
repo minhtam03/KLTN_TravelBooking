@@ -83,16 +83,16 @@ export const getReviewSummary = async (req, res) => {
         const message = new HumanMessage(`
             You will receive multiple reviews. Your job is to summarize them clearly and concisely.
             Please return the result in the following strict format:
-            
+
             Positive Aspects:
             <Two sentences describing positive aspects>
-            
+
             Negative Aspects:
             <Two sentences describing negative aspects>
-            
+
             General User Impressions:
             <Two sentences giving general overall impressions>
-        
+
             Analyze the following reviews:
             ${reviewsText}
         `);
