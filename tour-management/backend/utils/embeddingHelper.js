@@ -37,8 +37,6 @@
 // dotenv.config();
 // const HF_API_URL = "https://api-inference.huggingface.co/models/sentence-transformers/paraphrase-MiniLM-L6-v2";
 
-// const HF_API_TOKEN = "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"
-
 // export const getEmbedding = async (text) => {
 //     try {
 //         const response = await axios.post(HF_API_URL, {
