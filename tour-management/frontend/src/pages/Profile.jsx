@@ -6,6 +6,7 @@ import { Container, TextField, Button, Typography, Box, Grid, Paper, Avatar, Ico
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import { useNavigate } from "react-router-dom";
 import CommonSection from "../shared/CommonSection";
+import { Snackbar, Alert, Slide } from '@mui/material';
 
 const Profile = () => {
     const { user, dispatch } = useContext(AuthContext);
@@ -92,24 +93,40 @@ const Profile = () => {
 
             dispatch({ type: "LOGIN_SUCCESS", payload: res.data.data });
 
-            alert("Profile updated successfully!");
+            // alert("Profile updated successfully!");
+            showSnackbar("Profile updated successfully", "success");
 
-            navigate("/");
+            // navigate("/");
         } catch (err) {
-            alert("Error updating profile!");
+            // alert("Error updating profile!");
+            if (err.response?.data?.message) {
+                showSnackbar(err.response.data.message, 'error');
+            } else {
+                showSnackbar("Error updating profile!", "error");
+            }
         }
     };
+
+    const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'error' });
+
+    const showSnackbar = (message, severity = 'error') => {
+        setSnackbar(prev => ({ ...prev, open: false }));
+
+        setTimeout(() => {
+            setSnackbar({ open: true, message, severity });
+        }, 100); // delay nhỏ để đảm bảo trạng thái được cập nhật
+    };
+
+    const handleCloseSnackbar = () => {
+        setSnackbar((prev) => ({ ...prev, open: false }));
+    };
+
+    const slideTransition = (props) => <Slide {...props} direction="down" />;
 
     return (
         <>
             <CommonSection title={"Edit Personal Information"} />
             <Container maxWidth="lg">
-                {/* <Box sx={{ textAlign: "center", my: 4 }}>
-                    <Typography variant="h4" gutterBottom>
-                        Edit Personal Information
-                    </Typography>
-                </Box> */}
-
                 <form onSubmit={handleSubmit}>
                     <Grid container spacing={4}>
                         {/* Left Column: Profile Image */}
@@ -220,9 +237,7 @@ const Profile = () => {
                             </Paper>
 
                             <Box sx={{ mt: 4, textAlign: "center" }}>
-                                {/* <Button type="submit" variant="contained" color="primary">
-                            Save Changes
-                        </Button> */}
+
                                 <Button
                                     type="submit"
                                     variant="contained"
@@ -239,6 +254,27 @@ const Profile = () => {
                     {/* Submit Button */}
 
                 </form>
+                <Snackbar
+                    open={snackbar.open}
+                    autoHideDuration={3000}
+                    onClose={handleCloseSnackbar}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                    TransitionComponent={slideTransition}
+                >
+                    <Alert
+                        onClose={handleCloseSnackbar}
+                        severity={snackbar.severity}
+                        sx={{
+                            width: '100%',
+                            fontSize: '1.1rem',
+                            fontWeight: 600,
+                            py: 2,
+                            px: 3
+                        }}
+                    >
+                        {snackbar.message}
+                    </Alert>
+                </Snackbar>
             </Container>
         </>
 

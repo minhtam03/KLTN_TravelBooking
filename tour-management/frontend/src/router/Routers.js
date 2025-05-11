@@ -77,8 +77,6 @@ const Routers = () => {
       <Route path='/flights/:id' element={<FlightDetails />} />
       <Route path="/flights/search" element={<SearchResultListFlight />} />
 
-      {/* <Route path='/history/:bookingId' element={<BookingDetail />} /> */}
-
       <Route path="/booking/tour/:bookingId" element={<GenericBookingDetail type="tour" />} />
       <Route path="/booking/hotel/:bookingId" element={<GenericBookingDetail type="hotel" />} />
       <Route path="/booking/flight/:bookingId" element={<GenericBookingDetail type="flight" />} />

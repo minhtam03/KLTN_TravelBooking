@@ -21,24 +21,39 @@ const SuggestionForm = ({
     variant = "outlined"
 }) => {
     return (
-        <Grid container spacing={3} sx={{ marginBottom: 3, marginLeft: 4 }}>
+        <Grid container spacing={3} sx={{ marginBottom: 3, marginLeft: 12 }}>
             <Grid item xs={12}>
-                <Box sx={{ width: '70%', mx: 'auto' }}>
+                <Box sx={{ width: '60%', mx: 'auto' }}>
                     <TextField
+                        type="number"
+                        inputProps={{ min: 1 }}
                         data-testid="input-budget"
                         variant={variant}
                         fullWidth
                         label="Budget"
                         value={budget}
-                        onChange={(e) => setBudget(Number(e.target.value))}
+                        // onChange={(e) => setBudget(Number(e.target.value))}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            if (value === '') {
+                                setBudget('');
+                            } else {
+                                const numberValue = Number(value);
+                                if (numberValue >= 1) {
+                                    setBudget(numberValue);
+                                }
+                            }
+                        }}
                         disabled={loading}
                     />
                 </Box>
             </Grid>
 
             <Grid item xs={12}>
-                <Box sx={{ width: '70%', mx: 'auto' }}>
+                {/* <Box sx={{ width: '60%', mx: 'auto' }}>
                     <TextField
+                        type="number"
+                        inputProps={{ min: 1 }}
                         data-testid="input-duration"
                         variant={variant}
                         fullWidth
@@ -47,11 +62,35 @@ const SuggestionForm = ({
                         onChange={(e) => setDuration(Number(e.target.value))}
                         disabled={loading}
                     />
+                </Box> */}
+                <Box sx={{ width: '60%', mx: 'auto' }}>
+                    <TextField
+                        type="number"
+                        inputProps={{ min: 1 }}
+                        data-testid="input-duration"
+                        variant={variant}
+                        fullWidth
+                        label="Duration (Days)"
+                        value={duration}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            if (value === '') {
+                                setDuration('');
+                            } else {
+                                const numberValue = Number(value);
+                                if (numberValue >= 1) {
+                                    setDuration(numberValue);
+                                }
+                            }
+                        }}
+                        disabled={loading}
+                    />
                 </Box>
+
             </Grid>
 
             <Grid item xs={12}>
-                <Box sx={{ width: '70%', mx: 'auto' }}>
+                <Box sx={{ width: '60%', mx: 'auto' }}>
                     <FormControl fullWidth variant={variant}>
                         <InputLabel id="select-departure">Departure</InputLabel>
                         <Select
@@ -74,7 +113,7 @@ const SuggestionForm = ({
             </Grid>
 
             <Grid item xs={12}>
-                <Box sx={{ width: '70%', mx: 'auto' }}>
+                <Box sx={{ width: '60%', mx: 'auto' }}>
                     <FormControl fullWidth variant={variant}>
                         <InputLabel id="select-destination">Destination</InputLabel>
                         <Select
@@ -97,7 +136,7 @@ const SuggestionForm = ({
             </Grid>
 
             <Grid item xs={12}>
-                <Box sx={{ width: '70%', mx: 'auto' }}>
+                <Box sx={{ width: '60%', mx: 'auto' }}>
                     <TextField
                         data-testid="input-start-date"
                         variant={variant}

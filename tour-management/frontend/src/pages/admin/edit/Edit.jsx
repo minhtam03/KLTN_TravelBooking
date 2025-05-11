@@ -1,22 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import {
-    Box,
-    Grid,
-    Typography,
-    Button,
-    TextField,
-    IconButton,
-    Select,
-    MenuItem,
-    InputLabel,
-    FormControl,
-    InputAdornment,
-    Avatar,
-    Container,
-    Checkbox,
-    FormControlLabel,
-    CircularProgress,
+    Box, Grid, Typography, Button, TextField, IconButton, Select, MenuItem, InputLabel, FormControl, InputAdornment, Avatar,
+    Container, Checkbox, FormControlLabel, CircularProgress, Snackbar, Alert
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
@@ -25,25 +11,11 @@ import Navbar from "../../../components/admin/navbar/Navbar";
 import { BASE_URL } from "../../../utils/config";
 import axios from "axios";
 import { placeCodeMap } from "../../../utils/cities";
+import Slide from '@mui/material/Slide';
 
 
 const formatDateInput = (dateStr) => (!dateStr ? "" : new Date(dateStr).toISOString().split("T")[0]);
 const formatTimeInput = (timeStr) => (!timeStr ? "" : timeStr.length === 5 ? timeStr : timeStr.slice(0, 5));
-
-
-// const placeCodeMap = {
-//     'Ha Noi': 'HAN',
-//     'Ho Chi Minh': 'SGN',
-//     'Da Nang': 'DAD',
-//     'Hai Phong': 'HPH',
-//     'Can Tho': 'VCA',
-//     'Hue': 'HUI',
-//     'Vinh': 'VII',
-//     'Nha Trang': 'CXR',
-//     'Quy Nhon': 'UIH',
-//     'Phu Quoc': 'PQC',
-// };
-
 
 const Edit = ({ inputs, title }) => {
     const { id } = useParams();
@@ -134,9 +106,13 @@ const Edit = ({ inputs, title }) => {
             if (path === "users") {
                 if (!resetPassword) delete updateData.password;
                 else {
+                    // if (!newPassword) {
+                    //     setIsUpdating(false);
+                    //     return alert("Please enter a new password.");
+                    // }
                     if (!newPassword) {
                         setIsUpdating(false);
-                        return alert("Please enter a new password.");
+                        return showSnackbar("Please enter a new password.", "warning");
                     }
                     updateData.password = newPassword;
                 }
@@ -150,21 +126,48 @@ const Edit = ({ inputs, title }) => {
             });
 
             const result = await res.json();
+            // if (!res.ok) {
+            //     setIsUpdating(false);
+            //     return alert(result.message);
+            // }
+
             if (!res.ok) {
                 setIsUpdating(false);
-                return alert(result.message);
+                return showSnackbar(result.message || "Update failed.", "error");
             }
 
-            alert("Updated successfully!");
-            navigate(`/admin/${path}`);
+            // alert("Updated successfully!");
+            // navigate(`/admin/${path}`);
+            showSnackbar("Updated successfully!", "success");
+            setTimeout(() => {
+                navigate(`/admin/${path}`);
+            }, 1500); // đợi 1.5 giây để Snackbar hiển thị
+
         } catch (err) {
+            // console.error("Error updating data:", err);
+            // alert("Failed to update. Please try again.");
             console.error("Error updating data:", err);
-            alert("Failed to update. Please try again.");
+            showSnackbar("Failed to update. Please try again.", "error");
         } finally {
             setIsUpdating(false);
         }
     };
 
+    const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+
+    const showSnackbar = (message, severity = 'error') => {
+        setSnackbar(prev => ({ ...prev, open: false }));
+
+        setTimeout(() => {
+            setSnackbar({ open: true, message, severity });
+        }, 100); // delay nhỏ để đảm bảo trạng thái được cập nhật
+    };
+
+
+    const handleCloseSnackbar = () => {
+        setSnackbar((prev) => ({ ...prev, open: false }));
+    };
+    const slideTransition = (props) => <Slide {...props} direction="down" />;
     return (
         <Box display="flex">
             <Sidebar />
@@ -257,7 +260,8 @@ const Edit = ({ inputs, title }) => {
                                                                     fullWidth
                                                                     variant="standard"
                                                                     multiline={input.type === "textarea"}
-                                                                    minRows={input.type === "textarea" ? 6 : undefined}
+                                                                    minRows={input.type === "textarea" ? 1 : undefined}
+                                                                    inputProps={input.inputProps || {}}
                                                                 />
                                                             )}
                                                         </Box>
@@ -298,6 +302,7 @@ const Edit = ({ inputs, title }) => {
                                         </Grid>
                                     )}
 
+
                                     <Box mt={4} display="flex" justifyContent="center">
                                         <Button
                                             variant="contained"
@@ -314,6 +319,27 @@ const Edit = ({ inputs, title }) => {
                     </Grid>
                 </Container>
             </Box>
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={3000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                TransitionComponent={slideTransition}
+            >
+                <Alert
+                    onClose={handleCloseSnackbar}
+                    severity={snackbar.severity}
+                    sx={{
+                        width: '100%',
+                        fontSize: '1rem',
+                        py: 2,
+                        px: 3,
+                        fontWeight: 600
+                    }}
+                >
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
         </Box>
     );
 };

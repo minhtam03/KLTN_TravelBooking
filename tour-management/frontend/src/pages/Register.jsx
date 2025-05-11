@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { BASE_URL } from '../utils/config';
-
+import { Snackbar, Alert, Slide } from '@mui/material';
 import {
   Box,
   Container,
@@ -33,6 +33,21 @@ const Register = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
+
+    const { username, email, password } = credentials;
+    if (!username || !email || !password) {
+      showSnackbar("Please fill in all required fields", "warning");
+      return;
+    }
+
+    // Kiểm tra định dạng email hợp lệ
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      showSnackbar("Please enter a valid email address", "warning");
+      return;
+    }
+
+
     try {
       const res = await fetch(`${BASE_URL}/auth/register`, {
         method: 'post',
@@ -41,15 +56,43 @@ const Register = () => {
       });
 
       const result = await res.json();
-      if (!res.ok) alert(result.message);
+      if (!res.ok) {
+        showSnackbar(result.message || 'Registration failed', 'error');
+        return;
+      }
+
+      // dispatch({ type: 'REGISTER_SUCCESS' });
+      // navigate("/login");
 
       dispatch({ type: 'REGISTER_SUCCESS' });
-      navigate("/login");
+      showSnackbar("Account created successfully", "success");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+
 
     } catch (error) {
-      alert(error.message);
+      showSnackbar(error.message || 'Something went wrong', 'error');
     }
   };
+
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'error' });
+
+  const showSnackbar = (message, severity = 'error') => {
+    setSnackbar(prev => ({ ...prev, open: false }));
+
+    setTimeout(() => {
+      setSnackbar({ open: true, message, severity });
+    }, 100); // delay nhỏ để đảm bảo trạng thái được cập nhật
+  };
+
+
+  const handleCloseSnackbar = () => {
+    setSnackbar((prev) => ({ ...prev, open: false }));
+  };
+
+  const slideTransition = (props) => <Slide {...props} direction="down" />;
 
   return (
     <Container maxWidth="md">
@@ -92,7 +135,7 @@ const Register = () => {
                 placeholder="Username"
                 variant="outlined"
                 margin="normal"
-                required
+
                 onChange={handleChange}
                 InputProps={{
                   startAdornment: (
@@ -108,7 +151,7 @@ const Register = () => {
                 placeholder="Email"
                 variant="outlined"
                 margin="normal"
-                required
+
                 onChange={handleChange}
                 InputProps={{
                   startAdornment: (
@@ -125,7 +168,7 @@ const Register = () => {
                 placeholder="Password"
                 variant="outlined"
                 margin="normal"
-                required
+
                 onChange={handleChange}
                 InputProps={{
                   startAdornment: (
@@ -162,6 +205,28 @@ const Register = () => {
           </Grid>
         </Grid>
       </Paper>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        TransitionComponent={slideTransition}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          sx={{
+            width: '100%',
+            fontSize: '1.1rem',
+            fontWeight: 600,
+            py: 2,
+            px: 3
+          }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+
     </Container>
   );
 };

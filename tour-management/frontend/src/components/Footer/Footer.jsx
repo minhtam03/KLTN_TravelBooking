@@ -45,11 +45,11 @@ const Footer = () => {
           <Col lg='3'>
             <div className="logo">
               {/* <img src={logo} alt="" /> */}
-              <p>Lorem ipsum dolor sit
-                amet consectetur adipisicing elit. Magnam, numquam?
+              <p> From hidden gems to iconic destinations, we help you plan seamless adventures with personalized tours,
+                trusted reviews, and expert travel tips. Your dream trip starts here!
               </p>
 
-              <div className="social__links d-flex align-items-center gap-4">
+              {/* <div className="social__links d-flex align-items-center gap-4">
                 <span>
                   <Link to='#'> <i class="ri-youtube-line"></i></Link>
                   <Link to='#'> <i class="ri-twitter-line"></i></Link>
@@ -57,7 +57,7 @@ const Footer = () => {
                   <Link to='#'> <i class="ri-instagram-line"></i></Link>
 
                 </span>
-              </div>
+              </div> */}
             </div>
           </Col>
 

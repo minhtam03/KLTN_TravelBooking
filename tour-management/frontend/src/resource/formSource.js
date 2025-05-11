@@ -22,8 +22,11 @@ export const userInputs = [
     {
         id: "role",
         label: "Role",
-        type: "text",
-        placeholder: "user",
+        type: "select",
+        options: [
+            "user",
+            "admin"
+        ],
     },
 ];
 
@@ -54,15 +57,9 @@ export const tourInputs = [
         label: "Duration (days)",
         type: "number",
         placeholder: "5",
-        name: "duration", required: false
+        name: "duration", required: false,
+        inputProps: { min: 1 },
     },
-    // {
-    //     id: "distance",
-    //     label: "Distance (km)",
-    //     type: "number",
-    //     placeholder: "10",
-    //     name: "distance", required: false
-    // },
     {
         id: "desc",
         label: "Description",
@@ -83,7 +80,8 @@ export const tourInputs = [
         label: "Price ($)",
         type: "number",
         placeholder: "250",
-        name: "price", required: false
+        name: "price", required: false,
+        inputProps: { min: 1 },
     },
     {
         id: "maxGroupSize",
@@ -91,6 +89,7 @@ export const tourInputs = [
         type: "number",
         placeholder: "15",
         name: "maxGroupSize", required: false,
+        inputProps: { min: 1 },
     },
     {
         id: "featured",
@@ -146,6 +145,7 @@ export const hotelInputs = [
         type: "number",
         placeholder: "120",
         name: "pricePerNight",
+        inputProps: { min: 1 },
     },
     {
         id: "stars",
@@ -153,6 +153,7 @@ export const hotelInputs = [
         type: "number",
         placeholder: "4",
         name: "stars",
+        inputProps: { min: 1 },
     },
     {
         id: "roomsAvailable",
@@ -160,6 +161,7 @@ export const hotelInputs = [
         type: "number",
         placeholder: "50",
         name: "roomsAvailable",
+        inputProps: { min: 1 },
     },
     {
         id: "amenities",
@@ -242,5 +244,6 @@ export const flightInputs = [
         type: "number",
         placeholder: "99",
         name: "totalPriceUSD",
+        inputProps: { min: 1 },
     },
 ];

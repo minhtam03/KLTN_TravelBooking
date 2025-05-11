@@ -4,7 +4,7 @@ export const cityList = [   // list cho tour
     'Binh Duong', 'Bac Ninh', 'Nghe An', 'Bac Giang', 'Ha Long', 'Quang Binh',
     'Son La', 'Tien Giang', 'Quang Tri', 'An Giang', 'Ninh Binh',
     'Phu Tho', 'Ca Mau', 'Ha Giang', 'Lai Chau', 'Ha Tinh', 'Yen Bai', 'Quang Nam',
-    'Bac Kan', 'Quang Ngai', 'Lang Son', 'Hoa Binh', 'Tuyen Quang', 'Sapa', 'Hung Yen'
+    'Bac Kan', 'Quang Ngai', 'Lang Son', 'Hoa Binh', 'Tuyen Quang', 'Sapa', 'Hung Yen', 'Vung Tau'
 ];
 
 

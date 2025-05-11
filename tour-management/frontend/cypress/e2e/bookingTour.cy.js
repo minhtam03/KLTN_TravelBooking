@@ -1,4 +1,4 @@
-describe('Tour Booking Flow (with cookie)', () => {
+describe('Tour Booking Flow', () => {
 
   it('books a tour successfully when logged in', () => {
     const email = 'test19@gmail.com';

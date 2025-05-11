@@ -107,7 +107,13 @@ const ItemCardTooltip = ({ item, type }) => {
                         href={detailLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        sx={{ textTransform: "none", fontWeight: 500 }}
+                        sx={{
+                            textTransform: "none",
+                            '&:hover': {
+                                color: "white", // giữ màu không đổi khi hover
+                            },
+                            fontWeight: 500
+                        }}
                     >
                         View
                     </Button>

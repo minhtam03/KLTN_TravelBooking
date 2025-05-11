@@ -12,8 +12,8 @@ import {
     InputLabel,
     FormControl,
     InputAdornment,
-    Avatar,
-    Container, Checkbox, FormControlLabel
+    Avatar, CircularProgress,
+    Container, Checkbox, FormControlLabel, Snackbar, Alert, Slide
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
@@ -30,47 +30,13 @@ const New = ({ inputs, title }) => {
     const [showPassword, setShowPassword] = useState(false);
     const [file, setFile] = useState("");
     const [credentials, setCredentials] = useState({ username: "", email: "", password: "" });
-
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
     const path = location.pathname.split("/")[2];
-
-    // const handleChange = (e) => {
-    //     const { name, value } = e.target;
-    //     if (name === "tripType") setTripType(value);
-    //     if (path === "users") {
-    //         setCredentials((prev) => ({ ...prev, [name]: value }));
-    //     } else {
-    //         setInfo((prev) => ({ ...prev, [name]: value }));
-    //     }
-    // };
-    // const handleChange = (e) => {
-    //     const { name, value } = e.target;
-
-    //     const parsedValue =
-    //         name === "price"
-    //             ? parseFloat(value)
-    //             : name === "guestSize"
-    //                 ? parseInt(value)
-    //                 : value;
-
-    //     if (name === "tripType") setTripType(value);
-
-    //     if (path === "users") {
-    //         setCredentials((prev) => ({ ...prev, [name]: parsedValue }));
-    //     } else {
-    //         setInfo((prev) => ({ ...prev, [name]: parsedValue }));
-    //     }
-    // };
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        // const parsedValue =
-        //     name === "price"
-        //         ? parseFloat(value)
-        //         : name === "guestSize"
-        //             ? parseInt(value)
-        //             : value;
         let parsedValue = value;
         if (name === "price") parsedValue = parseFloat(value);
         else if (name === "guestSize") parsedValue = parseInt(value);
@@ -106,6 +72,7 @@ const New = ({ inputs, title }) => {
 
     const handleClick = async (e) => {
         e.preventDefault();
+        setLoading(true);
         let photoUrl = "";
         if (file && path !== "flights") {
             const data = new FormData();
@@ -126,15 +93,41 @@ const New = ({ inputs, title }) => {
                 body: JSON.stringify(bodyData),
             });
             const result = await res.json();
-            if (!res.ok) return alert(result.message);
-            alert("Created successfully!");
-            navigate(`/admin/${path}`);
+            if (!res.ok) {
+                showSnackbar(result.message || "Creation failed", "error");
+                return;
+            }
+
+            showSnackbar("Created successfully!", "success");
+
+            setTimeout(() => {
+                navigate(`/admin/${path}`);
+            }, 1500);
         } catch (err) {
             console.error("Error:", err);
-            alert("Failed to create. Please try again.");
+            showSnackbar("Failed to create. Please try again.", "error");
+
+        } finally {
+            setLoading(false); // Tắt loading dù thành công hay lỗi
         }
     };
 
+    const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+
+    const showSnackbar = (message, severity = 'error') => {
+        setSnackbar(prev => ({ ...prev, open: false }));
+
+        setTimeout(() => {
+            setSnackbar({ open: true, message, severity });
+        }, 100); // delay nhỏ để đảm bảo trạng thái được cập nhật
+    };
+
+
+    const handleCloseSnackbar = () => {
+        setSnackbar(prev => ({ ...prev, open: false }));
+    };
+
+    const slideTransition = (props) => <Slide {...props} direction="down" />;
     return (
         <Box display="flex">
             <Sidebar />
@@ -206,55 +199,6 @@ const New = ({ inputs, title }) => {
                                             onChange: handleChange,
                                             fullWidth: true
                                         };
-
-                                        // return (
-                                        //     <Grid item xs={12} sm={6} key={input.id}>
-                                        //         <Box display="flex" alignItems="center" gap={3}>
-                                        //             <Typography sx={{ width: 140, fontWeight: 500 }}>{input.label}:</Typography>
-                                        //             {input.id === "password" ? (
-                                        //                 <TextField
-                                        //                     {...commonProps}
-                                        //                     type={showPassword ? "text" : "password"}
-                                        //                     InputProps={{
-                                        //                         endAdornment: (
-                                        //                             <InputAdornment position="end">
-                                        //                                 <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                                        //                                     {showPassword ? <VisibilityOff /> : <Visibility />}
-                                        //                                 </IconButton>
-                                        //                             </InputAdornment>
-                                        //                         ),
-                                        //                     }}
-                                        //                     variant="standard"
-                                        //                 />
-                                        //             ) : input.type === "select" ? (
-                                        //                 <FormControl variant="standard" fullWidth>
-                                        //                     <Select
-                                        //                         name={input.id}
-                                        //                         defaultValue=""
-                                        //                         onChange={handleChange}
-                                        //                     >
-                                        //                         {input.options?.map((opt) => (
-                                        //                             <MenuItem key={opt} value={opt}>{opt}</MenuItem>
-                                        //                         ))}
-                                        //                     </Select>
-                                        //                 </FormControl>
-                                        //             ) : (
-                                        //                 // <TextField
-                                        //                 //     {...commonProps}
-                                        //                 //     type={input.type || "text"}
-                                        //                 //     variant="standard"
-                                        //                 // />
-                                        //                 <TextField
-                                        //                     {...commonProps}
-                                        //                     type={input.type === "textarea" ? undefined : input.type || "text"}
-                                        //                     variant="standard"
-                                        //                     multiline={input.type === "textarea"}
-                                        //                     minRows={input.type === "textarea" ? 6 : undefined}
-                                        //                 />
-                                        //             )}
-                                        //         </Box>
-                                        //     </Grid>
-                                        // );
                                         return (
                                             <Grid item xs={input.id === "content" ? 12 : 6} key={input.id}>
                                                 <Box display="flex" alignItems={input.id === "content" ? "flex-start" : "center"} gap={3}>
@@ -281,6 +225,7 @@ const New = ({ inputs, title }) => {
                                                                 ),
                                                             }}
                                                             variant="standard"
+
                                                         />
                                                     ) : input.type === "select" ? (
                                                         <FormControl variant="standard" fullWidth>
@@ -300,15 +245,8 @@ const New = ({ inputs, title }) => {
                                                             type={input.type === "textarea" ? undefined : input.type || "text"}
                                                             variant="standard"
                                                             multiline={input.type === "textarea"}
-                                                            minRows={input.type === "textarea" ? 6 : undefined}
-
-                                                        // value={
-                                                        //     input.id === "highlights"
-                                                        //         ? Array.isArray(info.highlights)
-                                                        //             ? info.highlights.join(", ")
-                                                        //             : info.highlights || ""
-                                                        //         : info[input.id] || ""
-                                                        // }
+                                                            minRows={input.type === "textarea" ? 1 : undefined}
+                                                            inputProps={input.inputProps || {}}
 
                                                         />
                                                     )}
@@ -331,7 +269,11 @@ const New = ({ inputs, title }) => {
                                             }
                                         }}
                                     >
-                                        Create
+                                        {loading ? (
+                                            <CircularProgress size={24} color="inherit" />
+                                        ) : (
+                                            "Create"
+                                        )}
                                     </Button>
                                 </Box>
                             </Box>
@@ -339,6 +281,28 @@ const New = ({ inputs, title }) => {
                     </Grid>
                 </Container>
             </Box>
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={3000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                TransitionComponent={slideTransition}
+            >
+                <Alert
+                    onClose={handleCloseSnackbar}
+                    severity={snackbar.severity}
+                    sx={{
+                        width: '100%',
+                        fontSize: '1rem',
+                        py: 2,
+                        px: 3,
+                        fontWeight: 600
+                    }}
+                >
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
+
         </Box>
     );
 };

@@ -3,40 +3,84 @@ import User from '../models/User.js'
 
 // create new User
 
+// export const createUser = async (req, res) => {
+//     // const newUser = new User(req.body)
+//     try {
+//         // hashing password
+//         const salt = bcrypt.genSaltSync(10)
+//         const hash = bcrypt.hashSync(req.body.password, salt)
+
+//         const newUser = new User({
+//             username: req.body.username,
+//             email: req.body.email,
+//             password: hash,
+//             role: req.body.role,
+//             photo: req.body.photo,
+//             phone: req.body.phone || "",
+//             address: req.body.address || "",
+//         })
+
+//         const savedUser = await newUser.save()
+
+//         res
+//             .status(200)
+//             .json({
+//                 success: true,
+//                 message: "Successfully created",
+//                 data: savedUser,
+//             })
+//     } catch (error) {
+//         res
+//             .status(500)
+//             .json({
+//                 success: false,
+//                 message: "Failed to create. Try again"
+//             })
+//     }
+// }
+
 export const createUser = async (req, res) => {
-    // const newUser = new User(req.body)
     try {
-        // hashing password
-        const salt = bcrypt.genSaltSync(10)
-        const hash = bcrypt.hashSync(req.body.password, salt)
+        const { username, email, password, role, photo, phone = "", address = "" } = req.body;
+
+        // Kiểm tra trùng username hoặc email
+        const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+        if (existingUser) {
+            const msg = existingUser.email === email
+                ? "Email already in use"
+                : "Username already taken";
+
+            return res.status(400).json({ success: false, message: msg });
+        }
+
+        // Hash password
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(password, salt);
 
         const newUser = new User({
-            username: req.body.username,
-            email: req.body.email,
+            username,
+            email,
             password: hash,
-            role: req.body.role,
-            photo: req.body.photo,
-            phone: req.body.phone || "",
-            address: req.body.address || "",
-        })
-        const savedUser = await newUser.save()
+            role,
+            photo,
+            phone,
+            address,
+        });
 
-        res
-            .status(200)
-            .json({
-                success: true,
-                message: "Successfully created",
-                data: savedUser,
-            })
+        const savedUser = await newUser.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Successfully created",
+            data: savedUser,
+        });
     } catch (error) {
-        res
-            .status(500)
-            .json({
-                success: false,
-                message: "Failed to create. Try again"
-            })
+        res.status(500).json({
+            success: false,
+            message: "Failed to create. Try again",
+        });
     }
-}
+};
 
 // update User
 export const updateUser = async (req, res) => {

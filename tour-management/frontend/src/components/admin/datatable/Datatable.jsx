@@ -4,6 +4,7 @@ import { DataGrid } from '@mui/x-data-grid'
 import { Box, Button, Typography, Stack } from '@mui/material'
 import { BASE_URL } from '../../../utils/config'
 import { IconButton, Tooltip } from '@mui/material'
+import { Dialog, DialogActions, DialogTitle } from "@mui/material";
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
@@ -15,50 +16,57 @@ const Datatable = ({ columns }) => {
     const path = location.pathname.split("/")[2]
     const [rows, setRows] = useState([])
     const [page, setPage] = useState(0)
+    const [loading, setLoading] = useState(true);
     const [importing, setImporting] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [selectedId, setSelectedId] = useState(null);
 
-    const handleDelete = async (id) => {
-        const confirmDelete = window.confirm("Are you sure you want to delete?");
-        if (!confirmDelete) return;
+    // const handleDelete = async (id) => {
+    //     const confirmDelete = window.confirm("Are you sure you want to delete?");
+    //     if (!confirmDelete) return;
 
+    //     try {
+    //         const res = await fetch(`${BASE_URL}/${path}/${id}`, {
+    //             method: "DELETE",
+    //             credentials: "include",
+    //         });
+
+    //         if (!res.ok) throw new Error("Failed to delete")
+
+    //         setRows((prevRows) => prevRows.filter((row) => row._id !== id))
+
+    //         await new Promise(resolve => setTimeout(resolve, 100))
+
+    //     } catch (error) {
+    //         console.error(error)
+    //         alert("Error deleting")
+    //     }
+    // }
+    const confirmDelete = (id) => {
+        setSelectedId(id);
+        setOpenDialog(true);
+    };
+
+    const handleDeleteConfirmed = async () => {
         try {
-            const res = await fetch(`${BASE_URL}/${path}/${id}`, {
+            const res = await fetch(`${BASE_URL}/${path}/${selectedId}`, {
                 method: "DELETE",
                 credentials: "include",
             });
 
-            if (!res.ok) throw new Error("Failed to delete")
+            if (!res.ok) throw new Error("Failed to delete");
 
-            setRows((prevRows) => prevRows.filter((row) => row._id !== id))
-
-            await new Promise(resolve => setTimeout(resolve, 100))
-
+            setRows((prevRows) => prevRows.filter((row) => row._id !== selectedId));
+            setOpenDialog(false);
+            setSelectedId(null);
         } catch (error) {
-            console.error(error)
-            alert("Error deleting")
+            console.error(error);
+            alert("Error deleting");
         }
-    }
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             const res = await fetch(`${BASE_URL}/${path}`, {
-    //                 method: 'GET',
-    //                 credentials: 'include',
-    //             })
-    //             if (!res.ok) throw new Error('Failed to fetch data')
-    //             const result = await res.json()
-    //             setRows(result.data)
-    //             setPage(0)
-    //         } catch (error) {
-    //             console.error(error)
-    //         }
-    //     }
-
-    //     fetchData()
-    // }, [path])
+    };
 
     const fetchData = async () => {
+        setLoading(true);
         try {
             const res = await fetch(`${BASE_URL}/${path}`, {
                 method: 'GET',
@@ -70,6 +78,8 @@ const Datatable = ({ columns }) => {
             setPage(0);
         } catch (error) {
             console.error(error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -110,7 +120,8 @@ const Datatable = ({ columns }) => {
                     <Tooltip title="Delete">
                         <IconButton
                             color="error"
-                            onClick={() => handleDelete(params.row._id)}
+                            // onClick={() => handleDelete(params.row._id)}
+                            onClick={() => confirmDelete(params.row._id)}
                             size="small"
                         >
                             <DeleteIcon sx={{ color: 'rgb(210, 101, 101)' }} />
@@ -226,14 +237,6 @@ const Datatable = ({ columns }) => {
                                 });
                                 if (!resNormalize.ok) throw new Error('Normalize flights failed');
 
-                                // const res = await fetch(`${BASE_URL}/hotels`, {
-                                //     method: 'GET',
-                                //     credentials: 'include',
-                                // });
-
-                                // setRows(res.data.data); // Update lại bảng với dữ liệu mới
-                                // setPage(0);
-
                                 alert('Import và Normalize Flights thành công!');
                             } catch (error) {
                                 console.error(error);
@@ -263,6 +266,7 @@ const Datatable = ({ columns }) => {
             </Box>
 
             <DataGrid
+                loading={loading}
                 key={path}
                 rows={rows}
                 columns={columns.concat(actionColumn)}
@@ -298,6 +302,18 @@ const Datatable = ({ columns }) => {
                     }
                 }}
             />
+            <Dialog open={openDialog} onClose={() => setOpenDialog(false)}
+                maxWidth="sm" // bạn có thể thử 'sm' hoặc 'md' nếu muốn lớn hơn nữa
+                fullWidth
+            >
+                <DialogTitle>
+                    <Typography variant="body1">Are you sure you want to delete?</Typography>
+                </DialogTitle>
+                <DialogActions>
+                    <Button onClick={() => setOpenDialog(false)} color="inherit" sx={{ fontSize: '0.8rem' }}>Cancel</Button>
+                    <Button onClick={handleDeleteConfirmed} color="error" variant="contained" sx={{ fontSize: '0.8rem' }}>Yes</Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     )
 }

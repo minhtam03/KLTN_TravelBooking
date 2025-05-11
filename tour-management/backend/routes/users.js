@@ -15,13 +15,13 @@ router.put("/profile", verifyUser, updateProfile);
 router.post("/", verifyAdmin, createUser);
 
 // update user
-router.put("/:id", verifyUser, updateUser)
+router.put("/:id", verifyAdmin, updateUser)
 
 // delete user
-router.delete("/:id", verifyUser, deleteUser)
+router.delete("/:id", verifyAdmin, deleteUser)
 
 // get single user
-router.get("/:id", verifyUser, getSingleUser)
+router.get("/:id", verifyAdmin, getSingleUser)
 
 // get all user
 router.get("/", verifyAdmin, getAllUser)

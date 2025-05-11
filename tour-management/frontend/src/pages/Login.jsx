@@ -17,7 +17,7 @@ import {
   InputAdornment,
 } from '@mui/material';
 import { Person, Lock } from '@mui/icons-material';
-
+import { Snackbar, Alert, Slide } from '@mui/material';
 import loginImg from '../assets/images/home/login.jpg';
 
 const Login = () => {
@@ -46,7 +46,12 @@ const Login = () => {
       });
 
       const result = await res.json();
-      if (!res.ok) alert(result.message);
+      // if (!res.ok) alert(result.message);
+      if (!res.ok) {
+        showSnackbar(result.message || "Login failed");
+        return;
+      }
+
 
       dispatch({ type: 'LOGIN_SUCCESS', payload: result.data });
       if (result.role === 'admin') {
@@ -59,6 +64,22 @@ const Login = () => {
       navigate('/login');
     }
   };
+
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'error' });
+
+  const showSnackbar = (message, severity = 'error') => {
+    setSnackbar(prev => ({ ...prev, open: false }));
+
+    setTimeout(() => {
+      setSnackbar({ open: true, message, severity });
+    }, 100); // delay nhỏ để đảm bảo trạng thái được cập nhật
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar(prev => ({ ...prev, open: false }));
+  };
+
+  const slideTransition = (props) => <Slide {...props} direction="down" />;
 
   return (
     <Container maxWidth="md">
@@ -158,19 +179,31 @@ const Login = () => {
                   Create an account
                 </Link>
               </Typography>
-
-              {/* <Typography variant="body2" align="center" mt={2}>
-                Or login with
-              </Typography>
-              <Box display="flex" justifyContent="center" gap={2} mt={1}>
-                <Button variant="outlined" sx={{ minWidth: 36 }}>F</Button>
-                <Button variant="outlined" sx={{ minWidth: 36 }}>T</Button>
-                <Button variant="outlined" sx={{ minWidth: 36 }}>G</Button>
-              </Box> */}
             </Box>
           </Grid>
         </Grid>
       </Paper>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        TransitionComponent={slideTransition}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          sx={{
+            width: '100%',
+            fontSize: '1.1rem',
+            fontWeight: 600,
+            py: 2,
+            px: 3
+          }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

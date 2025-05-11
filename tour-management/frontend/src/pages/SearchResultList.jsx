@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import CommonSection from './../shared/CommonSection';
 import { Container, Row, Col } from 'reactstrap';
+import { Alert, AlertTitle, Box, Button } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import TourCard from '../shared/TourCard';
 import { BASE_URL } from '../utils/config';
 import SearchBar from '../shared/SearchBar';
-import { Pagination, Box } from '@mui/material';
+import { Pagination } from '@mui/material';
 
 const SearchResultList = () => {
   const location = useLocation();
@@ -64,7 +65,26 @@ const SearchResultList = () => {
             {loading ? (
               <h4 className='text-center pt-5'>Loading...</h4>
             ) : data.length === 0 ? (
-              <h4 className='text-center'>No tours found</h4>
+              // <h4 className='text-center'>No tours found</h4>
+              <Col lg="12" className="text-center mt-3">
+                <Alert
+                  severity="info"
+                  icon={false}
+                  sx={{
+                    display: 'inline-block',  // căn giữa trong text-center
+                    textAlign: 'center',
+                    fontSize: '1.1rem',
+                    backgroundColor: '#fff',
+                    border: 'none',
+                    borderRadius: 2,
+                    px: 3,
+                    py: 2,
+                  }}
+                >
+                  <AlertTitle sx={{ fontSize: '1.25rem' }}><strong>No Tours Found</strong></AlertTitle>
+                  Try adjusting your filters.
+                </Alert>
+              </Col>
             ) : (
               data.map(tour => (
                 <Col lg='3' className='mb-4' key={tour._id}>
@@ -72,40 +92,27 @@ const SearchResultList = () => {
                 </Col>
               ))
             )}
-
-
-            {/* <Col lg='12'>
-              <div className="pagination d-flex align-items-center justify-content-center mt-4 gap-3">
-                {[...Array(pageCount || 1).keys()].map(number => (
-                  <span
-                    key={number}
-                    onClick={() => setPage(number)}
-                    className={page === number ? "active__page" : ""}
-                  >
-                    {number + 1}
-                  </span>
-                ))}
-              </div>
-            </Col> */}
-            <Col lg='12' className="d-flex justify-content-center mt-4">
-              <Pagination
-                count={pageCount}
-                page={page + 1}
-                onChange={(event, value) => setPage(value - 1)}
-                shape="rounded"
-                sx={{
-                  '& .MuiPaginationItem-root': {
-                    borderRadius: '50%',
-                  },
-                  '& .Mui-selected': {
-                    backgroundColor: 'rgb(201, 201, 201)',
-                    '&:hover': {
-                      backgroundColor: 'rgb(220, 219, 219)',
+            {!loading && data.length > 0 && (
+              <Col lg='12' className="d-flex justify-content-center mt-4">
+                <Pagination
+                  count={pageCount}
+                  page={page + 1}
+                  onChange={(event, value) => setPage(value - 1)}
+                  shape="rounded"
+                  sx={{
+                    '& .MuiPaginationItem-root': {
+                      borderRadius: '50%',
+                    },
+                    '& .Mui-selected': {
+                      backgroundColor: 'rgb(201, 201, 201)',
+                      '&:hover': {
+                        backgroundColor: 'rgb(220, 219, 219)',
+                      }
                     }
-                  }
-                }}
-              />
-            </Col>
+                  }}
+                />
+              </Col>
+            )}
 
           </Row>
         </Container>
